@@ -5,11 +5,9 @@ class Sandbox : public CrashEngine::Application
 public:
 	Sandbox()
 	{
-
 	}
 	~Sandbox()
 	{
-
 	}
 };
 

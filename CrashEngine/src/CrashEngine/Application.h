@@ -1,9 +1,9 @@
 #pragma once
 
 #include "Core.h"
+#include "Events/Event.h"
 
 namespace CrashEngine {
-
 	class CRASH_API Application
 	{
 	public:
@@ -15,5 +15,4 @@ namespace CrashEngine {
 
 	//to be defined in client
 	Application* CreateApplication();
-
 }
