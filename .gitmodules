@@ -1,3 +1,12 @@
 [submodule "CrashEngine/vendor/spdlog"]
 	path = CrashEngine/vendor/spdlog
 	url = https://github.com/gabime/spdlog
+[submodule "CrashEngine/vendor/GLFW"]
+	path = CrashEngine/vendor/GLFW
+	url = https://github.com/TheCherno/GLFW
+[submodule "CrashEngine/vendor/imgui"]
+	path = CrashEngine/vendor/imgui
+	url = https://github.com/TheCherno/imgui
+[submodule "CrashEngine/vendor/glm"]
+	path = CrashEngine/vendor/glm
+	url = https://github.com/g-truc/glm

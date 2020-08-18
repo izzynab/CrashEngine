@@ -10,6 +10,16 @@ workspace "CrashEngine"
 
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
+IncludeDir = {}
+IncludeDir["GLFW"] = "CrashEngine/vendor/GLFW/include"
+IncludeDir["GLAD"] = "CrashEngine/vendor/GLAD/include"
+IncludeDir["ImGui"] = "CrashEngine/vendor/imgui"
+IncludeDir["glm"] = "CrashEngine/vendor/glm"
+
+include "CrashEngine/vendor/GLFW"
+include "CrashEngine/vendor/GLAD"
+include "CrashEngine/vendor/imgui"
+
 project "CrashEngine"
 	location "CrashEngine"
 	kind "SharedLib"
@@ -24,24 +34,40 @@ project "CrashEngine"
 	files
 	{
 		"%{prj.name}/src/**.h",
-		"%{prj.name}/src/**.cpp"
+		"%{prj.name}/src/**.cpp",
+		"%{prj.name}/vendor/glm/glm/**.hpp",
+		"%{prj.name}/vendor/glm/glm/**.inl"
 	}
 
 	includedirs
 	{
 		"%{prj.name}/src",
-		"%{prj.name}/vendor/spdlog/include"
+		"%{prj.name}/vendor/spdlog/include",
+		"%{IncludeDir.GLFW}",
+		"%{IncludeDir.GLAD}",
+		"%{IncludeDir.ImGui}",
+		"%{IncludeDir.glm}"
 	}
+
+	links 
+	{ 
+		"GLAD",
+		"GLFW",
+		"ImGui",
+		"opengl32.lib"
+	}
+	
 
 	filter "system:windows"
 		cppdialect "C++17"
 		staticruntime "On"
-		systemversion "10.0.17134.0"
+		systemversion "10.0.18362.0"
 
 		defines
 		{
 			"CE_PLATFORM_WINDOWS",
-			"CE_BUILD_DLL"
+			"CE_BUILD_DLL",
+			"GLFW_INCLUDE_NONE"
 		}
 
 		postbuildcommands
@@ -51,14 +77,17 @@ project "CrashEngine"
 
 	filter "configurations:Debug"
 		defines "CE_DEBUG"
+		buildoptions "/MDd"
 		symbols "On"
 
 	filter "configurations:Release"
 		defines "CE_RELEASE"
+		buildoptions "/MD"
 		optimize "On"
 
 	filter "configurations:Dist"
 		defines "CE_DIST"
+		buildoptions "/MD"
 		optimize "On"
 
 project "Sandbox"
@@ -78,7 +107,8 @@ project "Sandbox"
 	includedirs
 	{
 		"CrashEngine/vendor/spdlog/include",
-		"CrashEngine/src"
+		"CrashEngine/src",
+		"%{IncludeDir.glm}"
 	}
 
 	links
@@ -89,7 +119,7 @@ project "Sandbox"
 	filter "system:windows"
 		cppdialect "C++17"
 		staticruntime "On"
-		systemversion "10.0.17134.0"
+		systemversion "10.0.18362.0"
 
 		defines
 		{
@@ -98,12 +128,15 @@ project "Sandbox"
 
 	filter "configurations:Debug"
 		defines "CE_DEBUG"
+		buildoptions "/MDd"
 		symbols "On"
 
 	filter "configurations:Release"
 		defines "CE_RELEASE"
+		buildoptions "/MD"
 		optimize "On"
 
 	filter "configurations:Dist"
 		defines "CE_DIST"
+		buildoptions "/MD"
 		optimize "On" 
