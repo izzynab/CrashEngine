@@ -26,11 +26,11 @@ namespace CrashEngine {
 #define CE_CORE_WARN(...)	::CrashEngine::Log::GetCoreLogger()->warn(__VA_ARGS__)
 #define CE_CORE_INFO(...)	::CrashEngine::Log::GetCoreLogger()->info(__VA_ARGS__)
 #define CE_CORE_TRACE(...)	::CrashEngine::Log::GetCoreLogger()->trace(__VA_ARGS__)
-#define CE_CORE_FATAL(...)	::CrashEngine::Log::GetCoreLogger()->fatal(__VA_ARGS__)
+#define CE_CORE_FATAL(...)	::CrashEngine::Log::GetCoreLogger()->critical(__VA_ARGS__)
 
 //clent log macros
 #define CE_ERROR(...)	::CrashEngine::Log::GetClientLogger()->error(__VA_ARGS__)
 #define CE_WARN(...)	::CrashEngine::Log::GetClientLogger()->warn(__VA_ARGS__)
 #define CE_INFO(...)	::CrashEngine::Log::GetClientLogger()->info(__VA_ARGS__)
 #define CE_TRACE(...)	::CrashEngine::Log::GetClientLogger()->trace(__VA_ARGS__)
-#define CE_FATAL(...)	::CrashEngine::Log::GetClientLogger()->fatal(__VA_ARGS__)
+#define CE_FATAL(...)	::CrashEngine::Log::GetClientLogger()->critical(__VA_ARGS__)

@@ -1,10 +1,14 @@
 #pragma once
 
 #ifdef CE_PLATFORM_WINDOWS
-#ifdef CE_BUILD_DLL
-#define CRASH_API __declspec(dllexport)
+#if CE_DYNAMIC_LINK
+	#ifdef CE_BUILD_DLL
+		#define CRASH_API __declspec(dllexport)
+	#else
+		#define CRASH_API  __declspec(dllimport)
+	#endif
 #else
-#define CRASH_API  __declspec(dllimport)
+	#define CRASH_API
 #endif
 #else
 #error Crash engine only supports windows!

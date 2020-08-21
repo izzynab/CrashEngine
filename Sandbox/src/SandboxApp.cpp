@@ -1,5 +1,7 @@
 #include <Crash.h>
 
+#include "imgui/imgui.h"
+
 class ExampleLayer : public CrashEngine::Layer
 {
 public:
@@ -13,6 +15,13 @@ public:
 
 		if (CrashEngine::Input::IsKeyPressed(CE_KEY_TAB))
 			CE_TRACE("Tab key is pressed (poll)!");
+	}
+
+	virtual void OnImGuiRender() override
+	{
+		ImGui::Begin("Test");
+		ImGui::Text("Hello World");
+		ImGui::End();
 	}
 
 	void OnEvent(CrashEngine::Event& event) override
@@ -34,7 +43,6 @@ public:
 	Sandbox()
 	{
 		PushLayer(new ExampleLayer());
-		PushOverlay(new CrashEngine::ImGuiLayer());
 	}
 	~Sandbox()
 	{

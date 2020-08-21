@@ -22,8 +22,10 @@ include "CrashEngine/vendor/imgui"
 
 project "CrashEngine"
 	location "CrashEngine"
-	kind "SharedLib"
+	kind "StaticLib"
 	language "C++"
+	cppdialect "C++17"
+	staticruntime "on"
 
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
 	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
@@ -37,6 +39,11 @@ project "CrashEngine"
 		"%{prj.name}/src/**.cpp",
 		"%{prj.name}/vendor/glm/glm/**.hpp",
 		"%{prj.name}/vendor/glm/glm/**.inl"
+	}
+
+	defines
+	{
+		"_CRT_SECURE_NO_WARNINGS"
 	}
 
 	includedirs
@@ -59,8 +66,6 @@ project "CrashEngine"
 	
 
 	filter "system:windows"
-		cppdialect "C++17"
-		staticruntime "On"
 		systemversion "10.0.18362.0"
 
 		defines
@@ -78,17 +83,17 @@ project "CrashEngine"
 	filter "configurations:Debug"
 		defines "CE_DEBUG"
 		buildoptions "/MDd"
-		symbols "On"
+		symbols "on"
 
 	filter "configurations:Release"
 		defines "CE_RELEASE"
 		buildoptions "/MD"
-		optimize "On"
+		optimize "on"
 
 	filter "configurations:Dist"
 		defines "CE_DIST"
 		buildoptions "/MD"
-		optimize "On"
+		optimize "on"
 
 project "Sandbox"
 	location "Sandbox"
@@ -108,6 +113,7 @@ project "Sandbox"
 	{
 		"CrashEngine/vendor/spdlog/include",
 		"CrashEngine/src",
+		"CrashEngine/vendor",
 		"%{IncludeDir.glm}"
 	}
 
@@ -117,8 +123,6 @@ project "Sandbox"
 	}
 
 	filter "system:windows"
-		cppdialect "C++17"
-		staticruntime "On"
 		systemversion "10.0.18362.0"
 
 		defines
@@ -129,14 +133,14 @@ project "Sandbox"
 	filter "configurations:Debug"
 		defines "CE_DEBUG"
 		buildoptions "/MDd"
-		symbols "On"
+		symbols "on"
 
 	filter "configurations:Release"
 		defines "CE_RELEASE"
 		buildoptions "/MD"
-		optimize "On"
+		optimize "on"
 
 	filter "configurations:Dist"
 		defines "CE_DIST"
 		buildoptions "/MD"
-		optimize "On" 
+		optimize "on" 
