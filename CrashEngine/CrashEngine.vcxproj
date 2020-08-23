@@ -168,6 +168,7 @@
     <ClInclude Include="src\CrashEngine\Log.h" />
     <ClInclude Include="src\CrashEngine\MouseButtonCodes.h" />
     <ClInclude Include="src\CrashEngine\Renderer\Buffer.h" />
+    <ClInclude Include="src\CrashEngine\Renderer\Camera.h" />
     <ClInclude Include="src\CrashEngine\Renderer\GraphicsContext.h" />
     <ClInclude Include="src\CrashEngine\Renderer\Renderer.h" />
     <ClInclude Include="src\CrashEngine\Renderer\RendererAPI.h" />
@@ -599,6 +600,7 @@
     <ClCompile Include="src\CrashEngine\LayerStack.cpp" />
     <ClCompile Include="src\CrashEngine\Log.cpp" />
     <ClCompile Include="src\CrashEngine\Renderer\Buffer.cpp" />
+    <ClCompile Include="src\CrashEngine\Renderer\Camera.cpp" />
     <ClCompile Include="src\CrashEngine\Renderer\Renderer.cpp" />
     <ClCompile Include="src\CrashEngine\Renderer\RendererAPI.cpp" />
     <ClCompile Include="src\CrashEngine\Renderer\RenderCommand.cpp" />

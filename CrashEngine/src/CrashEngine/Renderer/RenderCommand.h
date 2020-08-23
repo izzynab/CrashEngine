@@ -21,6 +21,11 @@ namespace CrashEngine {
 		{
 			s_RendererAPI->DrawIndexed(vertexArray);
 		}
+
+		inline static void DrawTriangles(const std::shared_ptr<VertexArray>& vertexArray, unsigned int NumberOfVerticies)
+		{
+			s_RendererAPI->DrawTriangles(vertexArray, NumberOfVerticies);
+		}
 	private:
 		static RendererAPI* s_RendererAPI;
 	};

@@ -2,6 +2,8 @@
 #include "Shader.h"
 
 #include <glad/glad.h>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 namespace CrashEngine {
 
@@ -11,7 +13,7 @@ namespace CrashEngine {
 		GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
 
 		// Send the vertex shader source code to GL
-		// Note that std::string's .c_str is NULL character terminated.
+		// Note that const char*'s .c_str is NULL character terminated.
 		const GLchar* source = vertexSrc.c_str();
 		glShaderSource(vertexShader, 1, &source, 0);
 
@@ -41,7 +43,7 @@ namespace CrashEngine {
 		GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
 
 		// Send the fragment shader source code to GL
-		// Note that std::string's .c_str is NULL character terminated.
+		// Note that const char*'s .c_str is NULL character terminated.
 		source = fragmentSrc.c_str();
 		glShaderSource(fragmentShader, 1, &source, 0);
 
@@ -122,6 +124,47 @@ namespace CrashEngine {
 	void Shader::Unbind() const
 	{
 		glUseProgram(0);
+	}
+
+	void Shader::SetUniformFloat(const char* name, float value)
+	{
+		int projectionLoc = glGetUniformLocation(m_RendererID, name);
+		glUniform1f(projectionLoc, value);
+	}
+
+	void Shader::SetUniformVec2(const char* name, glm::vec2 vector)
+	{
+		int projectionLoc = glGetUniformLocation(m_RendererID, name);
+		glUniform2fv(projectionLoc, 1, glm::value_ptr(vector));
+	}
+
+	void Shader::SetUniformVec3(const char* name, glm::vec3 vector)
+	{
+		int projectionLoc = glGetUniformLocation(m_RendererID, name);
+		glUniform3fv(projectionLoc, 1, glm::value_ptr(vector));
+	}
+
+	void Shader::SetUniformVec4(const char* name, glm::vec4 vector)
+	{
+		int projectionLoc = glGetUniformLocation(m_RendererID, name);
+		glUniform4fv(projectionLoc, 1, glm::value_ptr(vector));
+	}
+
+	void Shader::SetUniformMat3(const char* name, glm::mat4 matrix)
+	{
+		int projectionLoc = glGetUniformLocation(m_RendererID, name);
+		glUniformMatrix3fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(matrix));
+	}
+
+	void Shader::SetUniformMat4(const char* name, glm::mat4 matrix)
+	{
+		int projectionLoc = glGetUniformLocation(m_RendererID, name);
+		glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(matrix));
+	}
+
+	uint32_t Shader::GetID()
+	{
+		return m_RendererID;
 	}
 
 }

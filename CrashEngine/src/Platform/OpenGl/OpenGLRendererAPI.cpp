@@ -20,4 +20,8 @@ namespace CrashEngine {
 		glDrawElements(GL_TRIANGLES, vertexArray->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, nullptr);
 	}
 
+	void OpenGLRendererAPI::DrawTriangles(const std::shared_ptr<VertexArray>& vertexArray, unsigned int NumberOfVerticies)
+	{
+		glDrawArrays(GL_TRIANGLES, 0, NumberOfVerticies);
+	}
 }

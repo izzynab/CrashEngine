@@ -11,6 +11,9 @@ namespace CrashEngine {
 		virtual void Clear() override;
 
 		virtual void DrawIndexed(const std::shared_ptr<VertexArray>& vertexArray) override;
+		virtual void DrawTriangles(const std::shared_ptr<VertexArray>& vertexArray, unsigned int NumberOfVerticies) override;
+
+
 	};
 
 

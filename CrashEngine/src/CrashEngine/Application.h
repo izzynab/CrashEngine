@@ -11,9 +11,7 @@
 
 #include "CrashEngine/ImGui/ImGuiLayer.h"
 
-#include "CrashEngine/Renderer/Shader.h"
-#include "CrashEngine/Renderer/Buffer.h"
-#include "CrashEngine/Renderer/VertexArray.h"
+
 
 namespace CrashEngine {
 	class CRASH_API Application
@@ -22,7 +20,7 @@ namespace CrashEngine {
 		Application();
 		virtual ~Application();
 
-		void Run();
+		virtual void Run();
 
 		void OnEvent(Event& e);
 
@@ -40,11 +38,6 @@ namespace CrashEngine {
 		bool m_Running = true;
 		LayerStack m_LayerStack;
 
-		std::shared_ptr<Shader> m_Shader;
-		std::shared_ptr<VertexArray> m_VertexArray;
-
-		std::shared_ptr<Shader> m_BlueShader;
-		std::shared_ptr<VertexArray> m_SquareVA;
 	private:
 		static Application* s_Instance;
 	};
