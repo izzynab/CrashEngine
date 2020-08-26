@@ -29,6 +29,8 @@ namespace CrashEngine {
 
 		inline Window& GetWindow() { return *m_Window; }
 
+		//inline double GetTime() { glfwGetTime(); }
+
 		inline static Application& Get() { return *s_Instance; }
 	private:
 		bool OnWindowClose(WindowCloseEvent& e);

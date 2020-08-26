@@ -8,7 +8,11 @@
 #include "CrashEngine/Renderer/Renderer.h"
 #include "CrashEngine/Renderer/Camera.h"
 
-#include <GLFW/include/GLFW/glfw3.h>
+#include "CrashEngine/Input.h"
+#include "CrashEngine/Window.h"
+
+#include "GLFW/include/GLFW/glfw3.h"
+
 
 
 namespace CrashEngine {
@@ -109,7 +113,7 @@ namespace CrashEngine {
 
 			m_BlueShader.reset(new Shader(blueShaderVertexSrc, blueShaderFragmentSrc));
 
-			//camera.reset(new Camera(glm::vec3(0.0f, 0.0f, 3.0f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f, 1.0f, 0.0f)));
+			camera.reset(new Camera(glm::vec3(0.0f, 0.0f, 3.0f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f, 1.0f, 0.0f)));
 
 			m_BlueShader->Bind();
 
@@ -118,7 +122,7 @@ namespace CrashEngine {
 			m_BlueShader->SetUniformMat4("model", model);
 
 
-			view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
+			view = glm::lookAt(camera->Position, camera->Position + camera->Front, camera->Up);
 			m_BlueShader->SetUniformMat4("view", view);
 
 
@@ -129,21 +133,55 @@ namespace CrashEngine {
 
 		void OnUpdate() override
 		{
+			//TODO: get time func must not be glfw but crash engine api
 			float currentFrame = glfwGetTime();
-			deltaTime = currentFrame - lastFrame;
-			lastFrame = currentFrame;
+			camera->deltaTime = currentFrame - camera->lastFrame;
+			camera->lastFrame = currentFrame;
 
-		
+
+
+			float cameraSpeed = 2.5f * camera->deltaTime;
+			if (Input::IsMouseButtonPressed(CE_MOUSE_BUTTON_RIGHT))
+			{
+				if (Input::IsKeyPressed(CE_KEY_W))
+				{
+					camera->Position += cameraSpeed * camera->Front;
+				}
+				if (Input::IsKeyPressed(CE_KEY_S))
+				{
+					camera->Position -= cameraSpeed * camera->Front;
+				}
+				if (Input::IsKeyPressed(CE_KEY_A))
+				{
+					camera->Position -= glm::normalize(glm::cross(camera->Front, camera->Up)) * cameraSpeed;
+				}
+				if (Input::IsKeyPressed(CE_KEY_D))
+				{
+					camera->Position += glm::normalize(glm::cross(camera->Front, camera->Up)) * cameraSpeed;
+				}
+
+				float xpos = Input::GetMouseX();
+				float ypos = Input::GetMouseY();
+
+				camera->ChangeDirection(xpos, ypos);
+			}
+			else
+			{
+				camera->ResetMousePos();
+			}
+
+
+
+
 			RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
 			RenderCommand::Clear();
 
 			Renderer::BeginScene();
 
-			view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
+			view = glm::lookAt(camera->Position, camera->Position + camera->Front, camera->Up);
 			m_BlueShader->SetUniformMat4("view", view);
 
 			Renderer::SubmitDebug(m_SquareVA, 36);
-
 
 
 			Renderer::EndScene();
@@ -160,32 +198,7 @@ namespace CrashEngine {
 		{
 			if (event.GetEventType() == CrashEngine::EventType::KeyPressed)
 			{
-				float cameraSpeed = 2.5f * deltaTime;
 
-				CrashEngine::KeyPressedEvent& e = (CrashEngine::KeyPressedEvent&)event;
-				if (e.GetKeyCode() == CE_KEY_W)
-				{
-					CE_TRACE("w");
-					cameraPos += cameraSpeed * cameraFront;
-				}
-
-				if (e.GetKeyCode() == CE_KEY_S)
-				{
-					CE_TRACE("s");
-					cameraPos -= cameraSpeed * cameraFront;
-				}
-
-				if (e.GetKeyCode() == CE_KEY_A)
-				{
-					CE_TRACE("a");
-					cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
-				}
-
-				if (e.GetKeyCode() == CE_KEY_D)
-				{
-					CE_TRACE("d");
-					cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
-				}
 			}
 
 
@@ -193,38 +206,6 @@ namespace CrashEngine {
 			{
 				CrashEngine::MouseMovedEvent& e = (CrashEngine::MouseMovedEvent&)event;
 
-				float xpos = e.GetX();
-				float ypos = e.GetY();
-
-				if (firstMouse)
-				{
-					lastX = xpos;
-					lastY = ypos;
-					firstMouse = false;
-				}
-
-				float xoffset = xpos - lastX;
-				float yoffset = lastY - ypos;
-				lastX = xpos;
-				lastY = ypos;
-
-				float sensitivity = 0.1f;
-				xoffset *= sensitivity;
-				yoffset *= sensitivity;
-
-				yaw += xoffset;
-				pitch += yoffset;
-
-				if (pitch > 89.0f)
-					pitch = 89.0f;
-				if (pitch < -89.0f)
-					pitch = -89.0f;
-
-				glm::vec3 direction;
-				direction.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
-				direction.y = sin(glm::radians(pitch));
-				direction.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
-				cameraFront = glm::normalize(direction);
 			}
 
 		}
@@ -240,26 +221,6 @@ namespace CrashEngine {
 		glm::mat4 projection;
 
 
-		float deltaTime = 0.0f;	// Time between current frame and last frame
-		float lastFrame = 0.0f; // Time of last frame
-
-		//camera
-		glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
-		glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f,-1.0f);
-		glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
-
-		glm::vec3 direction;
-		float yaw = -90.0f;
-		float pitch = 0.f;
-
-		float lastX = 400, lastY = 300;
-		float xoffset;
-		float yoffset; // reversed since y-coordinates range from bottom to top
-
-		const float sensitivity = 0.1f;
-
-		bool firstMouse = true;
-
 
 	};
 
@@ -269,6 +230,7 @@ namespace CrashEngine {
 		Sandbox()
 		{
 			PushLayer(new ExampleLayer());
+
 		}
 		~Sandbox()
 		{

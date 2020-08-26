@@ -59,6 +59,7 @@ namespace CrashEngine {
 		glfwSetWindowUserPointer(m_Window, &m_Data);
 		SetVSync(true);
 
+		glfwSetInputMode(m_Window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
 
 		// Set GLFW callbacks
 		glfwSetWindowSizeCallback(m_Window, [](GLFWwindow* window, int width, int height)
@@ -123,12 +124,26 @@ namespace CrashEngine {
 				{
 					MouseButtonPressedEvent event(button);
 					data.EventCallback(event);
+					if (event.GetMouseButton() == 1)
+					{
+						glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+						if (glfwRawMouseMotionSupported()) { glfwSetInputMode(window, GLFW_RAW_MOUSE_MOTION, GLFW_TRUE); }
+						//TODO: implement that in snadbox
+						//make camera can move
+					}
 					break;
 				}
 				case GLFW_RELEASE:
 				{
 					MouseButtonReleasedEvent event(button);
 					data.EventCallback(event);
+					if (event.GetMouseButton() == 1)
+					{
+						glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+
+						//make camera cannot move
+					}
+					
 					break;
 				}
 				}
