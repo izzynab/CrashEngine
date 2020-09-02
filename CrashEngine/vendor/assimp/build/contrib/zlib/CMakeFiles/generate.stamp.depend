@@ -1,0 +1,13 @@
+# CMake generation dependency list for this directory.
+C:/Dev/Cmake/share/cmake-3.17/Modules/CheckCSourceCompiles.cmake
+C:/Dev/Cmake/share/cmake-3.17/Modules/CheckFunctionExists.c
+C:/Dev/Cmake/share/cmake-3.17/Modules/CheckFunctionExists.cmake
+C:/Dev/Cmake/share/cmake-3.17/Modules/CheckIncludeFile.c.in
+C:/Dev/Cmake/share/cmake-3.17/Modules/CheckIncludeFile.cmake
+C:/Dev/Cmake/share/cmake-3.17/Modules/CheckIncludeFileCXX.cmake
+C:/Dev/Cmake/share/cmake-3.17/Modules/CheckTypeSize.c.in
+C:/Dev/Cmake/share/cmake-3.17/Modules/CheckTypeSize.cmake
+C:/EngineDev/CrashEngine/CrashEngine/vendor/assimp/build/CMakeFiles/CheckTypeSize/OFF64_T.c
+C:/EngineDev/CrashEngine/CrashEngine/vendor/assimp/contrib/zlib/CMakeLists.txt
+C:/EngineDev/CrashEngine/CrashEngine/vendor/assimp/contrib/zlib/zconf.h.cmakein
+C:/EngineDev/CrashEngine/CrashEngine/vendor/assimp/contrib/zlib/zlib.pc.cmakein

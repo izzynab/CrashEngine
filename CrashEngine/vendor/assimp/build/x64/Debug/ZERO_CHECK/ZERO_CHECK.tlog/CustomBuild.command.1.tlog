@@ -1,0 +1,10 @@
+^C:\ENGINEDEV\CRASHENGINE\CRASHENGINE\VENDOR\ASSIMP\BUILD\CMAKEFILES\507FEF866EE1A0E5FF0C91C90FE59474\GENERATE.STAMP.RULE
+setlocal
+C:\Dev\Cmake\bin\cmake.exe -SC:/EngineDev/CrashEngine/CrashEngine/vendor/assimp -BC:/EngineDev/CrashEngine/CrashEngine/vendor/assimp/build --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file C:/EngineDev/CrashEngine/CrashEngine/vendor/assimp/build/Assimp.sln
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

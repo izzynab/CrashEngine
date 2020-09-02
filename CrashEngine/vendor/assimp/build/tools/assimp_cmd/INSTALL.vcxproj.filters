@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="C:\EngineDev\CrashEngine\CrashEngine\vendor\assimp\build\CMakeFiles\187f824708741e29559bda202fdb4f6b\INSTALL_force.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{C64F2322-EC3A-3096-AF9E-E629CD062244}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

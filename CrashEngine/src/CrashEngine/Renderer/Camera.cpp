@@ -1,11 +1,14 @@
 #include "cepch.h"
 #include "Camera.h"
 
-CrashEngine::Camera::Camera(glm::vec3 position, glm::vec3 front = glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f))
+CrashEngine::Camera::Camera(glm::vec3 position, float Width, float Height, glm::vec3 front, glm::vec3 up)
 {
 	Position = position;
 	Front = front;
 	Up = up;
+
+	lastX = Width / 2;
+	lastY = Height / 2;
 }
 
 CrashEngine::Camera::~Camera()

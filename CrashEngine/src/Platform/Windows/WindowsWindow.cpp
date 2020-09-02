@@ -128,8 +128,6 @@ namespace CrashEngine {
 					{
 						glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 						if (glfwRawMouseMotionSupported()) { glfwSetInputMode(window, GLFW_RAW_MOUSE_MOTION, GLFW_TRUE); }
-						//TODO: implement that in snadbox
-						//make camera can move
 					}
 					break;
 				}
@@ -140,8 +138,6 @@ namespace CrashEngine {
 					if (event.GetMouseButton() == 1)
 					{
 						glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
-
-						//make camera cannot move
 					}
 					
 					break;

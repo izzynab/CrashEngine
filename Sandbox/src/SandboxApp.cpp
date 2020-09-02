@@ -8,10 +8,15 @@
 #include "CrashEngine/Renderer/Renderer.h"
 #include "CrashEngine/Renderer/Camera.h"
 
+#include "CrashEngine/Renderer/Model.h"
+
 #include "CrashEngine/Input.h"
 #include "CrashEngine/Window.h"
 
+//TEMPORARY
 #include "GLFW/include/GLFW/glfw3.h"
+#define STB_IMAGE_IMPLEMENTATION
+#include <stb_image.h>
 
 
 
@@ -22,14 +27,13 @@ namespace CrashEngine {
 		ExampleLayer()
 			: Layer("Example")
 		{
-
 			m_SquareVA.reset(VertexArray::Create());
 
 			float vertices[] = {
-			-0.5f, -0.5f, -0.5f,
-			 0.5f, -0.5f, -0.5f,
-			 0.5f,  0.5f, -0.5f,
-			 0.5f,  0.5f, -0.5f,
+			-0.5f, -0.5f, -0.5f, 
+			 0.5f, -0.5f, -0.5f, 
+			 0.5f,  0.5f, -0.5f, 
+			 0.5f,  0.5f, -0.5f, 
 			-0.5f,  0.5f, -0.5f,
 			-0.5f, -0.5f, -0.5f,
 
@@ -77,43 +81,13 @@ namespace CrashEngine {
 			};
 			squareVB->SetLayout(layout1);
 
+
 			m_SquareVA->AddVertexBuffer(squareVB);
 
+			//m_BlueShader.reset(new Shader("Basic.vert", "Basic.frag"));
+			m_BlueShader = Shader::Create("Basic.vert", "Basic.frag");
 
-			std::string blueShaderVertexSrc = R"(
-			#version 330 core
-			
-			layout(location = 0) in vec3 a_Position;
-
-			out vec3 v_Position;
-
-			uniform mat4 model;
-			uniform mat4 view;
-			uniform mat4 projection;
-			
-			void main()
-			{
-				v_Position = a_Position;
-				gl_Position = projection * view * model * vec4(a_Position, 1.0);
-			}
-		)";
-
-			std::string blueShaderFragmentSrc = R"(
-			#version 330 core
-			
-			layout(location = 0) out vec4 color;
-
-			in vec3 v_Position;
-
-			void main()
-			{
-				color = vec4(0.2, 0.3, 0.8, 1.0);
-			}
-		)";
-
-			m_BlueShader.reset(new Shader(blueShaderVertexSrc, blueShaderFragmentSrc));
-
-			camera.reset(new Camera(glm::vec3(0.0f, 0.0f, 3.0f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f, 1.0f, 0.0f)));
+			camera.reset(new Camera(glm::vec3(0.0f, 0.0f, 3.0f), 800, 400));
 
 			m_BlueShader->Bind();
 
@@ -121,13 +95,14 @@ namespace CrashEngine {
 			model = glm::rotate(model, 30.f, glm::vec3(1.f, 1.0f, 1.0f));
 			m_BlueShader->SetUniformMat4("model", model);
 
-
 			view = glm::lookAt(camera->Position, camera->Position + camera->Front, camera->Up);
 			m_BlueShader->SetUniformMat4("view", view);
 
-
 			projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
 			m_BlueShader->SetUniformMat4("projection", projection);
+
+			backpack.reset(Model::Create("C:\\EngineDev\\CrashEngine\\Models\\backpack\\backpack.obj", false));
+			glEnable(GL_DEPTH_TEST);
 
 		}
 
@@ -178,10 +153,13 @@ namespace CrashEngine {
 
 			Renderer::BeginScene();
 
+			m_BlueShader->Bind();
 			view = glm::lookAt(camera->Position, camera->Position + camera->Front, camera->Up);
 			m_BlueShader->SetUniformMat4("view", view);
 
-			Renderer::SubmitDebug(m_SquareVA, 36);
+			backpack->Draw(m_BlueShader);
+
+			//Renderer::SubmitDebug(m_SquareVA, 36);
 
 
 			Renderer::EndScene();
@@ -211,10 +189,12 @@ namespace CrashEngine {
 		}
 
 	private:
-		std::shared_ptr<Shader> m_BlueShader;
+		//std::shared_ptr<Shader> m_BlueShader;
+		Shader* m_BlueShader;
 		std::shared_ptr<VertexArray> m_SquareVA;
 
 		std::shared_ptr<Camera> camera;
+		std::shared_ptr<Model> backpack;
 
 		glm::mat4 model;
 		glm::mat4 view;

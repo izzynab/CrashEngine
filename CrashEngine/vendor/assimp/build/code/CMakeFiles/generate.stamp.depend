@@ -1,0 +1,5 @@
+# CMake generation dependency list for this directory.
+C:/Dev/Cmake/share/cmake-3.17/Modules/FindPackageHandleStandardArgs.cmake
+C:/Dev/Cmake/share/cmake-3.17/Modules/FindPackageMessage.cmake
+C:/EngineDev/CrashEngine/CrashEngine/vendor/assimp/cmake-modules/FindRT.cmake
+C:/EngineDev/CrashEngine/CrashEngine/vendor/assimp/code/CMakeLists.txt

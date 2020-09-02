@@ -11,7 +11,7 @@ namespace CrashEngine {
 	{
 	public:
 
-		Camera(glm::vec3 position, glm::vec3 front, glm::vec3 up);
+		Camera(glm::vec3 position,float Width,float Height, glm::vec3 front = glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f));
 		~Camera();
 
 		void ChangeDirection(float xpos, float ypos);
@@ -31,7 +31,7 @@ namespace CrashEngine {
 
 		const float sensitivity = 0.1f;
 
-		float lastX = 400, lastY = 300;
+		float lastX, lastY;
 
 	private:
 

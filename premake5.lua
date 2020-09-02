@@ -15,10 +15,13 @@ IncludeDir["GLFW"] = "CrashEngine/vendor/GLFW/include"
 IncludeDir["GLAD"] = "CrashEngine/vendor/GLAD/include"
 IncludeDir["ImGui"] = "CrashEngine/vendor/imgui"
 IncludeDir["glm"] = "CrashEngine/vendor/glm"
+IncludeDir["stb"] = "CrashEngine/vendor/stb_image"
+IncludeDir["assimp"] = "CrashEngine/vendor/assimp/include"
 
 include "CrashEngine/vendor/GLFW"
 include "CrashEngine/vendor/GLAD"
 include "CrashEngine/vendor/imgui"
+include "CrashEngine/vendor/assimp"
 
 project "CrashEngine"
 	location "CrashEngine"
@@ -38,7 +41,11 @@ project "CrashEngine"
 		"%{prj.name}/src/**.h",
 		"%{prj.name}/src/**.cpp",
 		"%{prj.name}/vendor/glm/glm/**.hpp",
-		"%{prj.name}/vendor/glm/glm/**.inl"
+		"%{prj.name}/vendor/glm/glm/**.inl",
+		"%{prj.name}/vendor/assimp/include/assimp/**.hpp",
+		"%{prj.name}/vendor/assimp/include/assimp/**.inl",
+		"%{prj.name}/vendor/assimp/include/assimp/**.h",
+		"%{prj.name}/vendor/assimp/include/assimp/**.in",
 	}
 
 	defines
@@ -53,7 +60,9 @@ project "CrashEngine"
 		"%{IncludeDir.GLFW}",
 		"%{IncludeDir.GLAD}",
 		"%{IncludeDir.ImGui}",
-		"%{IncludeDir.glm}"
+		"%{IncludeDir.glm}",
+		"%{IncludeDir.stb}",
+		"%{IncludeDir.assimp}",
 	}
 
 	links 
@@ -61,7 +70,8 @@ project "CrashEngine"
 		"GLAD",
 		"GLFW",
 		"ImGui",
-		"opengl32.lib"
+		"Assimp",
+		"opengl32.lib",
 	}
 	
 
@@ -95,6 +105,7 @@ project "CrashEngine"
 		buildoptions "/MD"
 		optimize "on"
 
+
 project "Sandbox"
 	location "Sandbox"
 	kind "ConsoleApp"
@@ -114,7 +125,9 @@ project "Sandbox"
 		"CrashEngine/vendor/spdlog/include",
 		"CrashEngine/src",
 		"CrashEngine/vendor",
-		"%{IncludeDir.glm}"
+		"%{IncludeDir.glm}",
+		"%{IncludeDir.stb}",
+		"%{IncludeDir.assimp}",
 	}
 
 	links
