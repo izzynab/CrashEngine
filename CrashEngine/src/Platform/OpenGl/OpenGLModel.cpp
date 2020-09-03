@@ -16,8 +16,11 @@ namespace CrashEngine
     OpenGLModel::OpenGLModel(std::string const& path, bool gamma = false)
     {
         gammaCorrection = gamma;
+
+        stbi_set_flip_vertically_on_load(true);
         //set gamma correction
         loadModel(path);
+        stbi_set_flip_vertically_on_load(false);
     }
 
     // draws the model, and thus all its meshes
@@ -125,6 +128,7 @@ namespace CrashEngine
             for (unsigned int j = 0; j < face.mNumIndices; j++)
                 indices.push_back(face.mIndices[j]);
         }
+
         // process materials
         aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
         // we assume a convention for sampler names in the shaders. Each diffuse texture should be named
