@@ -1653,6 +1653,7 @@
     <ClInclude Include="vendor\glm\glm\vector_relational.hpp">
       <Filter>vendor\glm\glm</Filter>
     </ClInclude>
+    <ClInclude Include="src\CrashEngine\Renderer\Defines.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\CrashEngine\Application.cpp">

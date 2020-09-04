@@ -2,6 +2,7 @@
 #include "OpenGLRendererAPI.h"
 
 #include <glad/glad.h>
+#include "GLFW/glfw3.h"
 
 namespace CrashEngine {
 
@@ -14,6 +15,17 @@ namespace CrashEngine {
 	{
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	}
+
+	double OpenGLRendererAPI::GetTime()
+	{
+		return glfwGetTime();
+	}
+
+	void OpenGLRendererAPI::Enable(int nr)
+	{
+		glEnable(nr);
+	}
+
 
 	void OpenGLRendererAPI::DrawIndexed(const std::shared_ptr<VertexArray>& vertexArray)
 	{

@@ -169,6 +169,7 @@
     <ClInclude Include="src\CrashEngine\MouseButtonCodes.h" />
     <ClInclude Include="src\CrashEngine\Renderer\Buffer.h" />
     <ClInclude Include="src\CrashEngine\Renderer\Camera.h" />
+    <ClInclude Include="src\CrashEngine\Renderer\Defines.h" />
     <ClInclude Include="src\CrashEngine\Renderer\GraphicsContext.h" />
     <ClInclude Include="src\CrashEngine\Renderer\Mesh.h" />
     <ClInclude Include="src\CrashEngine\Renderer\Model.h" />

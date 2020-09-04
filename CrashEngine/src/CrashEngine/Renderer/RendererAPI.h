@@ -17,6 +17,10 @@ namespace CrashEngine {
 		virtual void SetClearColor(const glm::vec4& color) = 0;
 		virtual void Clear() = 0;
 
+		virtual double GetTime() = 0;
+
+		virtual void Enable(int nr) = 0;
+
 		virtual void DrawIndexed(const std::shared_ptr<VertexArray>& vertexArray) = 0;
 		virtual void DrawTriangles(const std::shared_ptr<VertexArray>& vertexArray, unsigned int NumberOfVerticies) = 0;
 

@@ -13,12 +13,6 @@
 #include "CrashEngine/Input.h"
 #include "CrashEngine/Window.h"
 
-//TEMPORARY
-#include "GLFW/include/GLFW/glfw3.h"
-#define STB_IMAGE_IMPLEMENTATION
-#include <stb_image.h>
-
-
 
 namespace CrashEngine {
 	class ExampleLayer : public CrashEngine::Layer
@@ -27,6 +21,9 @@ namespace CrashEngine {
 		ExampleLayer()
 			: Layer("Example")
 		{
+			camera.reset(new Camera(glm::vec3(0.0f, 0.0f, 3.0f), 800, 400));
+
+
 			m_SquareVA.reset(VertexArray::Create());
 
 			float vertices[] = {
@@ -87,8 +84,6 @@ namespace CrashEngine {
 			//m_BlueShader.reset(new Shader("Basic.vert", "Basic.frag"));
 			m_BlueShader = Shader::Create("Basic.vert", "Basic.frag");
 
-			camera.reset(new Camera(glm::vec3(0.0f, 0.0f, 3.0f), 800, 400));
-
 			m_BlueShader->Bind();
 
 			model = glm::mat4(1.0f);
@@ -102,51 +97,13 @@ namespace CrashEngine {
 			m_BlueShader->SetUniformMat4("projection", projection);
 
 			backpack.reset(Model::Create("C:\\EngineDev\\CrashEngine\\Models\\backpack\\backpack.obj", false));
-			glEnable(GL_DEPTH_TEST);
+			RenderCommand::Enable(CE_DEPTH_TEST);
 
 		}
 
 		void OnUpdate() override
 		{
-			//TODO: get time func must not be glfw but crash engine api
-			float currentFrame = glfwGetTime();
-			camera->deltaTime = currentFrame - camera->lastFrame;
-			camera->lastFrame = currentFrame;
-
-
-
-			float cameraSpeed = 2.5f * camera->deltaTime;
-			if (Input::IsMouseButtonPressed(CE_MOUSE_BUTTON_RIGHT))
-			{
-				if (Input::IsKeyPressed(CE_KEY_W))
-				{
-					camera->Position += cameraSpeed * camera->Front;
-				}
-				if (Input::IsKeyPressed(CE_KEY_S))
-				{
-					camera->Position -= cameraSpeed * camera->Front;
-				}
-				if (Input::IsKeyPressed(CE_KEY_A))
-				{
-					camera->Position -= glm::normalize(glm::cross(camera->Front, camera->Up)) * cameraSpeed;
-				}
-				if (Input::IsKeyPressed(CE_KEY_D))
-				{
-					camera->Position += glm::normalize(glm::cross(camera->Front, camera->Up)) * cameraSpeed;
-				}
-
-				float xpos = Input::GetMouseX();
-				float ypos = Input::GetMouseY();
-
-				camera->ChangeDirection(xpos, ypos);
-			}
-			else
-			{
-				camera->ResetMousePos();
-			}
-
-
-
+			camera->Update();
 
 			RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
 			RenderCommand::Clear();
@@ -192,7 +149,6 @@ namespace CrashEngine {
 		//std::shared_ptr<Shader> m_BlueShader;
 		Shader* m_BlueShader;
 		std::shared_ptr<VertexArray> m_SquareVA;
-
 		std::shared_ptr<Camera> camera;
 		std::shared_ptr<Model> backpack;
 

@@ -140,6 +140,7 @@ project "Sandbox"
 
 		defines
 		{
+
 			"CE_PLATFORM_WINDOWS"
 		}
 

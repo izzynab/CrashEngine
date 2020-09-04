@@ -17,6 +17,16 @@ namespace CrashEngine {
 			s_RendererAPI->Clear();
 		}
 
+		inline static double GetTime()
+		{
+			return s_RendererAPI->GetTime();
+		}
+
+		inline static void Enable(int nr)
+		{
+			s_RendererAPI->Enable(nr);
+		}
+
 		inline static void DrawIndexed(const std::shared_ptr<VertexArray>& vertexArray)
 		{
 			s_RendererAPI->DrawIndexed(vertexArray);
@@ -26,6 +36,8 @@ namespace CrashEngine {
 		{
 			s_RendererAPI->DrawTriangles(vertexArray, NumberOfVerticies);
 		}
+
+
 	private:
 		static RendererAPI* s_RendererAPI;
 	};
