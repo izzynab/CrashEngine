@@ -17,11 +17,13 @@ IncludeDir["ImGui"] = "CrashEngine/vendor/imgui"
 IncludeDir["glm"] = "CrashEngine/vendor/glm"
 IncludeDir["stb"] = "CrashEngine/vendor/stb_image"
 IncludeDir["assimp"] = "CrashEngine/vendor/assimp/include"
+IncludeDir["Freetype"] = "CrashEngine/vendor/freetype-lib/include"
 
 include "CrashEngine/vendor/GLFW"
 include "CrashEngine/vendor/GLAD"
 include "CrashEngine/vendor/imgui"
 include "CrashEngine/vendor/assimp"
+include "CrashEngine/vendor/freetype-lib"
 
 project "CrashEngine"
 	location "CrashEngine"
@@ -63,6 +65,7 @@ project "CrashEngine"
 		"%{IncludeDir.glm}",
 		"%{IncludeDir.stb}",
 		"%{IncludeDir.assimp}",
+		"%{IncludeDir.Freetype}",
 	}
 
 	links 
@@ -71,6 +74,7 @@ project "CrashEngine"
 		"GLFW",
 		"ImGui",
 		"Assimp",
+		"Freetype",
 		"opengl32.lib",
 	}
 	
@@ -128,6 +132,7 @@ project "Sandbox"
 		"%{IncludeDir.glm}",
 		"%{IncludeDir.stb}",
 		"%{IncludeDir.assimp}",
+		"%{IncludeDir.Freetype}",
 	}
 
 	links

@@ -184,45 +184,45 @@ namespace CrashEngine {
 		glUseProgram(0);
 	}
 
-	void OpenGLShader::SetUniformInt(const char* name, int value)
+	void OpenGLShader::SetUniformInt(std::string name, int value)
 	{
-		int projectionLoc = glGetUniformLocation(m_RendererID, name);
+		int projectionLoc = glGetUniformLocation(m_RendererID, name.c_str());
 		glUniform1i((projectionLoc), value);
 	}
 
-	void OpenGLShader::SetUniformFloat(const char* name, float value)
+	void OpenGLShader::SetUniformFloat(std::string name, float value)
 	{
-		int projectionLoc = glGetUniformLocation(m_RendererID, name);
+		int projectionLoc = glGetUniformLocation(m_RendererID, name.c_str());
 		glUniform1f(projectionLoc, value);
 	}
 
-	void OpenGLShader::SetUniformVec2(const char* name, glm::vec2 vector)
+	void OpenGLShader::SetUniformVec2(std::string name, glm::vec2 vector)
 	{
-		int projectionLoc = glGetUniformLocation(m_RendererID, name);
+		int projectionLoc = glGetUniformLocation(m_RendererID, name.c_str());
 		glUniform2fv(projectionLoc, 1, glm::value_ptr(vector));
 	}
 
-	void OpenGLShader::SetUniformVec3(const char* name, glm::vec3 vector)
+	void OpenGLShader::SetUniformVec3(std::string name, glm::vec3 vector)
 	{
-		int projectionLoc = glGetUniformLocation(m_RendererID, name);
+		int projectionLoc = glGetUniformLocation(m_RendererID, name.c_str());
 		glUniform3fv(projectionLoc, 1, glm::value_ptr(vector));
 	}
 
-	void OpenGLShader::SetUniformVec4(const char* name, glm::vec4 vector)
+	void OpenGLShader::SetUniformVec4(std::string name, glm::vec4 vector)
 	{
-		int projectionLoc = glGetUniformLocation(m_RendererID, name);
+		int projectionLoc = glGetUniformLocation(m_RendererID, name.c_str());
 		glUniform4fv(projectionLoc, 1, glm::value_ptr(vector));
 	}
 
-	void OpenGLShader::SetUniformMat3(const char* name, glm::mat4 matrix)
+	void OpenGLShader::SetUniformMat3(std::string name, glm::mat4 matrix)
 	{
-		int projectionLoc = glGetUniformLocation(m_RendererID, name);
+		int projectionLoc = glGetUniformLocation(m_RendererID, name.c_str());
 		glUniformMatrix3fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(matrix));
 	}
 
-	void OpenGLShader::SetUniformMat4(const char* name, glm::mat4 matrix)
+	void OpenGLShader::SetUniformMat4(std::string name, glm::mat4 matrix)
 	{
-		int projectionLoc = glGetUniformLocation(m_RendererID, name);
+		int projectionLoc = glGetUniformLocation(m_RendererID, name.c_str());
 		glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(matrix));
 	}
 

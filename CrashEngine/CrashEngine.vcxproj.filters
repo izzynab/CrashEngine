@@ -90,6 +90,9 @@
     <ClInclude Include="src\CrashEngine\Events\MouseEvent.h">
       <Filter>src\CrashEngine\Events</Filter>
     </ClInclude>
+    <ClInclude Include="src\CrashEngine\FileManager.h">
+      <Filter>src\CrashEngine</Filter>
+    </ClInclude>
     <ClInclude Include="src\CrashEngine\ImGui\ImGuiLayer.h">
       <Filter>src\CrashEngine\ImGui</Filter>
     </ClInclude>
@@ -115,6 +118,9 @@
       <Filter>src\CrashEngine\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\CrashEngine\Renderer\Camera.h">
+      <Filter>src\CrashEngine\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\CrashEngine\Renderer\Defines.h">
       <Filter>src\CrashEngine\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\CrashEngine\Renderer\GraphicsContext.h">
@@ -1653,7 +1659,9 @@
     <ClInclude Include="vendor\glm\glm\vector_relational.hpp">
       <Filter>vendor\glm\glm</Filter>
     </ClInclude>
-    <ClInclude Include="src\CrashEngine\Renderer\Defines.h" />
+    <ClInclude Include="src\CrashEngine\Renderer\TextRenderer.h" />
+    <ClInclude Include="src\Platform\OpenGl\OpenGLTextRenderer.h" />
+    <ClInclude Include="src\CrashEngine\Renderer\BasicShapes.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\CrashEngine\Application.cpp">
@@ -1731,10 +1739,20 @@
     <ClCompile Include="src\cepch.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\CrashEngine\Renderer\TextRenderer.cpp" />
+    <ClCompile Include="src\Platform\OpenGl\OpenGLTextRenderer.cpp" />
+    <ClCompile Include="src\CrashEngine\Renderer\BasicShapes.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="vendor\assimp\include\assimp\config.h.in">
       <Filter>vendor\assimp\include\assimp</Filter>
     </None>
+    <None Include="src\CrashEngine\Renderer\Shaders\Basic.frag" />
+    <None Include="src\CrashEngine\Renderer\Shaders\Basic.vert" />
+    <None Include="src\CrashEngine\Renderer\Shaders\Text.frag" />
+    <None Include="src\CrashEngine\Renderer\Shaders\Text.vert" />
+    <None Include="src\CrashEngine\Renderer\Shaders\pbr.vert" />
+    <None Include="src\CrashEngine\Renderer\Shaders\pbr.frag" />
+    <None Include="src\CrashEngine\Renderer\Shaders\pbrTexture.frag" />
   </ItemGroup>
 </Project>

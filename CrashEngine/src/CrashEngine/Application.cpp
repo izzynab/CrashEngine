@@ -7,11 +7,11 @@
 
 #include <GLFW/glfw3.h>
 #include <glad/glad.h>
-
 #include <glm/glm.hpp>
 
-
 #include "Input.h"
+
+
 
 namespace CrashEngine {
 
@@ -29,7 +29,7 @@ namespace CrashEngine {
 		m_ImGuiLayer = new ImGuiLayer();
 		PushOverlay(m_ImGuiLayer);
 
-		
+
 	}
 
 	Application::~Application()
@@ -80,4 +80,5 @@ namespace CrashEngine {
 		m_Running = false;
 		return true;
 	}
+
 }

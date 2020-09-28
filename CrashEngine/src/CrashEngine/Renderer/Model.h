@@ -11,10 +11,15 @@
 
 namespace CrashEngine
 {
+    enum TextureType
+    {
+        JPG, PNG, TGA
+    };
+
     class Model
     {
     public:
-        static Model* Create(std::string const& path, bool gamma = false);
+        static Model* Create(std::string const& path,TextureType type,bool gamma = false);
 
         // draws the model
         virtual void Draw(Shader* shader) = 0;

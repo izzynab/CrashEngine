@@ -36,6 +36,8 @@ namespace CrashEngine {
 
 		float lastX, lastY;
 
+		float CameraSpeed = 3.f;
+
 	private:
 
 		bool firstMouse = true;

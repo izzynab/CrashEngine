@@ -17,10 +17,10 @@ namespace CrashEngine {
 		RenderCommand::DrawIndexed(vertexArray);
 	}
 
-	void Renderer::SubmitDebug(const std::shared_ptr<VertexArray>& vertexArray, unsigned int NumberOfVerticies)
+	void Renderer::SubmitDebug(const std::shared_ptr<VertexArray>& vertexArray)
 	{
 		vertexArray->Bind();
-		RenderCommand::DrawTriangles(vertexArray, NumberOfVerticies);
+		RenderCommand::DrawTriangles(vertexArray);
 	}
 
 }

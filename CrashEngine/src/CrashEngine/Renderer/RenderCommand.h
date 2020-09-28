@@ -32,9 +32,19 @@ namespace CrashEngine {
 			s_RendererAPI->DrawIndexed(vertexArray);
 		}
 
-		inline static void DrawTriangles(const std::shared_ptr<VertexArray>& vertexArray, unsigned int NumberOfVerticies)
+		inline static void DrawTriangles(const std::shared_ptr<VertexArray>& vertexArray)
 		{
-			s_RendererAPI->DrawTriangles(vertexArray, NumberOfVerticies);
+			s_RendererAPI->DrawTriangles(vertexArray);
+		}
+
+		inline static unsigned int LoadTexture(std::string name)
+		{
+			return s_RendererAPI->LoadTexture(name);
+		}
+
+		inline static void BindTexture(unsigned int& texture, unsigned int textureNr)
+		{
+			s_RendererAPI->BindTexture(texture, textureNr);
 		}
 
 

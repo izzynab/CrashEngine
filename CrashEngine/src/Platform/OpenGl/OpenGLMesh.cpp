@@ -33,7 +33,7 @@ namespace CrashEngine
         unsigned int heightNr = 1;
         for (unsigned int i = 0; i < textures.size(); i++)
         {
-            glActiveTexture(GL_TEXTURE0 + i); // active proper texture unit before binding
+            //glActiveTexture(GL_TEXTURE0 + i); // active proper texture unit before binding
             // retrieve texture number (the N in diffuse_textureN)
             std::string number;
             std::string name = textures[i].type;
@@ -58,7 +58,7 @@ namespace CrashEngine
         glBindVertexArray(0);
 
         // always good practice to set everything back to defaults once configured.
-        glActiveTexture(GL_TEXTURE0);
+       // glActiveTexture(GL_TEXTURE0);
     }
 
     void OpenGLMesh::setupMesh()

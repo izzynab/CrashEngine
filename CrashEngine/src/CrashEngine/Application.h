@@ -12,7 +12,6 @@
 #include "CrashEngine/ImGui/ImGuiLayer.h"
 
 
-
 namespace CrashEngine {
 	class CRASH_API Application
 	{
@@ -28,8 +27,6 @@ namespace CrashEngine {
 		void PushOverlay(Layer* layer);
 
 		inline Window& GetWindow() { return *m_Window; }
-
-		//inline double GetTime() { glfwGetTime(); }
 
 		inline static Application& Get() { return *s_Instance; }
 	private:

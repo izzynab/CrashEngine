@@ -8,7 +8,7 @@ project "Assimp"
 
     files
     {
-        "include/assimp/Importer.hpp",
+  "include/assimp/Importer.hpp",
         "include/assimp/scene.h",
     }
 

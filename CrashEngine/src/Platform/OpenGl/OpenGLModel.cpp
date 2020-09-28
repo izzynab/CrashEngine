@@ -13,14 +13,26 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
+
 namespace CrashEngine
 {
     // constructor, expects a filepath to a 3D model.
-    OpenGLModel::OpenGLModel(std::string const& path, bool gamma = false)
+    OpenGLModel::OpenGLModel(std::string const& path, TextureType type, bool gamma = false)
     {
         gammaCorrection = gamma;
+        
+        switch (type)
+        {
+        case TextureType::JPG:  stbi_set_flip_vertically_on_load(true);
+            break;
 
-        stbi_set_flip_vertically_on_load(true);
+        case TextureType::PNG:  stbi_set_flip_vertically_on_load(true);
+            break;
+
+        case TextureType::TGA:  stbi_set_flip_vertically_on_load(false);
+            break;
+        }
+
         //set gamma correction
         loadModel(path);
         stbi_set_flip_vertically_on_load(false);
@@ -44,7 +56,7 @@ namespace CrashEngine
         // check for errors
         if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) // if is Not Zero
         {
-            std::cout << "ERROR::ASSIMP:: " << importer.GetErrorString() << std::endl;
+            CE_CORE_ERROR("ERROR::ASSIMP:: {}",importer.GetErrorString());
             return;
         }
         // retrieve the directory path of the filepath
@@ -191,7 +203,7 @@ namespace CrashEngine
         }
         else
         {
-            std::cout << "Texture failed to load at path: " << path << std::endl;
+            CE_CORE_ERROR("Texture failed to load at path: {}", path);
             stbi_image_free(data);
         }
 

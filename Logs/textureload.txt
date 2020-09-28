@@ -1,0 +1,4 @@
+Created new file: textureload.txt
+Diff: 0.024225
+Diff: 0.030385
+Diff: 0.030046

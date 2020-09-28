@@ -27,7 +27,7 @@ void CrashEngine::Camera::Update()
 	lastFrame = currentFrame;
 
 
-	float cameraSpeed = 2.5f * deltaTime;
+	float cameraSpeed = CameraSpeed * deltaTime;
 	if (Input::IsMouseButtonPressed(CE_MOUSE_BUTTON_RIGHT))
 	{
 		if (Input::IsKeyPressed(CE_KEY_W))

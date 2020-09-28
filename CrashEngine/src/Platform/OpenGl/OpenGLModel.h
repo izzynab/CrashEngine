@@ -15,7 +15,7 @@ namespace CrashEngine
     {
     public:
         // constructor, expects a filepath to a 3D model.
-        OpenGLModel(std::string const& path, bool gamma);
+        OpenGLModel(std::string const& path, TextureType type, bool gamma);
 
         // draws the model, and thus all its meshes
         virtual void Draw(Shader* shader) override;
