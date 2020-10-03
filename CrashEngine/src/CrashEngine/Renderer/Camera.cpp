@@ -6,14 +6,17 @@
 #include "CrashEngine/KeyCodes.h"
 #include "CrashEngine/MouseButtonCodes.h"
 
-CrashEngine::Camera::Camera(glm::vec3 position, float Width, float Height, glm::vec3 front, glm::vec3 up)
+CrashEngine::Camera::Camera(glm::vec3 position, float width, float height, glm::vec3 front, glm::vec3 up)
 {
 	Position = position;
 	Front = front;
 	Up = up;
 
-	lastX = Width / 2;
-	lastY = Height / 2;
+	lastX = width / 2;
+	lastY = height / 2;
+
+	Width = width;
+	Height = height;
 }
 
 CrashEngine::Camera::~Camera()

@@ -73,6 +73,7 @@ namespace CrashEngine {
 
 			m_Window->OnUpdate();
 		}
+
 	}
 
 	bool Application::OnWindowClose(WindowCloseEvent& e)

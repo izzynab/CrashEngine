@@ -37,16 +37,15 @@ namespace CrashEngine {
 			s_RendererAPI->DrawTriangles(vertexArray);
 		}
 
-		inline static unsigned int LoadTexture(std::string name)
+		inline static void BindTexture(const unsigned int& texture,unsigned int textureNr)
 		{
-			return s_RendererAPI->LoadTexture(name);
+			return s_RendererAPI->BindTexture(texture, textureNr);
 		}
 
-		inline static void BindTexture(unsigned int& texture, unsigned int textureNr)
+		inline static void SetViewport(float Width,float Height)
 		{
-			s_RendererAPI->BindTexture(texture, textureNr);
+			s_RendererAPI->SetViewport(Width, Height);
 		}
-
 
 	private:
 		static RendererAPI* s_RendererAPI;

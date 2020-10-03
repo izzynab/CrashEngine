@@ -1,13 +1,11 @@
 #include "cepch.h"
 #include "Mesh.h"
-
 #include "Renderer.h"
-
 #include "Platform/OpenGl/OpenGLMesh.h"
 
 namespace CrashEngine
 {
-    Mesh* CrashEngine::Mesh::Create(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures)
+    Mesh* CrashEngine::Mesh::Create(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<texture> textures)
     {
         switch (Renderer::GetAPI())
         {

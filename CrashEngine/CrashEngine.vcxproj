@@ -152,6 +152,9 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\Platform\OpenGl\OpenGLFramebuffer.h" />
+    <ClInclude Include="src\Platform\OpenGl\OpenGLTexture.h" />
+    <ClInclude Include="src\CrashEngine\Renderer\Framebuffer.h" />
     <ClInclude Include="src\Crash.h" />
     <ClInclude Include="src\CrashEngine\Application.h" />
     <ClInclude Include="src\CrashEngine\Core.h" />
@@ -193,6 +196,7 @@
     <ClInclude Include="src\Platform\Windows\WindowsInput.h" />
     <ClInclude Include="src\Platform\Windows\WindowsWindow.h" />
     <ClInclude Include="src\cepch.h" />
+    <ClInclude Include="src\CrashEngine\Renderer\Texture.h" />
     <ClInclude Include="vendor\assimp\include\assimp\BaseImporter.h" />
     <ClInclude Include="vendor\assimp\include\assimp\Bitmap.h" />
     <ClInclude Include="vendor\assimp\include\assimp\BlobIOSystem.h" />
@@ -688,6 +692,9 @@
     <ClInclude Include="vendor\glm\glm\vector_relational.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Platform\OpenGl\OpenGLFramebuffer.cpp" />
+    <ClCompile Include="src\Platform\OpenGl\OpenGLTexture.cpp" />
+    <ClCompile Include="src\CrashEngine\Renderer\Framebuffer.cpp" />
     <ClCompile Include="src\CrashEngine\Application.cpp" />
     <ClCompile Include="src\CrashEngine\ImGui\ImGuiBuild.cpp" />
     <ClCompile Include="src\CrashEngine\ImGui\ImGuiLayer.cpp" />
@@ -718,6 +725,7 @@
     <ClCompile Include="src\cepch.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="src\CrashEngine\Renderer\Texture.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="src\CrashEngine\Renderer\Shaders\Basic.frag" />

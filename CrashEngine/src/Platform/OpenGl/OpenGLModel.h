@@ -31,7 +31,7 @@ namespace CrashEngine
 
         virtual unsigned int TextureFromFile(const char* path, const std::string& directory, bool gamma) override;
 
-        std::vector<Texture> loadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName);
+        std::vector<texture> loadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName);
 
     public:
         std::vector<OpenGLMesh>  meshes;

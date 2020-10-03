@@ -17,9 +17,9 @@ namespace CrashEngine {
 		virtual void DrawIndexed(const std::shared_ptr<VertexArray>& vertexArray) override;
 		virtual void DrawTriangles(const std::shared_ptr<VertexArray>& vertexArray) override;
 
-		virtual unsigned int LoadTexture(std::string name) override;
+		virtual void BindTexture(const unsigned int& texture, unsigned int textureNr) override;
 
-		virtual void BindTexture(unsigned int& texture, unsigned int textureNr) override;
+		virtual void SetViewport(float Width, float Height) override;
 	};
 
 

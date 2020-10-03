@@ -9,7 +9,7 @@ namespace CrashEngine
     {
     public:
         // constructor
-        OpenGLMesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures);
+        OpenGLMesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<texture> textures);
 
         // render the mesh
         virtual void Draw(Shader* shader) override;

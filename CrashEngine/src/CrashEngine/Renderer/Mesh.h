@@ -16,7 +16,7 @@ namespace CrashEngine
         glm::vec3 Bitangent;
     };
 
-    struct Texture {
+    struct texture {
         unsigned int id;
         std::string type;
         std::string path;
@@ -25,14 +25,14 @@ namespace CrashEngine
     class Mesh
     {
     public:
-        static Mesh* Create(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures);
+        static Mesh* Create(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<texture> textures);
 
         // render the mesh
         virtual void Draw(Shader* shader);
 
         std::vector<Vertex>       vertices;
         std::vector<unsigned int> indices;
-        std::vector<Texture>      textures;
+        std::vector<texture>      textures;
         unsigned int VAO;
 
     };

@@ -38,7 +38,7 @@ namespace CrashEngine
 
     public:
         // model data 
-        std::vector<Texture> textures_loaded;	// stores all the textures loaded so far, optimization to make sure textures aren't loaded more than once.
+        std::vector<texture> textures_loaded;	// stores all the textures loaded so far, optimization to make sure textures aren't loaded more than once.
         std::string directory;
         bool gammaCorrection;
     };

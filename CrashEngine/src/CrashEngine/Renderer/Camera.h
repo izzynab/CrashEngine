@@ -12,7 +12,7 @@ namespace CrashEngine {
 	{
 	public:
 
-		Camera(glm::vec3 position,float Width,float Height, glm::vec3 front = glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f));
+		Camera(glm::vec3 position, float width,float height, glm::vec3 front = glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f));
 		~Camera();
 
 		void Update();
@@ -20,6 +20,9 @@ namespace CrashEngine {
 		void ChangeDirection(float xpos, float ypos);
 
 		void ResetMousePos();
+
+		inline void SetWidth(float width) { Width = width; lastX = width / 2;}
+		inline void SetHeight(float height) { Height = height; 	lastY = height / 2;}
 
 		float deltaTime = 0.0f;	// Time between current frame and last frame
 		float lastFrame = 0.0f; // Time of last frame
@@ -37,6 +40,8 @@ namespace CrashEngine {
 		float lastX, lastY;
 
 		float CameraSpeed = 3.f;
+
+		float Width, Height;
 
 	private:
 

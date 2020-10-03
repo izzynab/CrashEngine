@@ -8,6 +8,7 @@
 #include "CrashEngine/Renderer/VertexArray.h"
 #include "CrashEngine/Renderer/Renderer.h"
 #include "CrashEngine/Renderer/Camera.h"
+#include "CrashEngine/Renderer/Texture.h"
 
 #include "CrashEngine/Renderer/Model.h"
 #include "CrashEngine/Renderer/BasicShapes.h"
@@ -26,13 +27,18 @@ namespace CrashEngine {
 		ExampleLayer()
 			: Layer("Example")
 		{
-			camera.reset(new Camera(glm::vec3(0.0f, 0.0f, 3.0f), 800, 400));
-			camera->CameraSpeed = 9.f;
+			//auto window = Application::Get().GetWindow();
+
+			float Height = Application::Get().GetWindow().GetHeight();
+			float Width = Application::Get().GetWindow().GetWidth();
+
+			camera.reset(new Camera(glm::vec3(0.0f, 0.0f, 3.0f), Width, Height));
+			camera->CameraSpeed = 4.f;
 
 			pbrTextureShader = Shader::Create("pbr.vert", "pbrTexture.frag");
 			pbrTextureShader->Bind();
 
-			projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
+			projection = glm::perspective(glm::radians(45.0f), Width / Height, 0.1f, 100.0f);
 			pbrTextureShader->SetUniformMat4("projection", projection);
 
 			pbrTextureShader->SetUniformInt("albedoMap", 0);
@@ -41,14 +47,14 @@ namespace CrashEngine {
 			pbrTextureShader->SetUniformInt("roughnessMap", 3);
 			pbrTextureShader->SetUniformInt("aoMap", 4);
 
-			albedo = RenderCommand::LoadTexture("cerberus\\Cerberus_A.tga");
-			normal = RenderCommand::LoadTexture("cerberus\\Cerberus_N.tga");
-			metallic = RenderCommand::LoadTexture("cerberus\\Cerberus_M.tga");
-			roughness = RenderCommand::LoadTexture("cerberus\\Cerberus_R.tga");
-			ao = RenderCommand::LoadTexture("cerberus\\Cerberus_AO.tga");
+			albedo = Texture2D::Create("cerberus\\Cerberus_A.tga");
+			normal = Texture2D::Create("cerberus\\Cerberus_N.tga");
+			metallic = Texture2D::Create("cerberus\\Cerberus_M.tga");
+			roughness = Texture2D::Create("cerberus\\Cerberus_R.tga");
+			ao = Texture2D::Create("cerberus\\Cerberus_AO.tga");
 
 
-			gun.reset(Model::Create("C:\\EngineDev\\CrashEngine\\Models\\cerberus\\cerberus.obj", TextureType::TGA));
+			//gun.reset(Model::Create("C:\\EngineDev\\CrashEngine\\Models\\cerberus\\cerberus.obj", TextureType::TGA));
 
 
 			sphere.reset(new Sphere());
@@ -70,25 +76,22 @@ namespace CrashEngine {
 
 			view = glm::lookAt(camera->Position, camera->Position + camera->Front, camera->Up);
 
-			//pbrShader->Bind();
-			//pbrShader->SetUniformMat4("view", view);
-			//pbrShader->SetUniformVec3("camPos", camera->Position);
-			//gun->Draw(pbrShader);
-
 			pbrTextureShader->Bind();
 			pbrTextureShader->SetUniformMat4("view", view);
 			pbrTextureShader->SetUniformVec3("camPos", camera->Position);
 
-			model = glm::mat4(1.0f);
-			model = glm::scale(model, glm::vec3(3, 3, 3));
-			pbrTextureShader->SetUniformMat4("model", model);
-			gun->Draw(pbrTextureShader);
+			//uint32_t albedoID
+			RenderCommand::BindTexture(albedo->GetRendererID(), 0);
+			RenderCommand::BindTexture(normal->GetRendererID(), 1);
+			RenderCommand::BindTexture(metallic->GetRendererID(), 2);
+			RenderCommand::BindTexture(roughness->GetRendererID(), 3);
+			RenderCommand::BindTexture(ao->GetRendererID(), 4);
 
-			RenderCommand::BindTexture(albedo, 0);
-			RenderCommand::BindTexture(normal, 1);
-			RenderCommand::BindTexture(metallic, 2);
-			RenderCommand::BindTexture(roughness, 3);
-			RenderCommand::BindTexture(ao, 4);
+
+			model = glm::mat4(1.0f);
+			model = glm::scale(model, glm::vec3(1, 1, 1));
+			pbrTextureShader->SetUniformMat4("model", model);
+			//gun->Draw(pbrTextureShader);
 
 			// render rows*column number of spheres with material properties defined by textures (they all have the same material properties)
 			glm::mat4 model = glm::mat4(1.0f);
@@ -103,7 +106,7 @@ namespace CrashEngine {
 						0.0f
 					));
 					pbrTextureShader->SetUniformMat4("model", model);
-					//sphere->RenderSphere();
+					sphere->RenderSphere();
 				}
 			}
 
@@ -141,18 +144,22 @@ namespace CrashEngine {
 
 		virtual void OnImGuiRender() override
 		{
-			ImGui::Begin("Test");
-			ImGui::Text("Hello World");
-			ImGui::End();
+
 		}
 
 		void OnEvent(CrashEngine::Event& event) override
 		{
-			if (event.GetEventType() == CrashEngine::EventType::KeyPressed)
+			if (event.GetEventType() == CrashEngine::EventType::WindowResize)
 			{
+				CrashEngine::WindowResizeEvent& e = (CrashEngine::WindowResizeEvent&)event;
+				camera->SetHeight(e.GetHeight());
+				camera->SetWidth(e.GetWidth());
 
+				projection = glm::perspective(glm::radians(45.0f), (float)e.GetWidth() / (float)e.GetHeight(), 0.1f, 100.0f);
+				pbrTextureShader->Bind();
+				pbrTextureShader->SetUniformMat4("projection", projection);
+				RenderCommand::SetViewport(e.GetWidth(), e.GetHeight());
 			}
-
 
 			if (event.GetEventType() == CrashEngine::EventType::MouseMoved)
 			{
@@ -197,11 +204,11 @@ namespace CrashEngine {
 
 		std::shared_ptr<Sphere> sphere;
 
-		unsigned int albedo;
-		unsigned int normal;
-		unsigned int metallic;
-		unsigned int roughness;
-		unsigned int ao;
+		std::shared_ptr<Texture2D> albedo;
+		std::shared_ptr<Texture2D> normal;
+		std::shared_ptr<Texture2D> metallic;
+		std::shared_ptr<Texture2D> roughness;
+		std::shared_ptr<Texture2D> ao;
 	};
 
 	class Sandbox : public CrashEngine::Application

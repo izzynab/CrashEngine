@@ -24,8 +24,9 @@ namespace CrashEngine {
 		virtual void DrawIndexed(const std::shared_ptr<VertexArray>& vertexArray) = 0;
 		virtual void DrawTriangles(const std::shared_ptr<VertexArray>& vertexArray) = 0;
 
-		virtual unsigned int LoadTexture(std::string name) = 0;
-		virtual void BindTexture(unsigned int& texture, unsigned int textureNr) = 0;
+		virtual void BindTexture(const unsigned int& texture, unsigned int textureNr) = 0;
+
+		virtual void SetViewport(float Width, float Height) = 0;
 
 		inline static API GetAPI() { return s_API; }
 	private:
