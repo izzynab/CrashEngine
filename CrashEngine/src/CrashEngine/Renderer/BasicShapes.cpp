@@ -97,76 +97,59 @@ namespace CrashEngine {
     void Sphere::RenderSphere()
     {
         SphereVA->Bind();
-        Renderer::SubmitDebug(SphereVA);
+        Renderer::Submit(SphereVA,true);
     }
 
 
     Square::Square()
     {
-        std::vector<float> vertices = {
-            -0.5f, -0.5f, -0.5f,
-             0.5f, -0.5f, -0.5f,
-             0.5f,  0.5f, -0.5f,
-             0.5f,  0.5f, -0.5f,
-            -0.5f,  0.5f, -0.5f,
-            -0.5f, -0.5f, -0.5f,
-
-            -0.5f, -0.5f,  0.5f,
-             0.5f, -0.5f,  0.5f,
-             0.5f,  0.5f,  0.5f,
-             0.5f,  0.5f,  0.5f,
-            -0.5f,  0.5f,  0.5f,
-            -0.5f, -0.5f,  0.5f,
-
-            -0.5f,  0.5f,  0.5f,
-            -0.5f,  0.5f, -0.5f,
-            -0.5f, -0.5f, -0.5f,
-            -0.5f, -0.5f, -0.5f,
-            -0.5f, -0.5f,  0.5f,
-            -0.5f,  0.5f,  0.5f,
-
-             0.5f,  0.5f,  0.5f,
-             0.5f,  0.5f, -0.5f,
-             0.5f, -0.5f, -0.5f,
-             0.5f, -0.5f, -0.5f,
-             0.5f, -0.5f,  0.5f,
-             0.5f,  0.5f,  0.5f,
-
-            -0.5f, -0.5f, -0.5f,
-             0.5f, -0.5f, -0.5f,
-             0.5f, -0.5f,  0.5f,
-             0.5f, -0.5f,  0.5f,
-            -0.5f, -0.5f,  0.5f,
-            -0.5f, -0.5f, -0.5f,
-
-            -0.5f,  0.5f, -0.5f,
-             0.5f,  0.5f, -0.5f,
-             0.5f,  0.5f,  0.5f,
-             0.5f,  0.5f,  0.5f,
-            -0.5f,  0.5f,  0.5f,
-            -0.5f,  0.5f, -0.5f,
-        };
-
         SquareVA.reset(VertexArray::Create());
-        //SquareIB.reset(IndexBuffer::Create(&indices[0], indices.size()));
+       // SquareIB.reset(IndexBuffer::Create(&indices[0], indices.size()));
 
-        std::shared_ptr<VertexBuffer> SphereVB;
-        //SphereVB.reset(VertexBuffer::Create(&vertices[0], sizeof(data)));
+        std::shared_ptr<VertexBuffer> SquareVB;
+        SquareVB.reset(VertexBuffer::Create(&vertices[0], vertices.size() * sizeof(float)));
 
         BufferLayout layout1 = {
             { ShaderDataType::Float3, "a_Position" },
             { ShaderDataType::Float2, "a_TexCoords"},
-            { ShaderDataType::Float3, "a_Normals"}
+            { ShaderDataType::Float3, "a_Normals"},
         };
-        SphereVB->SetLayout(layout1);
+        SquareVB->SetLayout(layout1);
 
-        SquareVA->AddVertexBuffer(SphereVB);
+        SquareVA->AddVertexBuffer(SquareVB);
         //SquareVA->SetIndexBuffer(SquareIB);
+        
     }
 
 
     void Square::RenderSquare()
     {
-       // Renderer::SubmitDebug(SquareVA,);
+        SquareVA->Bind();
+        Renderer::SubmitDebug(SquareVA,36);
+    }
+
+
+    Quad::Quad()
+    {
+        QuadVA.reset(VertexArray::Create());
+        //SquareIB.reset(IndexBuffer::Create(&indices[0], indices.size()));
+
+        std::shared_ptr<VertexBuffer> QuadVB;
+        QuadVB.reset(VertexBuffer::Create(&vertices[0], vertices.size() * sizeof(float)));
+
+        BufferLayout layout1 = {
+            { ShaderDataType::Float3, "a_Position" },
+            { ShaderDataType::Float2, "a_TexCoords"}
+        };
+        QuadVB->SetLayout(layout1);
+
+        QuadVA->AddVertexBuffer(QuadVB);
+
+    }
+
+    void Quad::RenderQuad()
+    {
+        QuadVA->Bind();
+        Renderer::SubmitDebug(QuadVA,6);
     }
 }

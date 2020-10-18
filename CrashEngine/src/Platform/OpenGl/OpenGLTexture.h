@@ -19,6 +19,8 @@ namespace CrashEngine {
 
 		virtual void SetData(void* data, uint32_t size) override;
 
+		virtual void CreateMipmap() override;
+
 		virtual void Bind(uint32_t slot = 0) const override;
 
 		virtual bool operator==(const Texture& other) const override
@@ -27,6 +29,59 @@ namespace CrashEngine {
 		}
 	private:
 		std::string m_Path;
+		uint32_t m_Width, m_Height;
+		uint32_t m_RendererID;
+		GLenum m_InternalFormat, m_DataFormat;
+	};
+
+	class OpenGLTextureHDR : public TextureHDR
+	{
+	public:
+		OpenGLTextureHDR(const std::string& path);
+		virtual ~OpenGLTextureHDR();
+
+		virtual uint32_t GetWidth() const override { return m_Width; }
+		virtual uint32_t GetHeight() const override { return m_Height; }
+		virtual uint32_t GetRendererID() const override { return m_RendererID; }
+
+		virtual void SetData(void* data, uint32_t size) override;
+
+		virtual void CreateMipmap() override;
+
+		virtual void Bind(uint32_t slot = 0) const override;
+
+		virtual bool operator==(const Texture& other) const override
+		{
+			return m_RendererID == ((OpenGLTextureHDR&)other).m_RendererID;
+		}
+	private:
+		std::string m_Path;
+		uint32_t m_Width, m_Height;
+		uint32_t m_RendererID;
+		GLenum m_InternalFormat, m_DataFormat;
+	};
+
+	class OpenGLCubemapTexture : public CubemapTexture
+	{
+	public:
+		OpenGLCubemapTexture(uint32_t width, uint32_t height, bool mipmap);
+		virtual ~OpenGLCubemapTexture();
+
+		virtual uint32_t GetWidth() const override { return m_Width; }
+		virtual uint32_t GetHeight() const override { return m_Height; }
+		virtual uint32_t GetRendererID() const override { return m_RendererID; }
+
+		virtual void SetData(void* data, uint32_t size) override;
+
+		virtual void CreateMipmap() override;
+
+		virtual void Bind(uint32_t slot = 0) const override;
+
+		virtual bool operator==(const Texture& other) const override
+		{
+			return m_RendererID == ((OpenGLCubemapTexture&)other).m_RendererID;
+		}
+	private:
 		uint32_t m_Width, m_Height;
 		uint32_t m_RendererID;
 		GLenum m_InternalFormat, m_DataFormat;

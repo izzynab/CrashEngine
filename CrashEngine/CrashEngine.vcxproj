@@ -174,7 +174,7 @@
     <ClInclude Include="src\CrashEngine\Renderer\BasicShapes.h" />
     <ClInclude Include="src\CrashEngine\Renderer\Buffer.h" />
     <ClInclude Include="src\CrashEngine\Renderer\Camera.h" />
-    <ClInclude Include="src\CrashEngine\Renderer\Defines.h" />
+    <ClInclude Include="src\CrashEngine\Defines.h" />
     <ClInclude Include="src\CrashEngine\Renderer\GraphicsContext.h" />
     <ClInclude Include="src\CrashEngine\Renderer\Mesh.h" />
     <ClInclude Include="src\CrashEngine\Renderer\Model.h" />
@@ -728,11 +728,19 @@
     <ClCompile Include="src\CrashEngine\Renderer\Texture.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="src\CrashEngine\Renderer\Shaders\background.frag" />
+    <None Include="src\CrashEngine\Renderer\Shaders\background.vert" />
     <None Include="src\CrashEngine\Renderer\Shaders\Basic.frag" />
     <None Include="src\CrashEngine\Renderer\Shaders\Basic.vert" />
+    <None Include="src\CrashEngine\Renderer\Shaders\brdf.frag" />
+    <None Include="src\CrashEngine\Renderer\Shaders\brdf.vert" />
+    <None Include="src\CrashEngine\Renderer\Shaders\cubemap.vert" />
+    <None Include="src\CrashEngine\Renderer\Shaders\equirectangularToCubemap.frag" />
+    <None Include="src\CrashEngine\Renderer\Shaders\irradiance.frag" />
     <None Include="src\CrashEngine\Renderer\Shaders\pbr.frag" />
     <None Include="src\CrashEngine\Renderer\Shaders\pbr.vert" />
     <None Include="src\CrashEngine\Renderer\Shaders\pbrTexture.frag" />
+    <None Include="src\CrashEngine\Renderer\Shaders\prefilter.frag" />
     <None Include="src\CrashEngine\Renderer\Shaders\Text.frag" />
     <None Include="src\CrashEngine\Renderer\Shaders\Text.vert" />
     <None Include="vendor\assimp\include\assimp\config.h.in" />

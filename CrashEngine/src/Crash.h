@@ -10,7 +10,7 @@
 #include "CrashEngine/Input.h"
 #include "CrashEngine/KeyCodes.h"
 #include "CrashEngine/MouseButtonCodes.h"
-#include "CrashEngine/Renderer/Defines.h"
+#include "CrashEngine/Defines.h"
 
 //-----Entry Point------------------
 #include "CrashEngine/EntryPoint.h"

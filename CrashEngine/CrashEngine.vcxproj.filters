@@ -120,9 +120,6 @@
     <ClInclude Include="src\CrashEngine\Renderer\Camera.h">
       <Filter>src\CrashEngine\Renderer</Filter>
     </ClInclude>
-    <ClInclude Include="src\CrashEngine\Renderer\Defines.h">
-      <Filter>src\CrashEngine\Renderer</Filter>
-    </ClInclude>
     <ClInclude Include="src\CrashEngine\Renderer\GraphicsContext.h">
       <Filter>src\CrashEngine\Renderer</Filter>
     </ClInclude>
@@ -1666,6 +1663,9 @@
     <ClInclude Include="src\CrashEngine\Renderer\Framebuffer.h" />
     <ClInclude Include="src\Platform\OpenGl\OpenGLFramebuffer.h" />
     <ClInclude Include="src\Platform\OpenGl\OpenGLTexture.h" />
+    <ClInclude Include="src\CrashEngine\Defines.h">
+      <Filter>src\CrashEngine\Renderer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\CrashEngine\Application.cpp">
@@ -1762,5 +1762,13 @@
     <None Include="src\CrashEngine\Renderer\Shaders\pbr.vert" />
     <None Include="src\CrashEngine\Renderer\Shaders\pbr.frag" />
     <None Include="src\CrashEngine\Renderer\Shaders\pbrTexture.frag" />
+    <None Include="src\CrashEngine\Renderer\Shaders\cubemap.vert" />
+    <None Include="src\CrashEngine\Renderer\Shaders\equirectangularToCubemap.frag" />
+    <None Include="src\CrashEngine\Renderer\Shaders\irradiance.frag" />
+    <None Include="src\CrashEngine\Renderer\Shaders\prefilter.frag" />
+    <None Include="src\CrashEngine\Renderer\Shaders\brdf.vert" />
+    <None Include="src\CrashEngine\Renderer\Shaders\brdf.frag" />
+    <None Include="src\CrashEngine\Renderer\Shaders\background.vert" />
+    <None Include="src\CrashEngine\Renderer\Shaders\background.frag" />
   </ItemGroup>
 </Project>

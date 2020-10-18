@@ -11,16 +11,16 @@ namespace CrashEngine {
 	{
 	}
 
-	void Renderer::Submit(const std::shared_ptr<VertexArray>& vertexArray)
+	void Renderer::Submit(const std::shared_ptr<VertexArray>& vertexArray, bool strip)
 	{
 		vertexArray->Bind();
-		RenderCommand::DrawIndexed(vertexArray);
+		RenderCommand::DrawIndexed(vertexArray, strip);
 	}
 
-	void Renderer::SubmitDebug(const std::shared_ptr<VertexArray>& vertexArray)
+	void Renderer::SubmitDebug(const std::shared_ptr<VertexArray>& vertexArray, unsigned int trianglesNumber)
 	{
 		vertexArray->Bind();
-		RenderCommand::DrawTriangles(vertexArray);
+		RenderCommand::DrawTriangles(vertexArray, trianglesNumber);
 	}
 
 }

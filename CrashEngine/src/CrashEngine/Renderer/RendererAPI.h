@@ -21,10 +21,13 @@ namespace CrashEngine {
 
 		virtual void Enable(int nr) = 0;
 
-		virtual void DrawIndexed(const std::shared_ptr<VertexArray>& vertexArray) = 0;
-		virtual void DrawTriangles(const std::shared_ptr<VertexArray>& vertexArray) = 0;
+		virtual void DepthFunc(int nr) = 0;
+
+		virtual void DrawIndexed(const std::shared_ptr<VertexArray>& vertexArray, bool strip) = 0;
+		virtual void DrawTriangles(const std::shared_ptr<VertexArray>& vertexArray, unsigned int trianglesNumber) = 0;
 
 		virtual void BindTexture(const unsigned int& texture, unsigned int textureNr) = 0;
+		virtual void BindCubemap(const unsigned int& texture, unsigned int textureNr) = 0;
 
 		virtual void SetViewport(float Width, float Height) = 0;
 

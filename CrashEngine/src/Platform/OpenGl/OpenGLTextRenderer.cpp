@@ -94,7 +94,8 @@ namespace CrashEngine {
 	{
 		Shader* shader = Shader::Create("Text.vert", "Text.frag");
 
-		glm::mat4 projection = glm::ortho(0.0f, 800.0f, 0.0f, 600.0f);
+		glm::mat4 projection = glm::ortho(0.0f, 1280.f, 0.0f, 720.f);
+		projection = glm::scale(projection, glm::vec3(1, -1, 1));
 		shader->Bind();
 		shader->SetUniformMat4("projection", projection);
 
