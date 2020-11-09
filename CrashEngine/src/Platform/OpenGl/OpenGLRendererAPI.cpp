@@ -47,7 +47,6 @@ namespace CrashEngine {
 
 	void OpenGLRendererAPI::DrawTriangles(const std::shared_ptr<VertexArray>& vertexArray, unsigned int trianglesNumber)
 	{
-		//TODO: make this works not just for cube
 		glDrawArrays(GL_TRIANGLES, 0, trianglesNumber);
 	}
 

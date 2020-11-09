@@ -10,7 +10,7 @@ namespace CrashEngine {
         std::vector<glm::vec3> positions;
         std::vector<glm::vec2> uv;
         std::vector<glm::vec3> normals;
-        std::vector<uint32_t> indices;
+        std::vector<unsigned int> indices;
 
         const unsigned int X_SEGMENTS = 64;
         const unsigned int Y_SEGMENTS = 64;
@@ -55,7 +55,7 @@ namespace CrashEngine {
         indexCount = indices.size();
 
         std::vector<float> data;
-        for (unsigned int i = 0; i < positions.size(); ++i)
+        for (std::size_t i = 0; i < positions.size(); ++i)
         {
             data.push_back(positions[i].x);
             data.push_back(positions[i].y);
@@ -81,9 +81,9 @@ namespace CrashEngine {
 
 
         BufferLayout layout1 = {
-            { ShaderDataType::Float3, "a_Position" },
-            { ShaderDataType::Float2, "a_TexCoords"},
-            { ShaderDataType::Float3, "a_Normals"}
+            { ShaderDataType::Float3, "aPosition" },
+            { ShaderDataType::Float2, "aTexCoords"},
+            { ShaderDataType::Float3, "aNormals"}
         };
         SphereVB->SetLayout(layout1);
 
@@ -110,9 +110,9 @@ namespace CrashEngine {
         SquareVB.reset(VertexBuffer::Create(&vertices[0], vertices.size() * sizeof(float)));
 
         BufferLayout layout1 = {
-            { ShaderDataType::Float3, "a_Position" },
-            { ShaderDataType::Float2, "a_TexCoords"},
-            { ShaderDataType::Float3, "a_Normals"},
+            { ShaderDataType::Float3, "aPosition" },
+            { ShaderDataType::Float2, "aTexCoords"},
+            { ShaderDataType::Float3, "aNormals"},
         };
         SquareVB->SetLayout(layout1);
 
@@ -138,8 +138,8 @@ namespace CrashEngine {
         QuadVB.reset(VertexBuffer::Create(&vertices[0], vertices.size() * sizeof(float)));
 
         BufferLayout layout1 = {
-            { ShaderDataType::Float3, "a_Position" },
-            { ShaderDataType::Float2, "a_TexCoords"}
+            { ShaderDataType::Float3, "aPosition" },
+            { ShaderDataType::Float2, "aTexCoords"}
         };
         QuadVB->SetLayout(layout1);
 

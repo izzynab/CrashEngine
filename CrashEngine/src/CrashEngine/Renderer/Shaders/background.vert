@@ -1,10 +1,10 @@
 #version 330 core
 layout (location = 0) in vec3 a_Position;
 
+out vec3 WorldPos;
+
 uniform mat4 projection;
 uniform mat4 view;
-
-out vec3 WorldPos;
 
 void main()
 {

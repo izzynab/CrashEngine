@@ -102,5 +102,6 @@ void main()
 
     prefilteredColor = prefilteredColor / totalWeight;
 
-    FragColor = vec4(prefilteredColor, 1.0);
+    //vec3 envColor = textureLod(environmentMap, WorldPos, 0).rgb;
+    FragColor = vec4(prefilteredColor, 1.0);//TODO: when mip map is on level 4 one side of prefilter map is all green
 }

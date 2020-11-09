@@ -21,6 +21,7 @@ namespace CrashEngine{
 
 		virtual void Resize(uint32_t width, uint32_t height) = 0;
 		virtual void SetTexture(int texTarget, uint32_t textureID, int mipMapLevel) = 0;
+		virtual void SetNewTexture(uint32_t width, uint32_t height) = 0;
 
 		virtual uint32_t GetColorAttachmentRendererID() const = 0;
 

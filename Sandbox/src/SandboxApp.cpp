@@ -36,25 +36,14 @@ namespace CrashEngine {
 			camera.reset(new Camera(glm::vec3(0.0f, 0.0f, 3.0f), Width, Height));
 			camera->CameraSpeed = 4.f;
 
-			pbrTextureShader = Shader::Create("pbr.vert", "pbrTexture.frag");
-			pbrTextureShader->Bind();
-
 			projection = glm::perspective(glm::radians(45.0f), Width / Height, 0.1f, 100.0f);
-			projection = glm::scale(projection, glm::vec3(1, -1, 1));
-			pbrTextureShader->SetUniformMat4("projection", projection);
-			pbrTextureShader->SetUniformInt("albedoMap", 0);
-			pbrTextureShader->SetUniformInt("normalMap", 1);
-			pbrTextureShader->SetUniformInt("metallicMap", 2);
-			pbrTextureShader->SetUniformInt("roughnessMap", 3);
-			pbrTextureShader->SetUniformInt("aoMap", 4);
-
-
+			
 
 			pbrShader = Shader::Create("pbr.vert", "pbr.frag");
 			pbrShader->Bind();
 
 			pbrShader->SetUniformMat4("projection", projection);
-			pbrShader->SetUniformVec3("albedo", glm::vec3(0.5f, 0.0f, 0.0f));
+			pbrShader->SetUniformVec3("albedo", glm::vec3(1.0f, 0.0f, 1.0f));
 			pbrShader->SetUniformFloat("ao", 1.0f);
 			pbrShader->SetUniformInt("irradianceMap", 0);
 			pbrShader->SetUniformInt("prefilterMap", 1);
@@ -71,26 +60,53 @@ namespace CrashEngine {
 
 			basicShader = Shader::Create("Basic.vert", "Basic.frag");
 
+
+			pbrTextureShader = Shader::Create("pbr.vert", "pbrTexture.frag");
+			pbrTextureShader->Bind();
+
+
+			pbrTextureShader->SetUniformMat4("projection", projection);
+			pbrTextureShader->SetUniformInt("albedoMap", 0);
+			pbrTextureShader->SetUniformInt("normalMap", 1);
+			pbrTextureShader->SetUniformInt("metallicMap", 2);
+			pbrTextureShader->SetUniformInt("roughnessMap", 3);
+			pbrTextureShader->SetUniformInt("aoMap", 4);
+
+			pbrTextureShader->SetUniformInt("irradianceMap", 5);
+			pbrTextureShader->SetUniformInt("prefilterMap", 6);
+			pbrTextureShader->SetUniformInt("brdfLUT", 7);
+
+
+			
+			albedo = Texture2D::Create("cerberus\\cerberus_A.tga");
+			normal = Texture2D::Create("gold\\normal.png");
+			metallic = Texture2D::Create("gold\\metallic.png");
+			roughness = Texture2D::Create("gold\\roughness.png");
+			ao = Texture2D::Create("gold\\ao.jpg");
+
 			/*albedo = Texture2D::Create("cerberus\\Cerberus_A.tga");
 			normal = Texture2D::Create("cerberus\\Cerberus_N.tga");
 			metallic = Texture2D::Create("cerberus\\Cerberus_M.tga");
 			roughness = Texture2D::Create("cerberus\\Cerberus_R.tga");
 			ao = Texture2D::Create("cerberus\\Cerberus_AO.tga");*/
 
+			gun.reset(Model::Create("C:\\EngineDev\\CrashEngine\\Models\\cerberus\\cerberus.obj", TextureType::TGA));
 
 			// pbr: setup framebuffer
 			FramebufferSpecification spec;
-			spec.Height = 512;//TODO: check is this shauld be 512 or window size
-			spec.Width = 512;
+			spec.Height = 1080;
+			spec.Width = 2560;
+
+			renderFramebuffer = Framebuffer::Create(spec);
+
 			Framebuffer = Framebuffer::Create(spec);
 			Framebuffer->Bind();
 
+
 			Renderbuffer = Renderbuffer::Create();
-			Renderbuffer->SetStorage(CE_DEPTH_COMPONENT24, 512, 512);
+			Renderbuffer->SetStorage(CE_DEPTH_COMPONENT24, 1920, 1080);
 			Renderbuffer->AttachToFramebuffer();
 
-
-			//gun.reset(Model::Create("C:\\EngineDev\\CrashEngine\\Models\\cerberus\\cerberus.obj", TextureType::TGA));
 
 
 			// initialize default shapes
@@ -105,12 +121,11 @@ namespace CrashEngine {
 			RenderCommand::DepthFunc(CE_LEQUAL);
 
 
-			//TODO: hdr texture doesnt work
 			// pbr: load the HDR environment map
-			HDR = Texture2D::Create("hdr\\14-Hamarikyu_Bridge_B_8k.jpg");
-			
+			HDR = TextureHDR::Create("hdr\\14-Hamarikyu_Bridge_B_3k.hdr");
+
 			// pbr: setup cubemap to render to and attach to framebuffer
-			Cubemap = CubemapTexture::Create(512, 512, true);
+			Cubemap = CubemapTexture::Create(1080, 1080, true);
 
 
 			// pbr: set up projection and view matrices for capturing data onto the 6 cubemap face directions
@@ -132,7 +147,8 @@ namespace CrashEngine {
 			equirectangularToCubemapShader->SetUniformMat4("projection", captureProjection);
 			RenderCommand::BindTexture(HDR->GetRendererID(), 0);
 
-			RenderCommand::SetViewport(512, 512);
+			RenderCommand::SetViewport(1080, 1080);
+			Framebuffer->Bind();
 			for (unsigned int i = 0; i < 6; ++i)
 			{
 				equirectangularToCubemapShader->SetUniformMat4("view", captureViews[i]);
@@ -147,7 +163,7 @@ namespace CrashEngine {
 			Cubemap->CreateMipmap();
 
 			// pbr: create an irradiance cubemap, and re-scale capture FBO to irradiance scale.
-			Irradiancemap = CubemapTexture::Create(32, 32, true);
+			Irradiancemap = CubemapTexture::Create(32, 32, false);//TODO: more that 512 pixels make irradiance map wrong because when there is more than 512 cubemap is scaled and irrradiance map captures smaller section of cubemap
 			Framebuffer->Bind();
 			Renderbuffer->Bind();
 			Renderbuffer->SetStorage(CE_DEPTH_COMPONENT24, 32, 32);
@@ -157,7 +173,7 @@ namespace CrashEngine {
 			irradianceShader->Bind();
 			irradianceShader->SetUniformInt("environmentMap", 0);
 			irradianceShader->SetUniformMat4("projection", captureProjection);
-			Cubemap->Bind(0);
+			RenderCommand::BindCubemap(Cubemap->GetRendererID(),0);
 
 
 			RenderCommand::SetViewport(32, 32); // don't forget to configure the viewport to the capture dimensions.
@@ -172,19 +188,18 @@ namespace CrashEngine {
 			Framebuffer->Unbind();
 	
 
+
 			// pbr: create a pre-filter cubemap, and re-scale capture FBO to pre-filter scale.
 			Prefiltermap = CubemapTexture::Create(128, 128, true);
 			Prefiltermap->CreateMipmap();
 
-
 			// pbr: run a quasi monte-carlo simulation on the environment lighting to create a prefilter (cube)map.
-
 			prefilterShader->Bind();
 			prefilterShader->SetUniformInt("environmentMap", 0);
 			prefilterShader->SetUniformMat4("projection", captureProjection);
-			Cubemap->Bind();
-			Framebuffer->Bind();
+			RenderCommand::BindCubemap(Cubemap->GetRendererID(), 0);
 
+			Framebuffer->Bind();
 			unsigned int maxMipLevels = 5;
 			for (unsigned int mip = 0; mip < maxMipLevels; ++mip)
 			{
@@ -215,12 +230,13 @@ namespace CrashEngine {
 			Framebuffer->Bind();
 			Renderbuffer->Bind();
 			Renderbuffer->SetStorage(CE_DEPTH_COMPONENT24, 512, 512);
-			Framebuffer->SetTexture(CE_COLOR_ATTACHMENT0, brdfLUTTexture->GetRendererID(), 0);
+			Framebuffer->SetTexture(CE_TEXTURE_2D, brdfLUTTexture->GetRendererID(), 0);
 
 			RenderCommand::SetViewport(512, 512);
 			brdfShader->Bind();
 			RenderCommand::Clear();
 			quad->RenderQuad();
+
 			Framebuffer->Unbind();
 			
 
@@ -231,48 +247,69 @@ namespace CrashEngine {
 			backgroundShader->Bind();
 			backgroundShader->SetUniformMat4("projection", projection);
 
+			UniformBufferLayout uniformLayout = {
+			{ ShaderDataType::Mat4, "projection" },
+			{ ShaderDataType::Mat4, "view"},
+			};
+
+			m_MatrixUB.reset(UniformBuffer::Create(uniformLayout,0));
+			m_MatrixUB->linkShader(pbrShader->GetID(), "matricies");
+			m_MatrixUB->linkShader(pbrTextureShader->GetID(), "matricies");
+			m_MatrixUB->linkShader(backgroundShader->GetID(), "matricies");
+
+			m_MatrixUB->setData("projection", glm::value_ptr(projection));
+			m_MatrixUB->setData("view", glm::value_ptr(projection));
+
+
 
 			RenderCommand::SetViewport(Width, Height);
-
-
-
-
-
 		}
 
 		void OnUpdate() override
 		{
 			camera->Update();
-			
-			//TODO: this framebuffer doesnt work
-			Framebuffer->Unbind();
-			RenderCommand::SetClearColor({ 1.f, 1.f, 0.3f, 1.0f });
+
+			renderFramebuffer->Bind();
+
 			RenderCommand::Clear();
+			RenderCommand::SetClearColor({ 1.f, 0.f, 0.0f, 1.0f });
 
 			Renderer::BeginScene();
 
 			view = glm::lookAt(camera->Position, camera->Position + camera->Front, camera->Up);
+			
+			pbrTextureShader->Bind();
+			pbrTextureShader->SetUniformMat4("view", view);
+			pbrTextureShader->SetUniformVec3("camPos", camera->Position);
+
+
+			RenderCommand::BindTexture(albedo->GetRendererID(), 0);
+			RenderCommand::BindTexture(normal->GetRendererID(), 1);
+			RenderCommand::BindTexture(metallic->GetRendererID(), 2);
+			RenderCommand::BindTexture(roughness->GetRendererID(), 3);
+			RenderCommand::BindTexture(ao->GetRendererID(), 4);
+
+			RenderCommand::BindCubemap(Irradiancemap->GetRendererID(), 5);
+			RenderCommand::BindCubemap(Prefiltermap->GetRendererID(), 6);
+			RenderCommand::BindTexture(brdfLUTTexture->GetRendererID(), 7);
+
+			model = glm::mat4(1.0f);
+			model = glm::translate(model, glm::vec3(4, 1, 1));
+			pbrTextureShader->SetUniformMat4("model", model);
+			//gun->Draw(pbrTextureShader);
+			sphere->RenderSphere();
 
 			pbrShader->Bind();
 			pbrShader->SetUniformMat4("view", view);
 			pbrShader->SetUniformVec3("camPos", camera->Position);
 
-
-			/*RenderCommand::BindTexture(albedo->GetRendererID(), 0);
-			RenderCommand::BindTexture(normal->GetRendererID(), 1);
-			RenderCommand::BindTexture(metallic->GetRendererID(), 2);
-			RenderCommand::BindTexture(roughness->GetRendererID(), 3);
-			RenderCommand::BindTexture(ao->GetRendererID(), 4);*/
-
 			RenderCommand::BindCubemap(Irradiancemap->GetRendererID(), 0);
 			RenderCommand::BindCubemap(Prefiltermap->GetRendererID(), 1);
 			RenderCommand::BindTexture(brdfLUTTexture->GetRendererID(), 2);
 
-
 			model = glm::mat4(1.0f);
 			model = glm::scale(model, glm::vec3(1, 1, 1));
 			pbrShader->SetUniformMat4("model", model);
-			//gun->Draw(pbrTextureShader);
 
 			// render rows*column number of spheres with material properties defined by textures (they all have the same material properties)
 			glm::mat4 model = glm::mat4(1.0f);
@@ -281,7 +318,7 @@ namespace CrashEngine {
 				pbrShader->SetUniformFloat("metallic", (float)row / (float)nrRows);
 				for (int col = 0; col < nrColumns; ++col)
 				{
-					pbrShader->SetUniformFloat("roughness", glm::clamp((float)col / (float)nrColumns, 0.05f, 1.0f));
+					pbrShader->SetUniformFloat("roughness", glm::clamp((float)col / (float)nrColumns, 0.05f, 1.0f));//TODO: when rougness is low normal doesnt work and lighting dont make good spheres
 					model = glm::mat4(1.0f);
 					model = glm::translate(model, glm::vec3(
 						(float)(col - (nrColumns / 2)) * spacing,
@@ -294,59 +331,49 @@ namespace CrashEngine {
 			}
 
 			// render light source (simply re-render sphere at light positions)
-				   // this looks a bit off as we use the same shader, but it'll make their positions obvious and 
-				   // keeps the codeprint small.
+			// this looks a bit off as we use the same shader, but it'll make their positions obvious and 
+			// keeps the codeprint small.
 			for (unsigned int i = 0; i < sizeof(lightPositions) / sizeof(lightPositions[0]); ++i)
 			{
 				glm::vec3 newPos = lightPositions[i] + glm::vec3(sin(RenderCommand::GetTime() * 5.0) * 5.0, 0.0, 0.0);
 				newPos = lightPositions[i];
+				pbrShader->Bind();
 				pbrShader->SetUniformVec3("lightPositions[" + std::to_string(i) + "]", newPos);
 				pbrShader->SetUniformVec3("lightColors[" + std::to_string(i) + "]", lightColors[i]);
-
 				model = glm::mat4(1.0f);
 				model = glm::translate(model, newPos);
 				model = glm::scale(model, glm::vec3(0.5f));
 				pbrShader->SetUniformMat4("model", model);
 				//sphere->RenderSphere();
+
+				pbrTextureShader->Bind();
+				pbrTextureShader->SetUniformVec3("lightPositions[" + std::to_string(i) + "]", newPos);
+				pbrTextureShader->SetUniformVec3("lightColors[" + std::to_string(i) + "]", lightColors[i]);
 			}
 
-
+			
 			// render skybox (render as last to prevent overdraw)
 			backgroundShader->Bind();
 			backgroundShader->SetUniformMat4("view", view);
 			RenderCommand::BindCubemap(Cubemap->GetRendererID(), 0);
-			//RenderCommand::BindCubemap(IrradianceMap, 0); // display irradiance map
-			//RenderCommand::BindCubemap(Prefiltermap->GetRendererID(), 0); // display prefilter map
+			//RenderCommand::BindCubemap(Irradiancemap->GetRendererID(), 0); // display irradiance map used to diffuse light
+			//RenderCommand::BindCubemap(Prefiltermap->GetRendererID(), 0); // display prefilter map used to specular light
 
-			//TODO: this square is black
 			square->RenderSquare();
 
-			basicShader->Bind();
-			RenderCommand::BindTexture(HDR->GetRendererID(), 0);
-			equirectangularToCubemapShader->Bind();
-			//brdfShader->Bind();
-			quad->RenderQuad();
-
-
-			//FPS counter
-			/*double currentTime = RenderCommand::GetTime();
-			double fps1 = currentTime - lastTime;
-			lastTime = currentTime;
-
-			int fps2 = 1/fps1;
-			std::string fps = std::to_string(fps2);
-			textRenderer->RenderText(fps, 0.0f, 0.0f, 1.0f, glm::vec3(1, 1, 1));*/
-
 			Renderer::EndScene();
-			
-			uint32_t fb = Framebuffer->GetColorAttachmentRendererID();
+			renderFramebuffer->Unbind();
 
-			Framebuffer->Unbind();
+			RenderCommand::Clear();
+			RenderCommand::SetClearColor(glm::vec4(1,1,0,1));
+			basicShader->Bind();
+			RenderCommand::BindTexture(renderFramebuffer->GetColorAttachmentRendererID(), 0);
+			quad->RenderQuad();
 		}
 
 		virtual void OnImGuiRender() override
 		{
-			/*bool s = true;
+			bool s = true;
 			bool* show = &s;
 
 			static bool opt_fullscreen_persistant = true;
@@ -394,24 +421,29 @@ namespace CrashEngine {
 				ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
 
 
+
 				ImGui::Begin("Render context");
 				ImVec2 WindowView = ImVec2(ImGui::GetWindowWidth(), ImGui::GetWindowHeight() - 40);
 
-				ImGui::Image((void*)fb, WindowView);
+				
+				ImGui::Image((void*)renderFramebuffer->GetColorAttachmentRendererID(), WindowView,ImVec2(0,1),ImVec2(1,0));
+				//renderFramebuffer->Resize(WindowView.y, WindowView.x); //this make screen black
+				renderFramebuffer->SetNewTexture(WindowView.x, WindowView.y);
 
 				RenderCommand::SetViewport(WindowView.x, WindowView.y);
 
-				projection = glm::perspective(glm::radians(45.0f), (float)WindowView.x / (float)WindowView.y, 0.1f, 100.0f);
-				projection = glm::scale(projection, glm::vec3(1, -1, 1));
+				projection = glm::perspective(glm::radians(45.0f), (float)WindowView.x / (float)WindowView.y, 0.1f, 100.0f);		
 
 				pbrTextureShader->Bind();
 				pbrTextureShader->SetUniformMat4("projection", projection);
+
+				pbrShader->Bind();
+				pbrShader->SetUniformMat4("projection", projection);
+
+				backgroundShader->Bind();
+				backgroundShader->SetUniformMat4("projection", projection);
+
 				ImGui::End();
-
-
-
-
-
 			}
 			else
 			{
@@ -441,7 +473,7 @@ namespace CrashEngine {
 				ImGui::EndMenuBar();
 			}
 
-			ImGui::End();*/
+			ImGui::End();
 		}
 
 		void OnEvent(CrashEngine::Event& event) override
@@ -453,7 +485,7 @@ namespace CrashEngine {
 				camera->SetWidth(e.GetWidth());
 
 				//projection = glm::perspective(glm::radians(45.0f), (float)e.GetWidth() / (float)e.GetHeight(), 0.1f, 100.0f);
-				//projection = glm::scale(projection, glm::vec3(1, -1, 1));
+				//
 				//pbrTextureShader->Bind();
 				//pbrTextureShader->SetUniformMat4("projection", projection);
 
@@ -470,6 +502,7 @@ namespace CrashEngine {
 
 	private:
 		std::shared_ptr<VertexArray> m_SquareVA;
+		std::shared_ptr<UniformBuffer> m_MatrixUB;
 		std::shared_ptr<Camera> camera;
 		std::shared_ptr<Model> backpack;
 		std::shared_ptr<Model> gun;
@@ -518,18 +551,23 @@ namespace CrashEngine {
 		std::shared_ptr<Texture2D> roughness;
 		std::shared_ptr<Texture2D> ao;
 
-		std::shared_ptr<Texture2D> HDR;
+		std::shared_ptr<Texture2D> albedo1;
+		std::shared_ptr<Texture2D> normal1;
+		std::shared_ptr<Texture2D> metallic1;
+		std::shared_ptr<Texture2D> roughness1;
+		std::shared_ptr<Texture2D> ao1;
+
+		std::shared_ptr<TextureHDR> HDR;
 		std::shared_ptr<CubemapTexture> Cubemap;
 		std::shared_ptr<CubemapTexture> Irradiancemap;
 		std::shared_ptr<CubemapTexture> Prefiltermap;
 		std::shared_ptr<Texture2D> brdfLUTTexture;
 
 
+		std::shared_ptr<Framebuffer> renderFramebuffer;
 
 		std::shared_ptr<Framebuffer> Framebuffer;
 		std::shared_ptr<Renderbuffer> Renderbuffer;
-
-		uint32_t fb;
 	};
 
 	class Sandbox : public CrashEngine::Application

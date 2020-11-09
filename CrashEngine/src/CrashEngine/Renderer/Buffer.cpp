@@ -31,4 +31,16 @@ namespace CrashEngine {
 		return nullptr;
 	}
 
+	UniformBuffer* UniformBuffer::Create(const UniformBufferLayout& layout, uint32_t index)
+	{
+		switch (Renderer::GetAPI())
+		{
+		case RendererAPI::API::None:    CE_CORE_ASSERT(false, "RendererAPI::None is currently not supported!"); return nullptr;
+		case RendererAPI::API::OpenGL:  return new OpenGLUniformBuffer(layout,index);
+		}
+
+		CE_CORE_ASSERT(false, "Unknown RendererAPI!");
+		return nullptr;
+	}
+
 }

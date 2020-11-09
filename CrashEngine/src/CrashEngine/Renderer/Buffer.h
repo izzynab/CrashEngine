@@ -36,8 +36,6 @@ namespace CrashEngine {
 		uint32_t Offset;
 		bool Normalized;
 
-		BufferElement() {}
-
 		BufferElement(ShaderDataType type, const std::string& name, bool normalized = false)
 			: Name(name), Type(type), Size(ShaderDataTypeSize(type)), Offset(0), Normalized(normalized)
 		{
@@ -68,7 +66,7 @@ namespace CrashEngine {
 	class BufferLayout
 	{
 	public:
-		BufferLayout() {}
+		BufferLayout() {};
 
 		BufferLayout(const std::initializer_list<BufferElement>& elements)
 			: m_Elements(elements)
@@ -100,6 +98,79 @@ namespace CrashEngine {
 		uint32_t m_Stride = 0;
 	};
 
+
+	static uint32_t UniformShaderDataTypeSize(ShaderDataType type)
+	{
+		switch (type)
+		{
+		case ShaderDataType::Float:    return 4;
+		case ShaderDataType::Float2:   return 4 * 2;
+		case ShaderDataType::Float3:   return 4 * 4;
+		case ShaderDataType::Float4:   return 4 * 4;
+		case ShaderDataType::Mat3:     return 4 * 3 * 3;
+		case ShaderDataType::Mat4:     return 4 * 4 * 4;
+		case ShaderDataType::Int:      return 4;
+		case ShaderDataType::Int2:     return 4 * 2;
+		case ShaderDataType::Int3:     return 4 * 3;
+		case ShaderDataType::Int4:     return 4 * 4;
+		case ShaderDataType::Bool:     return 4;
+		}
+
+		CE_CORE_ASSERT(false, "Unknown ShaderDataType!");
+		return 0;
+	}
+
+	struct UniformBufferElement
+	{
+		std::string Name;
+		ShaderDataType Type;
+		uint32_t Size;
+		uint32_t Offset;
+		bool Normalized;
+
+		UniformBufferElement(ShaderDataType type, const std::string& name, bool normalized = false)
+			: Name(name), Type(type), Size(UniformShaderDataTypeSize(type)), Offset(0), Normalized(normalized)
+		{
+		}
+
+	};
+
+	class UniformBufferLayout
+	{
+	public:
+		UniformBufferLayout() {};
+
+		UniformBufferLayout(const std::initializer_list<UniformBufferElement>& elements)
+			: m_Elements(elements)
+		{
+			CalculateOffsetsAndStride();
+		}
+
+		inline uint32_t GetStride() const { return m_Stride; }
+		inline const std::vector<UniformBufferElement>& GetElements() const { return m_Elements; }
+
+		std::vector<UniformBufferElement>::iterator begin() { return m_Elements.begin(); }
+		std::vector<UniformBufferElement>::iterator end() { return m_Elements.end(); }
+		std::vector<UniformBufferElement>::const_iterator begin() const { return m_Elements.begin(); }
+		std::vector<UniformBufferElement>::const_iterator end() const { return m_Elements.end(); }
+	private:
+		void CalculateOffsetsAndStride()
+		{
+			uint32_t offset = 0;
+			m_Stride = 0;
+			for (auto& element : m_Elements)
+			{
+				element.Offset = offset;
+				offset += element.Size;
+				m_Stride += element.Size;
+			}
+		}
+	private:
+		std::vector<UniformBufferElement> m_Elements;
+		uint32_t m_Stride = 0;
+	};
+
+
 	class VertexBuffer
 	{
 	public:
@@ -114,6 +185,7 @@ namespace CrashEngine {
 		static VertexBuffer* Create(float* vertices, uint32_t size);
 	};
 
+
 	class IndexBuffer
 	{
 	public:
@@ -125,6 +197,22 @@ namespace CrashEngine {
 		virtual uint32_t GetCount() const = 0;
 
 		static IndexBuffer* Create(uint32_t* indices, uint32_t size);
+	};
+
+
+	class UniformBuffer
+	{
+	public:
+		virtual ~UniformBuffer() {}
+
+		virtual void Bind() const = 0;
+		virtual void Unbind() const = 0;
+		
+		virtual void linkShader(uint32_t sharedID, std::string name) = 0;
+		virtual void setData(std::string name, void* data) = 0;
+
+		static UniformBuffer* Create(const UniformBufferLayout& layout,uint32_t index);
+
 	};
 
 }

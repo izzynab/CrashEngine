@@ -31,6 +31,9 @@
 #define CE_TEXTURE_CUBE_MAP_SEAMLESS	 0x884F
 #define CE_PROGRAM_POINT_SIZE			 0x8642
 
+#define CE_TEXTURE_1D 0x0DE0
+#define CE_TEXTURE_2D 0x0DE1
+
 #define CE_NEVER                          0x0200
 #define CE_LESS                           0x0201
 #define CE_EQUAL                          0x0202

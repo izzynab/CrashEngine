@@ -35,4 +35,22 @@ namespace CrashEngine {
 		uint32_t m_Count;
 	};
 
+	class OpenGLUniformBuffer : public UniformBuffer
+	{
+	public:
+		OpenGLUniformBuffer(const UniformBufferLayout& layout, uint32_t index);
+		virtual ~OpenGLUniformBuffer();
+
+		virtual void Bind() const;
+		virtual void Unbind() const;
+
+		virtual void linkShader(uint32_t sharedID, std::string name) override;
+		virtual void setData(std::string name, void* data) override;
+
+	private:
+		uint32_t m_RendererID;
+		uint32_t m_index;
+
+		std::vector<UniformBufferElement> elements;
+	};
 }

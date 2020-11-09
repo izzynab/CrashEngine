@@ -29,7 +29,10 @@ namespace CrashEngine {
 			glDeleteTextures(1, &m_DepthAttachment);
 		}
 
-		glCreateFramebuffers(1, &m_RendererID);
+		//glCreateFramebuffers(1, &m_RendererID);
+		//glBindFramebuffer(GL_FRAMEBUFFER, m_RendererID);
+
+		glGenFramebuffers(1, &m_RendererID);
 		glBindFramebuffer(GL_FRAMEBUFFER, m_RendererID);
 
 		glCreateTextures(GL_TEXTURE_2D, 1, &m_ColorAttachment);
@@ -48,12 +51,13 @@ namespace CrashEngine {
 		CE_CORE_ASSERT(glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE, "Framebuffer is incomplete!");
 
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
 	}
 
 	void OpenGLFramebuffer::Bind()
 	{
 		glBindFramebuffer(GL_FRAMEBUFFER, m_RendererID);
-		glViewport(0, 0, m_Specification.Width, m_Specification.Height);
+		//glViewport(0, 0, m_Specification.Width, m_Specification.Height);
 	}
 
 	void OpenGLFramebuffer::Unbind()
@@ -76,8 +80,14 @@ namespace CrashEngine {
 
 	void OpenGLFramebuffer::SetTexture(int texTarget, uint32_t textureID, int mipMapLevel)
 	{
-		glBindFramebuffer(GL_FRAMEBUFFER, m_RendererID);
+		//glBindFramebuffer(GL_FRAMEBUFFER, m_RendererID);
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, texTarget, textureID, mipMapLevel);
+	}
+
+	void OpenGLFramebuffer::SetNewTexture(uint32_t width, uint32_t height)
+	{
+		glBindTexture(GL_TEXTURE_2D, m_ColorAttachment);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
 	}
 
 
@@ -95,7 +105,8 @@ namespace CrashEngine {
 
 	void OpenGLRenderbuffer::Invalidate()
 	{
-		glCreateRenderbuffers(1, &m_RendererID);
+		//glCreateRenderbuffers(1, &m_RendererID);
+		glGenRenderbuffers(1, &m_RendererID);
 	}
 
 	void OpenGLRenderbuffer::Bind()

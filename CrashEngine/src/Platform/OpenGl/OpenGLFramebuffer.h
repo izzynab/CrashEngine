@@ -18,6 +18,7 @@ namespace CrashEngine
 
 		virtual void Resize(uint32_t width, uint32_t height) override;
 		virtual void SetTexture(int texTarget, uint32_t textureID, int mipMapLevel) override;
+		virtual void SetNewTexture(uint32_t width, uint32_t height) override;
 
 		virtual uint32_t GetColorAttachmentRendererID() const override { return m_ColorAttachment; }
 
