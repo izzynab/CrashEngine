@@ -69,8 +69,8 @@ namespace CrashEngine {
 		glBindBuffer(GL_UNIFORM_BUFFER, m_RendererID);
 		glBufferData(GL_UNIFORM_BUFFER, layout.GetStride(), NULL, GL_STATIC_DRAW);
 		glBindBuffer(GL_UNIFORM_BUFFER, 0);
-		glBindBufferRange(GL_UNIFORM_BUFFER, index, m_RendererID, 0, layout.GetStride());
-
+		//glBindBufferRange(GL_UNIFORM_BUFFER, index, m_RendererID, 0, layout.GetStride());
+		glBindBufferBase(GL_UNIFORM_BUFFER, index, m_RendererID);
 		elements = layout.GetElements();
 		
 	}
@@ -92,14 +92,14 @@ namespace CrashEngine {
 
 	void OpenGLUniformBuffer::linkShader(uint32_t sharedID, std::string name)
 	{
-		unsigned int uniformBlockIndexRed = glGetUniformBlockIndex(sharedID, name.c_str());
-		glUniformBlockBinding(sharedID, uniformBlockIndexRed, 0);
+		unsigned int uniformBlockIndex = glGetUniformBlockIndex(sharedID, name.c_str());
+		glUniformBlockBinding(sharedID, uniformBlockIndex, m_index);
 	}
 
 	void OpenGLUniformBuffer::setData(std::string name, void* data)
 	{
-		uint32_t offset;
-		uint32_t size;
+		uint32_t offset = 0;
+		uint32_t size = 0;
 
 		for (auto& element : elements)
 		{

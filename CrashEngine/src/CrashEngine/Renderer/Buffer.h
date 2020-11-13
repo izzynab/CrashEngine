@@ -157,12 +157,15 @@ namespace CrashEngine {
 		void CalculateOffsetsAndStride()
 		{
 			uint32_t offset = 0;
+			uint32_t LastSize = 0;
 			m_Stride = 0;
 			for (auto& element : m_Elements)
 			{
+				if (offset % element.Size != 0) offset = offset - LastSize + element.Size;
 				element.Offset = offset;
 				offset += element.Size;
 				m_Stride += element.Size;
+				LastSize = element.Size;
 			}
 		}
 	private:

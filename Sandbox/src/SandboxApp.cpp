@@ -36,13 +36,12 @@ namespace CrashEngine {
 			camera.reset(new Camera(glm::vec3(0.0f, 0.0f, 3.0f), Width, Height));
 			camera->CameraSpeed = 4.f;
 
-			projection = glm::perspective(glm::radians(45.0f), Width / Height, 0.1f, 100.0f);
+			glm::mat4 projection = glm::perspective(glm::radians(45.0f), Width / Height, 0.1f, 100.0f);
 			
 
 			pbrShader = Shader::Create("pbr.vert", "pbr.frag");
 			pbrShader->Bind();
 
-			pbrShader->SetUniformMat4("projection", projection);
 			pbrShader->SetUniformVec3("albedo", glm::vec3(1.0f, 0.0f, 1.0f));
 			pbrShader->SetUniformFloat("ao", 1.0f);
 			pbrShader->SetUniformInt("irradianceMap", 0);
@@ -65,7 +64,6 @@ namespace CrashEngine {
 			pbrTextureShader->Bind();
 
 
-			pbrTextureShader->SetUniformMat4("projection", projection);
 			pbrTextureShader->SetUniformInt("albedoMap", 0);
 			pbrTextureShader->SetUniformInt("normalMap", 1);
 			pbrTextureShader->SetUniformInt("metallicMap", 2);
@@ -104,7 +102,7 @@ namespace CrashEngine {
 
 
 			Renderbuffer = Renderbuffer::Create();
-			Renderbuffer->SetStorage(CE_DEPTH_COMPONENT24, 1920, 1080);
+			Renderbuffer->SetStorage(CE_DEPTH_COMPONENT24, 2560, 1080);
 			Renderbuffer->AttachToFramebuffer();
 
 
@@ -238,28 +236,20 @@ namespace CrashEngine {
 			quad->RenderQuad();
 
 			Framebuffer->Unbind();
-			
 
-
-			// initialize static shader uniforms before rendering
-			pbrShader->Bind();
-			pbrShader->SetUniformMat4("projection", projection);
-			backgroundShader->Bind();
-			backgroundShader->SetUniformMat4("projection", projection);
 
 			UniformBufferLayout uniformLayout = {
-			{ ShaderDataType::Mat4, "projection" },
-			{ ShaderDataType::Mat4, "view"},
+				{ ShaderDataType::Mat4, "projection" },
+				{ ShaderDataType::Mat4, "view"},
 			};
 
-			m_MatrixUB.reset(UniformBuffer::Create(uniformLayout,0));
-			m_MatrixUB->linkShader(pbrShader->GetID(), "matricies");
-			m_MatrixUB->linkShader(pbrTextureShader->GetID(), "matricies");
-			m_MatrixUB->linkShader(backgroundShader->GetID(), "matricies");
+			m_MatrixUB.reset(UniformBuffer::Create(uniformLayout, 0));
+			m_MatrixUB->linkShader(pbrShader->GetID(), "Matrices");
+			m_MatrixUB->linkShader(pbrTextureShader->GetID(), "Matrices");
+			m_MatrixUB->linkShader(backgroundShader->GetID(), "Matrices");
 
 			m_MatrixUB->setData("projection", glm::value_ptr(projection));
-			m_MatrixUB->setData("view", glm::value_ptr(projection));
-
+			
 
 
 			RenderCommand::SetViewport(Width, Height);
@@ -276,10 +266,12 @@ namespace CrashEngine {
 
 			Renderer::BeginScene();
 
-			view = glm::lookAt(camera->Position, camera->Position + camera->Front, camera->Up);
-			
+			glm::mat4 view = glm::lookAt(camera->Position, camera->Position + camera->Front, camera->Up);
+			m_MatrixUB->setData("view", glm::value_ptr(view));
+
+
 			pbrTextureShader->Bind();
-			pbrTextureShader->SetUniformMat4("view", view);
+			//pbrTextureShader->SetUniformMat4("view", view);
 			pbrTextureShader->SetUniformVec3("camPos", camera->Position);
 
 
@@ -300,7 +292,6 @@ namespace CrashEngine {
 			sphere->RenderSphere();
 
 			pbrShader->Bind();
-			pbrShader->SetUniformMat4("view", view);
 			pbrShader->SetUniformVec3("camPos", camera->Position);
 
 			RenderCommand::BindCubemap(Irradiancemap->GetRendererID(), 0);
@@ -350,25 +341,16 @@ namespace CrashEngine {
 				pbrTextureShader->SetUniformVec3("lightPositions[" + std::to_string(i) + "]", newPos);
 				pbrTextureShader->SetUniformVec3("lightColors[" + std::to_string(i) + "]", lightColors[i]);
 			}
-
 			
 			// render skybox (render as last to prevent overdraw)
 			backgroundShader->Bind();
-			backgroundShader->SetUniformMat4("view", view);
 			RenderCommand::BindCubemap(Cubemap->GetRendererID(), 0);
-			//RenderCommand::BindCubemap(Irradiancemap->GetRendererID(), 0); // display irradiance map used to diffuse light
-			//RenderCommand::BindCubemap(Prefiltermap->GetRendererID(), 0); // display prefilter map used to specular light
 
 			square->RenderSquare();
 
 			Renderer::EndScene();
 			renderFramebuffer->Unbind();
 
-			RenderCommand::Clear();
-			RenderCommand::SetClearColor(glm::vec4(1,1,0,1));
-			basicShader->Bind();
-			RenderCommand::BindTexture(renderFramebuffer->GetColorAttachmentRendererID(), 0);
-			quad->RenderQuad();
 		}
 
 		virtual void OnImGuiRender() override
@@ -420,28 +402,24 @@ namespace CrashEngine {
 				ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
 				ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
 
-
-
 				ImGui::Begin("Render context");
-				ImVec2 WindowView = ImVec2(ImGui::GetWindowWidth(), ImGui::GetWindowHeight() - 40);
+				ImVec2 CurrentWindowView = ImVec2(ImGui::GetWindowWidth(), ImGui::GetWindowHeight() - 40);
+				ImGui::Image((void*)renderFramebuffer->GetColorAttachmentRendererID(), CurrentWindowView, ImVec2(0, 1), ImVec2(1, 0));
 
-				
-				ImGui::Image((void*)renderFramebuffer->GetColorAttachmentRendererID(), WindowView,ImVec2(0,1),ImVec2(1,0));
-				//renderFramebuffer->Resize(WindowView.y, WindowView.x); //this make screen black
-				renderFramebuffer->SetNewTexture(WindowView.x, WindowView.y);
+				if (SceneWindowSize.x != CurrentWindowView.x || SceneWindowSize.y != CurrentWindowView.y)
+				{
+					//renderFramebuffer->Resize(WindowView.y, WindowView.x); //this make screen black
+					renderFramebuffer->SetNewTexture(CurrentWindowView.x, CurrentWindowView.y);
 
-				RenderCommand::SetViewport(WindowView.x, WindowView.y);
+					RenderCommand::SetViewport(CurrentWindowView.x, CurrentWindowView.y);
+					SceneWindowSize = CurrentWindowView;
 
-				projection = glm::perspective(glm::radians(45.0f), (float)WindowView.x / (float)WindowView.y, 0.1f, 100.0f);		
+					glm::mat4 projection = glm::perspective(glm::radians(45.0f), (float)CurrentWindowView.x / (float)CurrentWindowView.y, 0.1f, 100.0f);
 
-				pbrTextureShader->Bind();
-				pbrTextureShader->SetUniformMat4("projection", projection);
+					m_MatrixUB->setData("projection", glm::value_ptr(projection));
 
-				pbrShader->Bind();
-				pbrShader->SetUniformMat4("projection", projection);
+				}
 
-				backgroundShader->Bind();
-				backgroundShader->SetUniformMat4("projection", projection);
 
 				ImGui::End();
 			}
@@ -484,12 +462,7 @@ namespace CrashEngine {
 				camera->SetHeight(e.GetHeight());
 				camera->SetWidth(e.GetWidth());
 
-				//projection = glm::perspective(glm::radians(45.0f), (float)e.GetWidth() / (float)e.GetHeight(), 0.1f, 100.0f);
-				//
-				//pbrTextureShader->Bind();
-				//pbrTextureShader->SetUniformMat4("projection", projection);
 
-				//RenderCommand::SetViewport(e.GetWidth(), e.GetHeight());
 			}
 
 			if (event.GetEventType() == CrashEngine::EventType::MouseMoved)
@@ -501,6 +474,8 @@ namespace CrashEngine {
 		}
 
 	private:
+		ImVec2 SceneWindowSize = ImVec2(0,0);
+
 		std::shared_ptr<VertexArray> m_SquareVA;
 		std::shared_ptr<UniformBuffer> m_MatrixUB;
 		std::shared_ptr<Camera> camera;
@@ -519,8 +494,8 @@ namespace CrashEngine {
 		Shader* backgroundShader;
 
 		glm::mat4 model;
-		glm::mat4 view;
-		glm::mat4 projection;
+		//glm::mat4 view;
+		//glm::mat4 projection;
 
 		double lastTime = 0;
 	
