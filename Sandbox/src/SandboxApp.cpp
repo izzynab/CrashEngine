@@ -88,7 +88,7 @@ namespace CrashEngine {
 			roughness = Texture2D::Create("cerberus\\Cerberus_R.tga");
 			ao = Texture2D::Create("cerberus\\Cerberus_AO.tga");*/
 
-			gun.reset(Model::Create("C:\\EngineDev\\CrashEngine\\Models\\cerberus\\cerberus.obj", TextureType::TGA));
+			gun.reset(Model::Create("C:\\EngineDev\\CrashEngine\\Models\\sphereFlat.obj", TextureType::TGA));
 
 			// pbr: setup framebuffer
 			FramebufferSpecification spec;
@@ -317,7 +317,10 @@ namespace CrashEngine {
 						0.0f
 					));
 					pbrShader->SetUniformMat4("model", model);
-					sphere->RenderSphere();
+					pbrShader->SetUniformVec3("albedo", glm::vec3(1.0f, 0.0f, 1.0f));
+					//sphere->RenderSphere();
+					//square->RenderSquare();
+					gun->Draw(pbrShader);
 				}
 			}
 
@@ -329,13 +332,14 @@ namespace CrashEngine {
 				glm::vec3 newPos = lightPositions[i] + glm::vec3(sin(RenderCommand::GetTime() * 5.0) * 5.0, 0.0, 0.0);
 				newPos = lightPositions[i];
 				pbrShader->Bind();
+				pbrShader->SetUniformVec3("albedo", glm::vec3(1.0f, 1.0f, 1.0f));
 				pbrShader->SetUniformVec3("lightPositions[" + std::to_string(i) + "]", newPos);
 				pbrShader->SetUniformVec3("lightColors[" + std::to_string(i) + "]", lightColors[i]);
 				model = glm::mat4(1.0f);
 				model = glm::translate(model, newPos);
 				model = glm::scale(model, glm::vec3(0.5f));
 				pbrShader->SetUniformMat4("model", model);
-				//sphere->RenderSphere();
+				sphere->RenderSphere();
 
 				pbrTextureShader->Bind();
 				pbrTextureShader->SetUniformVec3("lightPositions[" + std::to_string(i) + "]", newPos);
@@ -500,13 +504,13 @@ namespace CrashEngine {
 		double lastTime = 0;
 	
 		// lights
-		glm::vec3 lightPositions[12] = {
+		glm::vec3 lightPositions[4] = {
 			glm::vec3(-10.0f,  10.0f, 10.0f),
 			glm::vec3(10.0f,  10.0f, 10.0f),
 			glm::vec3(-10.0f, -10.0f, 10.0f),
 			glm::vec3(10.0f, -10.0f, 10.0f),
 		};
-		glm::vec3 lightColors[12] = {
+		glm::vec3 lightColors[4] = {
 			glm::vec3(300.0f, 300.0f, 300.0f),
 			glm::vec3(300.0f, 300.0f, 300.0f),
 			glm::vec3(300.0f, 300.0f, 300.0f),
