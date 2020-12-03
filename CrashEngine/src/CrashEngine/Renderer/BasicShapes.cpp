@@ -96,7 +96,6 @@ namespace CrashEngine {
 
     void Sphere::RenderSphere()
     {
-        SphereVA->Bind();
         Renderer::Submit(SphereVA,true);
     }
 

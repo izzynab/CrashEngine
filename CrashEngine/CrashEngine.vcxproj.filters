@@ -75,6 +75,9 @@
     <ClInclude Include="src\CrashEngine\Core.h">
       <Filter>src\CrashEngine</Filter>
     </ClInclude>
+    <ClInclude Include="src\CrashEngine\Defines.h">
+      <Filter>src\CrashEngine</Filter>
+    </ClInclude>
     <ClInclude Include="src\CrashEngine\EntryPoint.h">
       <Filter>src\CrashEngine</Filter>
     </ClInclude>
@@ -114,10 +117,16 @@
     <ClInclude Include="src\CrashEngine\MouseButtonCodes.h">
       <Filter>src\CrashEngine</Filter>
     </ClInclude>
+    <ClInclude Include="src\CrashEngine\Renderer\BasicShapes.h">
+      <Filter>src\CrashEngine\Renderer</Filter>
+    </ClInclude>
     <ClInclude Include="src\CrashEngine\Renderer\Buffer.h">
       <Filter>src\CrashEngine\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\CrashEngine\Renderer\Camera.h">
+      <Filter>src\CrashEngine\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\CrashEngine\Renderer\Framebuffer.h">
       <Filter>src\CrashEngine\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\CrashEngine\Renderer\GraphicsContext.h">
@@ -141,6 +150,12 @@
     <ClInclude Include="src\CrashEngine\Renderer\Shader.h">
       <Filter>src\CrashEngine\Renderer</Filter>
     </ClInclude>
+    <ClInclude Include="src\CrashEngine\Renderer\TextRenderer.h">
+      <Filter>src\CrashEngine\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\CrashEngine\Renderer\Texture.h">
+      <Filter>src\CrashEngine\Renderer</Filter>
+    </ClInclude>
     <ClInclude Include="src\CrashEngine\Renderer\VertexArray.h">
       <Filter>src\CrashEngine\Renderer</Filter>
     </ClInclude>
@@ -153,16 +168,19 @@
     <ClInclude Include="src\Platform\OpenGl\OpenGLContext.h">
       <Filter>src\Platform\OpenGl</Filter>
     </ClInclude>
-    <ClInclude Include="src\Platform\OpenGl\OpenGLMesh.h">
-      <Filter>src\Platform\OpenGl</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Platform\OpenGl\OpenGLModel.h">
+    <ClInclude Include="src\Platform\OpenGl\OpenGLFramebuffer.h">
       <Filter>src\Platform\OpenGl</Filter>
     </ClInclude>
     <ClInclude Include="src\Platform\OpenGl\OpenGLRendererAPI.h">
       <Filter>src\Platform\OpenGl</Filter>
     </ClInclude>
     <ClInclude Include="src\Platform\OpenGl\OpenGLShader.h">
+      <Filter>src\Platform\OpenGl</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\OpenGl\OpenGLTextRenderer.h">
+      <Filter>src\Platform\OpenGl</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\OpenGl\OpenGLTexture.h">
       <Filter>src\Platform\OpenGl</Filter>
     </ClInclude>
     <ClInclude Include="src\Platform\OpenGl\OpenGLVertexArray.h">
@@ -1656,16 +1674,6 @@
     <ClInclude Include="vendor\glm\glm\vector_relational.hpp">
       <Filter>vendor\glm\glm</Filter>
     </ClInclude>
-    <ClInclude Include="src\CrashEngine\Renderer\TextRenderer.h" />
-    <ClInclude Include="src\Platform\OpenGl\OpenGLTextRenderer.h" />
-    <ClInclude Include="src\CrashEngine\Renderer\BasicShapes.h" />
-    <ClInclude Include="src\CrashEngine\Renderer\Texture.h" />
-    <ClInclude Include="src\CrashEngine\Renderer\Framebuffer.h" />
-    <ClInclude Include="src\Platform\OpenGl\OpenGLFramebuffer.h" />
-    <ClInclude Include="src\Platform\OpenGl\OpenGLTexture.h" />
-    <ClInclude Include="src\CrashEngine\Defines.h">
-      <Filter>src\CrashEngine\Renderer</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\CrashEngine\Application.cpp">
@@ -1686,10 +1694,16 @@
     <ClCompile Include="src\CrashEngine\Log.cpp">
       <Filter>src\CrashEngine</Filter>
     </ClCompile>
+    <ClCompile Include="src\CrashEngine\Renderer\BasicShapes.cpp">
+      <Filter>src\CrashEngine\Renderer</Filter>
+    </ClCompile>
     <ClCompile Include="src\CrashEngine\Renderer\Buffer.cpp">
       <Filter>src\CrashEngine\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\CrashEngine\Renderer\Camera.cpp">
+      <Filter>src\CrashEngine\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CrashEngine\Renderer\Framebuffer.cpp">
       <Filter>src\CrashEngine\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\CrashEngine\Renderer\Mesh.cpp">
@@ -1710,6 +1724,12 @@
     <ClCompile Include="src\CrashEngine\Renderer\Shader.cpp">
       <Filter>src\CrashEngine\Renderer</Filter>
     </ClCompile>
+    <ClCompile Include="src\CrashEngine\Renderer\TextRenderer.cpp">
+      <Filter>src\CrashEngine\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CrashEngine\Renderer\Texture.cpp">
+      <Filter>src\CrashEngine\Renderer</Filter>
+    </ClCompile>
     <ClCompile Include="src\CrashEngine\Renderer\VertexArray.cpp">
       <Filter>src\CrashEngine\Renderer</Filter>
     </ClCompile>
@@ -1719,16 +1739,19 @@
     <ClCompile Include="src\Platform\OpenGl\OpenGLContext.cpp">
       <Filter>src\Platform\OpenGl</Filter>
     </ClCompile>
-    <ClCompile Include="src\Platform\OpenGl\OpenGLMesh.cpp">
-      <Filter>src\Platform\OpenGl</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Platform\OpenGl\OpenGLModel.cpp">
+    <ClCompile Include="src\Platform\OpenGl\OpenGLFramebuffer.cpp">
       <Filter>src\Platform\OpenGl</Filter>
     </ClCompile>
     <ClCompile Include="src\Platform\OpenGl\OpenGLRendererAPI.cpp">
       <Filter>src\Platform\OpenGl</Filter>
     </ClCompile>
     <ClCompile Include="src\Platform\OpenGl\OpenGLShader.cpp">
+      <Filter>src\Platform\OpenGl</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\OpenGl\OpenGLTextRenderer.cpp">
+      <Filter>src\Platform\OpenGl</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\OpenGl\OpenGLTexture.cpp">
       <Filter>src\Platform\OpenGl</Filter>
     </ClCompile>
     <ClCompile Include="src\Platform\OpenGl\OpenGLVertexArray.cpp">
@@ -1743,32 +1766,10 @@
     <ClCompile Include="src\cepch.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\CrashEngine\Renderer\TextRenderer.cpp" />
-    <ClCompile Include="src\Platform\OpenGl\OpenGLTextRenderer.cpp" />
-    <ClCompile Include="src\CrashEngine\Renderer\BasicShapes.cpp" />
-    <ClCompile Include="src\CrashEngine\Renderer\Framebuffer.cpp" />
-    <ClCompile Include="src\CrashEngine\Renderer\Texture.cpp" />
-    <ClCompile Include="src\Platform\OpenGl\OpenGLFramebuffer.cpp" />
-    <ClCompile Include="src\Platform\OpenGl\OpenGLTexture.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="vendor\assimp\include\assimp\config.h.in">
       <Filter>vendor\assimp\include\assimp</Filter>
     </None>
-    <None Include="src\CrashEngine\Renderer\Shaders\Basic.frag" />
-    <None Include="src\CrashEngine\Renderer\Shaders\Basic.vert" />
-    <None Include="src\CrashEngine\Renderer\Shaders\Text.frag" />
-    <None Include="src\CrashEngine\Renderer\Shaders\Text.vert" />
-    <None Include="src\CrashEngine\Renderer\Shaders\pbr.vert" />
-    <None Include="src\CrashEngine\Renderer\Shaders\pbr.frag" />
-    <None Include="src\CrashEngine\Renderer\Shaders\pbrTexture.frag" />
-    <None Include="src\CrashEngine\Renderer\Shaders\cubemap.vert" />
-    <None Include="src\CrashEngine\Renderer\Shaders\equirectangularToCubemap.frag" />
-    <None Include="src\CrashEngine\Renderer\Shaders\irradiance.frag" />
-    <None Include="src\CrashEngine\Renderer\Shaders\prefilter.frag" />
-    <None Include="src\CrashEngine\Renderer\Shaders\brdf.vert" />
-    <None Include="src\CrashEngine\Renderer\Shaders\brdf.frag" />
-    <None Include="src\CrashEngine\Renderer\Shaders\background.vert" />
-    <None Include="src\CrashEngine\Renderer\Shaders\background.frag" />
   </ItemGroup>
 </Project>

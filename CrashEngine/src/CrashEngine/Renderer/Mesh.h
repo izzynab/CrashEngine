@@ -5,6 +5,10 @@
 #include <string>
 #include <vector>
 
+#include "Texture.h"
+#include "Buffer.h"
+#include "VertexArray.h"
+
 
 namespace CrashEngine
 {
@@ -16,24 +20,33 @@ namespace CrashEngine
         glm::vec3 Bitangent;
     };
 
-    struct texture {
-        unsigned int id;
-        std::string type;
-        std::string path;
-    };
+
 
     class Mesh
     {
     public:
-        static Mesh* Create(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<texture> textures);
+        Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices);
 
         // render the mesh
-        virtual void Draw(Shader* shader);
+        void Draw(Shader* shader);
 
-        std::vector<Vertex>       vertices;
-        std::vector<unsigned int> indices;
-        std::vector<texture>      textures;
-        unsigned int VAO;
+        std::vector<Vertex>   vertices;
+        std::vector<uint32_t> indices;
+
+        std::shared_ptr <VertexArray> VA;
+        std::shared_ptr <VertexBuffer> VB;
+        std::shared_ptr <IndexBuffer> IB;
+
+
+        // initializes all the buffer objects/arrays
+        void setupMesh();
+
+    public:
+        std::shared_ptr<Texture2D> albedo;
+        std::shared_ptr<Texture2D> normal;
+        std::shared_ptr<Texture2D> metallic;
+        std::shared_ptr<Texture2D> roughness;
+        std::shared_ptr<Texture2D> ao;
 
     };
 }

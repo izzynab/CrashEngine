@@ -1,8 +1,11 @@
 #version 330 core
 out vec4 FragColor;
-in vec2 TexCoords;
+
 in vec3 WorldPos;
 in vec3 Normal;
+in vec2 TexCoords;
+in vec3 aTangent;
+in vec3 aBitangent;
 
 // material parameters
 uniform sampler2D albedoMap;
@@ -171,5 +174,5 @@ void main()
     // gamma correct
     color = pow(color, vec3(1.0/2.2)); 
 
-    FragColor = vec4(color , 1.0);
+    FragColor = vec4(texture(albedoMap,TexCoords).rgb , 1.0);
 }

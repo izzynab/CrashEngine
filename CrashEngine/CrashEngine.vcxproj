@@ -77,7 +77,7 @@
       <PrecompiledHeaderFile>cepch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;CE_PLATFORM_WINDOWS;CE_BUILD_DLL;GLFW_INCLUDE_NONE;CE_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\GLFW\include;vendor\GLAD\include;vendor\imgui;vendor\glm;vendor\stb_image;vendor\assimp\include;vendor\freetype-lib\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\GLFW\include;vendor\GLAD\include;vendor\imgui;vendor\glm;vendor\stb_image;vendor\assimp\include;vendor\freetype-lib\include;vendor\entt\include;vendor\yaml-cpp\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -101,7 +101,7 @@
       <PrecompiledHeaderFile>cepch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;CE_PLATFORM_WINDOWS;CE_BUILD_DLL;GLFW_INCLUDE_NONE;CE_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\GLFW\include;vendor\GLAD\include;vendor\imgui;vendor\glm;vendor\stb_image;vendor\assimp\include;vendor\freetype-lib\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\GLFW\include;vendor\GLAD\include;vendor\imgui;vendor\glm;vendor\stb_image;vendor\assimp\include;vendor\freetype-lib\include;vendor\entt\include;vendor\yaml-cpp\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -129,7 +129,7 @@
       <PrecompiledHeaderFile>cepch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;CE_PLATFORM_WINDOWS;CE_BUILD_DLL;GLFW_INCLUDE_NONE;CE_DIST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\GLFW\include;vendor\GLAD\include;vendor\imgui;vendor\glm;vendor\stb_image;vendor\assimp\include;vendor\freetype-lib\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\GLFW\include;vendor\GLAD\include;vendor\imgui;vendor\glm;vendor\stb_image;vendor\assimp\include;vendor\freetype-lib\include;vendor\entt\include;vendor\yaml-cpp\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -152,12 +152,10 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="src\Platform\OpenGl\OpenGLFramebuffer.h" />
-    <ClInclude Include="src\Platform\OpenGl\OpenGLTexture.h" />
-    <ClInclude Include="src\CrashEngine\Renderer\Framebuffer.h" />
     <ClInclude Include="src\Crash.h" />
     <ClInclude Include="src\CrashEngine\Application.h" />
     <ClInclude Include="src\CrashEngine\Core.h" />
+    <ClInclude Include="src\CrashEngine\Defines.h" />
     <ClInclude Include="src\CrashEngine\EntryPoint.h" />
     <ClInclude Include="src\CrashEngine\Events\ApplicationEvent.h" />
     <ClInclude Include="src\CrashEngine\Events\Event.h" />
@@ -174,7 +172,7 @@
     <ClInclude Include="src\CrashEngine\Renderer\BasicShapes.h" />
     <ClInclude Include="src\CrashEngine\Renderer\Buffer.h" />
     <ClInclude Include="src\CrashEngine\Renderer\Camera.h" />
-    <ClInclude Include="src\CrashEngine\Defines.h" />
+    <ClInclude Include="src\CrashEngine\Renderer\Framebuffer.h" />
     <ClInclude Include="src\CrashEngine\Renderer\GraphicsContext.h" />
     <ClInclude Include="src\CrashEngine\Renderer\Mesh.h" />
     <ClInclude Include="src\CrashEngine\Renderer\Model.h" />
@@ -183,20 +181,20 @@
     <ClInclude Include="src\CrashEngine\Renderer\RendererAPI.h" />
     <ClInclude Include="src\CrashEngine\Renderer\Shader.h" />
     <ClInclude Include="src\CrashEngine\Renderer\TextRenderer.h" />
+    <ClInclude Include="src\CrashEngine\Renderer\Texture.h" />
     <ClInclude Include="src\CrashEngine\Renderer\VertexArray.h" />
     <ClInclude Include="src\CrashEngine\Window.h" />
     <ClInclude Include="src\Platform\OpenGl\OpenGLBuffer.h" />
     <ClInclude Include="src\Platform\OpenGl\OpenGLContext.h" />
-    <ClInclude Include="src\Platform\OpenGl\OpenGLMesh.h" />
-    <ClInclude Include="src\Platform\OpenGl\OpenGLModel.h" />
+    <ClInclude Include="src\Platform\OpenGl\OpenGLFramebuffer.h" />
     <ClInclude Include="src\Platform\OpenGl\OpenGLRendererAPI.h" />
     <ClInclude Include="src\Platform\OpenGl\OpenGLShader.h" />
     <ClInclude Include="src\Platform\OpenGl\OpenGLTextRenderer.h" />
+    <ClInclude Include="src\Platform\OpenGl\OpenGLTexture.h" />
     <ClInclude Include="src\Platform\OpenGl\OpenGLVertexArray.h" />
     <ClInclude Include="src\Platform\Windows\WindowsInput.h" />
     <ClInclude Include="src\Platform\Windows\WindowsWindow.h" />
     <ClInclude Include="src\cepch.h" />
-    <ClInclude Include="src\CrashEngine\Renderer\Texture.h" />
     <ClInclude Include="vendor\assimp\include\assimp\BaseImporter.h" />
     <ClInclude Include="vendor\assimp\include\assimp\Bitmap.h" />
     <ClInclude Include="vendor\assimp\include\assimp\BlobIOSystem.h" />
@@ -692,9 +690,6 @@
     <ClInclude Include="vendor\glm\glm\vector_relational.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Platform\OpenGl\OpenGLFramebuffer.cpp" />
-    <ClCompile Include="src\Platform\OpenGl\OpenGLTexture.cpp" />
-    <ClCompile Include="src\CrashEngine\Renderer\Framebuffer.cpp" />
     <ClCompile Include="src\CrashEngine\Application.cpp" />
     <ClCompile Include="src\CrashEngine\ImGui\ImGuiBuild.cpp" />
     <ClCompile Include="src\CrashEngine\ImGui\ImGuiLayer.cpp" />
@@ -704,6 +699,7 @@
     <ClCompile Include="src\CrashEngine\Renderer\BasicShapes.cpp" />
     <ClCompile Include="src\CrashEngine\Renderer\Buffer.cpp" />
     <ClCompile Include="src\CrashEngine\Renderer\Camera.cpp" />
+    <ClCompile Include="src\CrashEngine\Renderer\Framebuffer.cpp" />
     <ClCompile Include="src\CrashEngine\Renderer\Mesh.cpp" />
     <ClCompile Include="src\CrashEngine\Renderer\Model.cpp" />
     <ClCompile Include="src\CrashEngine\Renderer\RenderCommand.cpp" />
@@ -711,38 +707,23 @@
     <ClCompile Include="src\CrashEngine\Renderer\RendererAPI.cpp" />
     <ClCompile Include="src\CrashEngine\Renderer\Shader.cpp" />
     <ClCompile Include="src\CrashEngine\Renderer\TextRenderer.cpp" />
+    <ClCompile Include="src\CrashEngine\Renderer\Texture.cpp" />
     <ClCompile Include="src\CrashEngine\Renderer\VertexArray.cpp" />
     <ClCompile Include="src\Platform\OpenGl\OpenGLBuffer.cpp" />
     <ClCompile Include="src\Platform\OpenGl\OpenGLContext.cpp" />
-    <ClCompile Include="src\Platform\OpenGl\OpenGLMesh.cpp" />
-    <ClCompile Include="src\Platform\OpenGl\OpenGLModel.cpp" />
+    <ClCompile Include="src\Platform\OpenGl\OpenGLFramebuffer.cpp" />
     <ClCompile Include="src\Platform\OpenGl\OpenGLRendererAPI.cpp" />
     <ClCompile Include="src\Platform\OpenGl\OpenGLShader.cpp" />
     <ClCompile Include="src\Platform\OpenGl\OpenGLTextRenderer.cpp" />
+    <ClCompile Include="src\Platform\OpenGl\OpenGLTexture.cpp" />
     <ClCompile Include="src\Platform\OpenGl\OpenGLVertexArray.cpp" />
     <ClCompile Include="src\Platform\Windows\WindowsInput.cpp" />
     <ClCompile Include="src\Platform\Windows\WindowsWindow.cpp" />
     <ClCompile Include="src\cepch.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="src\CrashEngine\Renderer\Texture.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="src\CrashEngine\Renderer\Shaders\background.frag" />
-    <None Include="src\CrashEngine\Renderer\Shaders\background.vert" />
-    <None Include="src\CrashEngine\Renderer\Shaders\Basic.frag" />
-    <None Include="src\CrashEngine\Renderer\Shaders\Basic.vert" />
-    <None Include="src\CrashEngine\Renderer\Shaders\brdf.frag" />
-    <None Include="src\CrashEngine\Renderer\Shaders\brdf.vert" />
-    <None Include="src\CrashEngine\Renderer\Shaders\cubemap.vert" />
-    <None Include="src\CrashEngine\Renderer\Shaders\equirectangularToCubemap.frag" />
-    <None Include="src\CrashEngine\Renderer\Shaders\irradiance.frag" />
-    <None Include="src\CrashEngine\Renderer\Shaders\pbr.frag" />
-    <None Include="src\CrashEngine\Renderer\Shaders\pbr.vert" />
-    <None Include="src\CrashEngine\Renderer\Shaders\pbrTexture.frag" />
-    <None Include="src\CrashEngine\Renderer\Shaders\prefilter.frag" />
-    <None Include="src\CrashEngine\Renderer\Shaders\Text.frag" />
-    <None Include="src\CrashEngine\Renderer\Shaders\Text.vert" />
     <None Include="vendor\assimp\include\assimp\config.h.in" />
   </ItemGroup>
   <ItemGroup>
