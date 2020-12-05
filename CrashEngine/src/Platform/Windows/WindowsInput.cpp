@@ -1,7 +1,7 @@
 #include "cepch.h"
 #include "WindowsInput.h"
 
-#include "CrashEngine/Application.h"
+#include "CrashEngine/Core/Application.h"
 #include <GLFW/glfw3.h>
 
 namespace CrashEngine {

@@ -13,7 +13,7 @@
 #include <unordered_map>
 #include <unordered_set>
 
-#include "CrashEngine/Log.h"
+#include "CrashEngine/Core/Log.h"
 
 #ifdef CE_PLATFORM_WINDOWS
 #include <Windows.h>

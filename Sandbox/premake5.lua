@@ -9,24 +9,26 @@ project "Sandbox"
 
 	files
 	{
-		"%{prj.name}/src/**.h",
-		"%{prj.name}/src/**.cpp"
+		"src/**.h",
+		"src/**.cpp"
 	}
 
 	includedirs
 	{
-		"CrashEngine/vendor/spdlog/include",
-		"CrashEngine/src",
-		"CrashEngine/vendor",
+		"%{wks.location}/CrashEngine/vendor/spdlog/include",
+		"%{wks.location}/CrashEngine/src",
+		"%{wks.location}/CrashEngine/vendor",
 
 		"%{IncludeDir.glm}",
 		"%{IncludeDir.entt}",
 
+		"%{IncludeDir.GLFW}",
+		"%{IncludeDir.GLAD}",
 		"%{IncludeDir.ImGui}",
 		"%{IncludeDir.stb}",
 		"%{IncludeDir.assimp}",
-		"%{IncludeDir.Freetype}",
-		"%{IncludeDir.yaml_cpp}",
+
+
 	}
 
 	links
@@ -45,15 +47,12 @@ project "Sandbox"
 
 	filter "configurations:Debug"
 		defines "CE_DEBUG"
-		buildoptions "/MDd"
 		symbols "on"
 
 	filter "configurations:Release"
 		defines "CE_RELEASE"
-		buildoptions "/MD"
 		optimize "on"
 
 	filter "configurations:Dist"
 		defines "CE_DIST"
-		buildoptions "/MD"
 		optimize "on" 

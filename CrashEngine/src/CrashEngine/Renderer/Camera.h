@@ -1,6 +1,6 @@
 #pragma once
 
-#include "CrashEngine/Core.h"
+#include "CrashEngine/Core/Core.h"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>

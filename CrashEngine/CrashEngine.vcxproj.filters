@@ -69,18 +69,6 @@
     <ClInclude Include="src\Crash.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="src\CrashEngine\Application.h">
-      <Filter>src\CrashEngine</Filter>
-    </ClInclude>
-    <ClInclude Include="src\CrashEngine\Core.h">
-      <Filter>src\CrashEngine</Filter>
-    </ClInclude>
-    <ClInclude Include="src\CrashEngine\Defines.h">
-      <Filter>src\CrashEngine</Filter>
-    </ClInclude>
-    <ClInclude Include="src\CrashEngine\EntryPoint.h">
-      <Filter>src\CrashEngine</Filter>
-    </ClInclude>
     <ClInclude Include="src\CrashEngine\Events\ApplicationEvent.h">
       <Filter>src\CrashEngine\Events</Filter>
     </ClInclude>
@@ -93,29 +81,8 @@
     <ClInclude Include="src\CrashEngine\Events\MouseEvent.h">
       <Filter>src\CrashEngine\Events</Filter>
     </ClInclude>
-    <ClInclude Include="src\CrashEngine\FileManager.h">
-      <Filter>src\CrashEngine</Filter>
-    </ClInclude>
     <ClInclude Include="src\CrashEngine\ImGui\ImGuiLayer.h">
       <Filter>src\CrashEngine\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="src\CrashEngine\Input.h">
-      <Filter>src\CrashEngine</Filter>
-    </ClInclude>
-    <ClInclude Include="src\CrashEngine\KeyCodes.h">
-      <Filter>src\CrashEngine</Filter>
-    </ClInclude>
-    <ClInclude Include="src\CrashEngine\Layer.h">
-      <Filter>src\CrashEngine</Filter>
-    </ClInclude>
-    <ClInclude Include="src\CrashEngine\LayerStack.h">
-      <Filter>src\CrashEngine</Filter>
-    </ClInclude>
-    <ClInclude Include="src\CrashEngine\Log.h">
-      <Filter>src\CrashEngine</Filter>
-    </ClInclude>
-    <ClInclude Include="src\CrashEngine\MouseButtonCodes.h">
-      <Filter>src\CrashEngine</Filter>
     </ClInclude>
     <ClInclude Include="src\CrashEngine\Renderer\BasicShapes.h">
       <Filter>src\CrashEngine\Renderer</Filter>
@@ -150,17 +117,11 @@
     <ClInclude Include="src\CrashEngine\Renderer\Shader.h">
       <Filter>src\CrashEngine\Renderer</Filter>
     </ClInclude>
-    <ClInclude Include="src\CrashEngine\Renderer\TextRenderer.h">
-      <Filter>src\CrashEngine\Renderer</Filter>
-    </ClInclude>
     <ClInclude Include="src\CrashEngine\Renderer\Texture.h">
       <Filter>src\CrashEngine\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\CrashEngine\Renderer\VertexArray.h">
       <Filter>src\CrashEngine\Renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="src\CrashEngine\Window.h">
-      <Filter>src\CrashEngine</Filter>
     </ClInclude>
     <ClInclude Include="src\Platform\OpenGl\OpenGLBuffer.h">
       <Filter>src\Platform\OpenGl</Filter>
@@ -175,9 +136,6 @@
       <Filter>src\Platform\OpenGl</Filter>
     </ClInclude>
     <ClInclude Include="src\Platform\OpenGl\OpenGLShader.h">
-      <Filter>src\Platform\OpenGl</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Platform\OpenGl\OpenGLTextRenderer.h">
       <Filter>src\Platform\OpenGl</Filter>
     </ClInclude>
     <ClInclude Include="src\Platform\OpenGl\OpenGLTexture.h">
@@ -1674,25 +1632,54 @@
     <ClInclude Include="vendor\glm\glm\vector_relational.hpp">
       <Filter>vendor\glm\glm</Filter>
     </ClInclude>
+    <ClInclude Include="src\CrashEngine\Core\Application.h">
+      <Filter>src\CrashEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="src\CrashEngine\Core\Core.h">
+      <Filter>src\CrashEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="src\CrashEngine\Core\Defines.h">
+      <Filter>src\CrashEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="src\CrashEngine\Core\EntryPoint.h">
+      <Filter>src\CrashEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="src\CrashEngine\Core\FileManager.h">
+      <Filter>src\CrashEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="src\CrashEngine\Core\Input.h">
+      <Filter>src\CrashEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="src\CrashEngine\Core\KeyCodes.h">
+      <Filter>src\CrashEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="src\CrashEngine\Core\Layer.h">
+      <Filter>src\CrashEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="src\CrashEngine\Core\LayerStack.h">
+      <Filter>src\CrashEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="src\CrashEngine\Core\Log.h">
+      <Filter>src\CrashEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="src\CrashEngine\Core\MouseButtonCodes.h">
+      <Filter>src\CrashEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="src\CrashEngine\Core\Window.h">
+      <Filter>src\CrashEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="src\CrashEngine\Scene\Entity.h" />
+    <ClInclude Include="src\CrashEngine\Scene\Scene.h" />
+    <ClInclude Include="src\CrashEngine\Scene\Components.h" />
+    <ClInclude Include="src\CrashEngine\Scene\SceneCamera.h" />
+    <ClInclude Include="src\CrashEngine\Renderer\CameraController.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\CrashEngine\Application.cpp">
-      <Filter>src\CrashEngine</Filter>
-    </ClCompile>
     <ClCompile Include="src\CrashEngine\ImGui\ImGuiBuild.cpp">
       <Filter>src\CrashEngine\ImGui</Filter>
     </ClCompile>
     <ClCompile Include="src\CrashEngine\ImGui\ImGuiLayer.cpp">
       <Filter>src\CrashEngine\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="src\CrashEngine\Layer.cpp">
-      <Filter>src\CrashEngine</Filter>
-    </ClCompile>
-    <ClCompile Include="src\CrashEngine\LayerStack.cpp">
-      <Filter>src\CrashEngine</Filter>
-    </ClCompile>
-    <ClCompile Include="src\CrashEngine\Log.cpp">
-      <Filter>src\CrashEngine</Filter>
     </ClCompile>
     <ClCompile Include="src\CrashEngine\Renderer\BasicShapes.cpp">
       <Filter>src\CrashEngine\Renderer</Filter>
@@ -1724,9 +1711,6 @@
     <ClCompile Include="src\CrashEngine\Renderer\Shader.cpp">
       <Filter>src\CrashEngine\Renderer</Filter>
     </ClCompile>
-    <ClCompile Include="src\CrashEngine\Renderer\TextRenderer.cpp">
-      <Filter>src\CrashEngine\Renderer</Filter>
-    </ClCompile>
     <ClCompile Include="src\CrashEngine\Renderer\Texture.cpp">
       <Filter>src\CrashEngine\Renderer</Filter>
     </ClCompile>
@@ -1748,9 +1732,6 @@
     <ClCompile Include="src\Platform\OpenGl\OpenGLShader.cpp">
       <Filter>src\Platform\OpenGl</Filter>
     </ClCompile>
-    <ClCompile Include="src\Platform\OpenGl\OpenGLTextRenderer.cpp">
-      <Filter>src\Platform\OpenGl</Filter>
-    </ClCompile>
     <ClCompile Include="src\Platform\OpenGl\OpenGLTexture.cpp">
       <Filter>src\Platform\OpenGl</Filter>
     </ClCompile>
@@ -1766,6 +1747,22 @@
     <ClCompile Include="src\cepch.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\CrashEngine\Core\Application.cpp">
+      <Filter>src\CrashEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CrashEngine\Core\Layer.cpp">
+      <Filter>src\CrashEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CrashEngine\Core\LayerStack.cpp">
+      <Filter>src\CrashEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CrashEngine\Core\Log.cpp">
+      <Filter>src\CrashEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CrashEngine\Scene\Entity.cpp" />
+    <ClCompile Include="src\CrashEngine\Scene\Scene.cpp" />
+    <ClCompile Include="src\CrashEngine\Scene\SceneCamera.cpp" />
+    <ClCompile Include="src\CrashEngine\Renderer\CameraController.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="vendor\assimp\include\assimp\config.h.in">

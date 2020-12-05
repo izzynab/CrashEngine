@@ -2,9 +2,9 @@
 #include "Camera.h"
 
 #include "CrashEngine/Renderer/Renderer.h"
-#include "CrashEngine/Input.h"
-#include "CrashEngine/KeyCodes.h"
-#include "CrashEngine/MouseButtonCodes.h"
+#include "CrashEngine/Core/Input.h"
+#include "CrashEngine/Core/KeyCodes.h"
+#include "CrashEngine/Core/MouseButtonCodes.h"
 
 CrashEngine::Camera::Camera(glm::vec3 position, float width, float height, glm::vec3 front, glm::vec3 up)
 {

@@ -2,7 +2,7 @@
 
 #include "cepch.h"
 
-#include "CrashEngine/Core.h"
+#include "CrashEngine/Core/Core.h"
 
 
 namespace CrashEngine {

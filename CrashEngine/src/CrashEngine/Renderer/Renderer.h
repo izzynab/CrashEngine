@@ -2,6 +2,20 @@
 
 #include "RenderCommand.h"
 
+#include "Camera.h"
+
+#include "Model.h"
+
+#include "Texture.h"
+
+#include "Shader.h"
+
+#include "BasicShapes.h"
+
+#include "Framebuffer.h"
+
+
+
 namespace CrashEngine {
 
 	class Renderer

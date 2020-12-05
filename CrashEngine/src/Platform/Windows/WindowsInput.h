@@ -1,6 +1,6 @@
 #pragma once
 
-#include "CrashEngine/Input.h"
+#include "CrashEngine/Core/Input.h"
 
 namespace CrashEngine {
 

@@ -1,6 +1,7 @@
 #include <Crash.h>
-#include "EditorLayer.h"
+#include "CrashEngine/Core/EntryPoint.h"
 
+#include "Layers/EditorLayer.h"
 
 namespace CrashEngine {
 	
@@ -9,7 +10,7 @@ namespace CrashEngine {
 	public:
 		Sandbox()
 		{
-			PushLayer(new EditorLayer());
+			PushLayer(new Editor());
 		}
 		~Sandbox()
 		{

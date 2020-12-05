@@ -1,6 +1,6 @@
 #pragma once
 
-#include "CrashEngine/Window.h"
+#include "CrashEngine/Core/Window.h"
 #include "CrashEngine/Renderer/GraphicsContext.h"
 
 #include <GLFW/glfw3.h>
