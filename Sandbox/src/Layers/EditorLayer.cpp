@@ -10,12 +10,12 @@ namespace CrashEngine {
 		float Height = Application::Get().GetWindow().GetHeight();
 		float Width = Application::Get().GetWindow().GetWidth();
 
-		camera.reset(new Camera(glm::vec3(0.0f, 0.0f, 3.0f), Width, Height));
-		camera->CameraSpeed = 4.f;
+		cameraController.reset(new CameraController(glm::vec3(0.0f, 0.0f, 3.0f), Width, Height));
+
 
 		imguilayer.reset(new ImGuiLayer);
 
-		glm::mat4 projection = glm::perspective(glm::radians(45.0f), Width / Height, 0.1f, 100.0f);
+		glm::mat4 projection = cameraController->GetCamera().GetProjectionMatrix();
 
 
 		pbrShader = Shader::Create("pbr.vert", "pbr.frag");
@@ -222,9 +222,9 @@ namespace CrashEngine {
 		RenderCommand::SetViewport(Width, Height);
 	}
 
-	void Editor::OnUpdate()
+	void Editor::OnUpdate(Timestep ts)
 	{
-		camera->Update();
+		cameraController->OnUpdate(ts);
 
 		renderFramebuffer->Bind();
 
@@ -233,13 +233,13 @@ namespace CrashEngine {
 
 		Renderer::BeginScene();
 
-		glm::mat4 view = glm::lookAt(camera->Position, camera->Position + camera->Front, camera->Up);
+		glm::mat4 view = cameraController->GetCamera().GetViewMatrix();
 		m_MatrixUB->setData("view", glm::value_ptr(view));
 
 
 		pbrTextureShader->Bind();
 		//pbrTextureShader->SetUniformMat4("view", view);
-		pbrTextureShader->SetUniformVec3("camPos", camera->Position);
+		pbrTextureShader->SetUniformVec3("camPos", cameraController->GetCamera().GetPosition());
 
 		RenderCommand::BindCubemap(Irradiancemap->GetRendererID(), 5);
 		RenderCommand::BindCubemap(Prefiltermap->GetRendererID(), 6);
@@ -252,7 +252,7 @@ namespace CrashEngine {
 		//sphere->RenderSphere();
 
 		pbrShader->Bind();
-		pbrShader->SetUniformVec3("camPos", camera->Position);
+		pbrShader->SetUniformVec3("camPos", cameraController->GetCamera().GetPosition());
 
 		RenderCommand::BindCubemap(Irradiancemap->GetRendererID(), 0);
 		RenderCommand::BindCubemap(Prefiltermap->GetRendererID(), 1);
@@ -337,10 +337,6 @@ namespace CrashEngine {
 		if (imguilayer->EditorStyleEnabled) { imguilayer->StyleEditor(); }
 
 
-
-
-
-
 		RenderCommand::SetViewport(imguilayer->CurrentWindowView.x, imguilayer->CurrentWindowView.y);
 
 		glm::mat4 projection = glm::perspective(glm::radians(45.0f), (float)imguilayer->CurrentWindowView.x / (float)imguilayer->CurrentWindowView.y, 0.1f, 100.0f);
@@ -351,20 +347,7 @@ namespace CrashEngine {
 
 	void Editor::OnEvent(CrashEngine::Event& event)
 	{
-		if (event.GetEventType() == CrashEngine::EventType::WindowResize)
-		{
-			CrashEngine::WindowResizeEvent& e = (CrashEngine::WindowResizeEvent&)event;
-			camera->SetHeight(e.GetHeight());
-			camera->SetWidth(e.GetWidth());
-
-
-		}
-
-		if (event.GetEventType() == CrashEngine::EventType::MouseMoved)
-		{
-			CrashEngine::MouseMovedEvent& e = (CrashEngine::MouseMovedEvent&)event;
-
-		}
+		cameraController->OnEvent(event);
 
 	}
 

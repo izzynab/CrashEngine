@@ -154,6 +154,7 @@
     <ClInclude Include="src\CrashEngine\Core\Core.h" />
     <ClInclude Include="src\CrashEngine\Core\Defines.h" />
     <ClInclude Include="src\CrashEngine\Core\EntryPoint.h" />
+    <ClInclude Include="src\CrashEngine\Core\Timestep.h" />
     <ClInclude Include="src\CrashEngine\Events\ApplicationEvent.h" />
     <ClInclude Include="src\CrashEngine\Events\Event.h" />
     <ClInclude Include="src\CrashEngine\Events\KeyEvent.h" />

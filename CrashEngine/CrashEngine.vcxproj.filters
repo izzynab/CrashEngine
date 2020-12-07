@@ -1673,6 +1673,7 @@
     <ClInclude Include="src\CrashEngine\Scene\Components.h" />
     <ClInclude Include="src\CrashEngine\Scene\SceneCamera.h" />
     <ClInclude Include="src\CrashEngine\Renderer\CameraController.h" />
+    <ClInclude Include="src\CrashEngine\Core\Timestep.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\CrashEngine\ImGui\ImGuiBuild.cpp">

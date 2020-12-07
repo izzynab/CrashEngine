@@ -3,6 +3,7 @@
 #include <Crash.h>
 
 #include "imgui/imgui.h"
+#include "CrashEngine/Core/Timestep.h"
 
 #include "CrashEngine/Renderer/Renderer.h"
 
@@ -19,7 +20,7 @@ namespace CrashEngine {
 	public:
 		Editor();
 
-		void OnUpdate() override;
+		void OnUpdate(Timestep ts) override;
 
 		virtual void OnImGuiRender() override;
 
@@ -32,7 +33,7 @@ namespace CrashEngine {
 
 		std::shared_ptr<VertexArray> m_SquareVA;
 		std::shared_ptr<UniformBuffer> m_MatrixUB;
-		std::shared_ptr<Camera> camera;
+		std::shared_ptr<CameraController> cameraController;
 		std::shared_ptr<Model> backpack;
 
 		Shader* basicShader;
@@ -46,10 +47,6 @@ namespace CrashEngine {
 		Shader* backgroundShader;
 
 		glm::mat4 model;
-		//glm::mat4 view;
-		//glm::mat4 projection;
-
-		double lastTime = 0;
 
 		// lights
 		glm::vec3 lightPositions[4] = {

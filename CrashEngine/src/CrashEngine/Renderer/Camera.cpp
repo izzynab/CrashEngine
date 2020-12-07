@@ -1,103 +1,29 @@
 #include "cepch.h"
 #include "Camera.h"
 
-#include "CrashEngine/Renderer/Renderer.h"
-#include "CrashEngine/Core/Input.h"
-#include "CrashEngine/Core/KeyCodes.h"
-#include "CrashEngine/Core/MouseButtonCodes.h"
 
-CrashEngine::Camera::Camera(glm::vec3 position, float width, float height, glm::vec3 front, glm::vec3 up)
-{
-	Position = position;
-	Front = front;
-	Up = up;
+namespace CrashEngine {
 
-	lastX = width / 2;
-	lastY = height / 2;
-
-	Width = width;
-	Height = height;
-}
-
-CrashEngine::Camera::~Camera()
-{
-}
-
-void CrashEngine::Camera::Update()
-{
-	float currentFrame = RenderCommand::GetTime();
-	deltaTime = currentFrame - lastFrame;
-	lastFrame = currentFrame;
-
-
-	float cameraSpeed = CameraSpeed * deltaTime;
-	if (Input::IsMouseButtonPressed(CE_MOUSE_BUTTON_RIGHT))
+	Camera::Camera(glm::vec3 position, float width, float height)
+		: m_ProjectionMatrix(), m_ViewMatrix(1.f),Width(width), Height(height)
 	{
-		if (Input::IsKeyPressed(CE_KEY_W))
-		{
-			Position += cameraSpeed * Front;
-		}
-		if (Input::IsKeyPressed(CE_KEY_S))
-		{
-			Position -= cameraSpeed * Front;
-		}
-		if (Input::IsKeyPressed(CE_KEY_A))
-		{
-			Position -= glm::normalize(glm::cross(Front, Up)) * cameraSpeed;
-		}
-		if (Input::IsKeyPressed(CE_KEY_D))
-		{
-			Position += glm::normalize(glm::cross(Front, Up)) * cameraSpeed;
-		}
+		m_Position = position;
 
-		float xpos = Input::GetMouseX();
-		float ypos = Input::GetMouseY();
-
-		ChangeDirection(xpos, ypos);
-	}
-	else
-	{
-		ResetMousePos();
-	}
-}
-
-void CrashEngine::Camera::ChangeDirection(float xpos, float ypos)
-{
-	if (firstMouse)
-	{
-		lastX = xpos;
-		lastY = ypos;
-
-		firstMouse = false;
+		RecalculateViewMatrix();
+		RecalculateProjectionMatrix();
+		
 	}
 
+	Camera::~Camera()
+	{
+	}
 
-	float xoffset = xpos - lastX;
-	float yoffset = lastY - ypos;
-
-	lastX = xpos;
-	lastY = ypos;
-
-	float sensitivity = 0.1f;
-	xoffset *= sensitivity;
-	yoffset *= sensitivity;
-
-	yaw += xoffset;
-	pitch += yoffset;
-
-	if (pitch > 89.0f)
-		pitch = 89.0f;
-	if (pitch < -89.0f)
-		pitch = -89.0f;
-
-	glm::vec3 direction;
-	direction.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
-	direction.y = sin(glm::radians(pitch));
-	direction.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
-	Front = glm::normalize(direction);
-}
-
-void CrashEngine::Camera::ResetMousePos()
-{
-	firstMouse = true;
+	void Camera::RecalculateViewMatrix()
+	{
+		m_ViewMatrix = glm::lookAt(m_Position, m_Position + m_Front, m_Up);
+	}
+	void Camera::RecalculateProjectionMatrix()
+	{
+		m_ProjectionMatrix = glm::perspective(glm::radians(45.0f), Width / Height, 0.1f, 100.0f);
+	}
 }

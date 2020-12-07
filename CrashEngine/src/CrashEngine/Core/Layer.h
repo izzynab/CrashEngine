@@ -3,6 +3,8 @@
 #include "CrashEngine/Core/Core.h"
 #include "CrashEngine/Events/Event.h"
 
+#include "CrashEngine/Core/Timestep.h"
+
 
 namespace CrashEngine {
 
@@ -14,7 +16,7 @@ namespace CrashEngine {
 
 		virtual void OnAttach() {}
 		virtual void OnDetach() {}
-		virtual void OnUpdate() {}
+		virtual void OnUpdate(Timestep ts) {}
 		virtual void OnImGuiRender() {}
 		virtual void OnEvent(Event& event) {}
 

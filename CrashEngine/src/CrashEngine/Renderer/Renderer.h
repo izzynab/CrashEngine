@@ -2,7 +2,7 @@
 
 #include "RenderCommand.h"
 
-#include "Camera.h"
+#include "CameraController.h"
 
 #include "Model.h"
 

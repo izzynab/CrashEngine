@@ -11,41 +11,35 @@ namespace CrashEngine {
 	class CRASH_API Camera
 	{
 	public:
-
-		Camera(glm::vec3 position, float width,float height, glm::vec3 front = glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f));
+		Camera(glm::vec3 position, float width, float height);
 		~Camera();
 
-		void Update();
+		void SetProjection(glm::mat4& projection) { m_ProjectionMatrix = projection; }
 
-		void ChangeDirection(float xpos, float ypos);
+		const glm::vec3& GetPosition() const { return m_Position; }
+		void SetPosition(const glm::vec3& position) { m_Position = position; RecalculateViewMatrix(); }
 
-		void ResetMousePos();
+		const glm::mat4& GetProjectionMatrix() const { return m_ProjectionMatrix; }
+		const glm::mat4& GetViewMatrix() const { return m_ViewMatrix; }
 
-		inline void SetWidth(float width) { Width = width; lastX = width / 2;}
-		inline void SetHeight(float height) { Height = height; 	lastY = height / 2;}
+		inline void SetSize(float height, float width) { Height = height; Width = width; RecalculateProjectionMatrix(); }
+	private:
+		void RecalculateViewMatrix();
+		void RecalculateProjectionMatrix();
 
-		float deltaTime = 0.0f;	// Time between current frame and last frame
-		float lastFrame = 0.0f; // Time of last frame
-	
 	public:
-		glm::vec3 Position;
-		glm::vec3 Front;
-		glm::vec3 Up;
+		glm::vec3 m_Front = glm::vec3(0.0f, 0.0f, -1.0f);
+		glm::vec3 m_Up = glm::vec3(0.0f, 1.0f, 0.0f);
 
-		float yaw = -90.0f;
-		float pitch = 0.f;
+	private:	
+		glm::mat4 m_ProjectionMatrix;
+		glm::mat4 m_ViewMatrix;
 
-		const float sensitivity = 0.1f;
+		glm::vec3 m_Position = { 0.0f, 0.0f, 0.0f };
 
-		float lastX, lastY;
-
-		float CameraSpeed = 3.f;
 
 		float Width, Height;
 
-	private:
-
-		bool firstMouse = true;
 
 	};
 }
