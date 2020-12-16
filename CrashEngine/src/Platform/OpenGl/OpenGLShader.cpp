@@ -145,7 +145,7 @@ namespace CrashEngine {
 		}
 		catch (std::ifstream::failure& e)
 		{
-			std::cout << "ERROR::SHADER::FILE_NOT_SUCCESFULLY_READ" << std::endl;
+			CE_CORE_ERROR("SHADER::FILE_NOT_SUCCESFULLY_READ");
 		}
 		const char* vShaderCode = vertexCode.c_str();
 		const char* fShaderCode = fragmentCode.c_str();

@@ -30,8 +30,8 @@ namespace CrashEngine
         // render the mesh
         void Draw(Shader* shader);
 
-        std::vector<Vertex>   vertices;
-        std::vector<uint32_t> indices;
+        std::vector<float>   vertices;
+        std::vector<unsigned int> indices;
 
         std::shared_ptr <VertexArray> VA;
         std::shared_ptr <VertexBuffer> VB;

@@ -10,6 +10,12 @@
 #include "CrashEngine/Renderer/Buffer.h"
 #include "CrashEngine/Renderer/VertexArray.h"
 
+#include "CrashEngine/Scene/Entity.h"
+#include "CrashEngine/Scene/Scene.h"
+#include "CrashEngine/Scene/Components.h"
+
+#include "Panels/SceneHierarchyPanel.h"
+
 
 
 
@@ -27,14 +33,26 @@ namespace CrashEngine {
 		void OnEvent(CrashEngine::Event& event) override;
 
 	private:
-		std::shared_ptr<ImGuiLayer> imguilayer;
+		std::shared_ptr<Scene> m_ActiveScene;
+		Entity m_Entity;
 
-		//ImVec2 OldWindowSize = ImVec2(0,0);
+		std::shared_ptr<Texture2D> albedo;
+		std::shared_ptr<Texture2D> normal;
+		std::shared_ptr<Texture2D> metallic;
+		std::shared_ptr<Texture2D> roughness;
+		std::shared_ptr<Texture2D> ao;
+
+		Model* testModel;
+
+		std::shared_ptr<ImGuiLayer> imguilayer;
+		SceneHierarchyPanel* HierarchyPanel;
+
+
+
 
 		std::shared_ptr<VertexArray> m_SquareVA;
 		std::shared_ptr<UniformBuffer> m_MatrixUB;
 		std::shared_ptr<CameraController> cameraController;
-		std::shared_ptr<Model> backpack;
 
 		Shader* basicShader;
 
@@ -68,17 +86,6 @@ namespace CrashEngine {
 		std::shared_ptr<Sphere> sphere;
 		std::shared_ptr<Square> square;
 		std::shared_ptr<Quad> quad;
-
-
-		Model* testModel;
-
-		std::shared_ptr<Texture2D> albedo;
-		std::shared_ptr<Texture2D> normal;
-		std::shared_ptr<Texture2D> metallic;
-		std::shared_ptr<Texture2D> roughness;
-		std::shared_ptr<Texture2D> ao;
-
-
 
 		std::shared_ptr<TextureHDR> HDR;
 		std::shared_ptr<CubemapTexture> Cubemap;

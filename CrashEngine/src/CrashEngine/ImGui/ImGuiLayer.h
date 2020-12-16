@@ -41,7 +41,7 @@ namespace CrashEngine {
 		ImVec2 OldWindowSize = ImVec2(0, 0);
 
 		bool EditorStyleEnabled = false;
-		bool MenuEnabled = true;
+		bool MenuEnabled = false;
 		bool WindowMetricsEnabled = false;
 	private:
 		float m_Time = 0.0f;

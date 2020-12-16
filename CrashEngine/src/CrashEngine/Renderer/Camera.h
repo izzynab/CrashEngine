@@ -11,6 +11,7 @@ namespace CrashEngine {
 	class CRASH_API Camera
 	{
 	public:
+		Camera() = default;
 		Camera(glm::vec3 position, float width, float height);
 		~Camera();
 
@@ -22,7 +23,7 @@ namespace CrashEngine {
 		const glm::mat4& GetProjectionMatrix() const { return m_ProjectionMatrix; }
 		const glm::mat4& GetViewMatrix() const { return m_ViewMatrix; }
 
-		inline void SetSize(float height, float width) { Height = height; Width = width; RecalculateProjectionMatrix(); }
+		inline void SetSize(float height, float width) { ScreenHeight = height; ScreenWidth = width; RecalculateProjectionMatrix(); }
 	private:
 		void RecalculateViewMatrix();
 		void RecalculateProjectionMatrix();
@@ -38,7 +39,7 @@ namespace CrashEngine {
 		glm::vec3 m_Position = { 0.0f, 0.0f, 0.0f };
 
 
-		float Width, Height;
+		float ScreenWidth, ScreenHeight;
 
 
 	};

@@ -23,4 +23,9 @@ namespace CrashEngine {
 		RenderCommand::DrawTriangles(vertexArray, trianglesNumber);
 	}
 
+	void Renderer::DrawModel(Model* model, Shader* shader)
+	{
+		model->Draw(shader);
+	}
+
 }

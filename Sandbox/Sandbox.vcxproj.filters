@@ -9,11 +9,13 @@
     <ClInclude Include="src\Layers\EditorLayer.h">
       <Filter>Layers</Filter>
     </ClInclude>
+    <ClInclude Include="src\Layers\Panels\SceneHierarchyPanel.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Layers\EditorLayer.cpp">
       <Filter>Layers</Filter>
     </ClCompile>
     <ClCompile Include="src\SandboxApp.cpp" />
+    <ClCompile Include="src\Layers\Panels\SceneHierarchyPanel.cpp" />
   </ItemGroup>
 </Project>

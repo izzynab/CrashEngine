@@ -1,18 +1,17 @@
 #include "cepch.h"
-#include "Scene.h"
 
-#include "Components.h"
+#include "Scene.h"
+#include "Entity.h"
+
 #include "CrashEngine/Renderer/Renderer.h"
 
-#include <glm/glm.hpp>
-
-#include "Entity.h"
+#include "Components.h"
 
 
 namespace CrashEngine {
 
 	CrashEngine::Scene::Scene()
-	{
+	{	
 	}
 
 	CrashEngine::Scene::~Scene()
@@ -33,41 +32,34 @@ namespace CrashEngine {
 		m_Registry.destroy(entity);
 	}
 
-	void Scene::OnUpdate()
-	{	
-		// Render 
-		/*Camera* mainCamera = nullptr;
-		glm::mat4 cameraTransform;
-		{
-			auto view = m_Registry.view<TransformComponent, CameraComponent>();
-			for (auto entity : view)
-			{
-				auto [transform, camera] = view.get<TransformComponent, CameraComponent>(entity);
+	void Scene::OnUpdate(Timestep ts)
+	{
+		auto view = m_Registry.view<TransformComponent, MeshComponent>();
 
-				if (camera.Primary)
-				{
-					mainCamera = &camera.Camera;
-					cameraTransform = transform.GetTransform();
-					break;
-				}
+		for (auto entity : view) 
+		{
+			auto& mod = view.get<MeshComponent>(entity);
+			auto &transform = view.get<TransformComponent>(entity);
+
+			for (int i = 0; i < mod.model->meshes.size(); i++)
+			{
+				mod.model->meshes[i].albedo = mod.albedo;
+				mod.model->meshes[i].normal = mod.normal;
+				mod.model->meshes[i].metallic = mod.metallic;
+				mod.model->meshes[i].roughness = mod.roughness;
+				mod.model->meshes[i].ao = mod.ao;
 			}
+
+			glm::mat4 model = transform.GetTransform();
+			
+			//glm::mat4 model = glm::mat4(1.0f);
+			//model = glm::translate(model, glm::vec3(1, 0, 0));
+			defaultShader->SetUniformMat4("model", model);
+
+			mod.Draw(defaultShader);	
 		}
 
-		if (mainCamera)
-		{
-			//Renderer::BeginScene(*mainCamera, cameraTransform);
-
-			auto group = m_Registry.group<TransformComponent>(entt::get<MeshComponent>);
-			for (auto entity : group)
-			{
-				auto [transform, Mesh] = group.get<TransformComponent, MeshComponent>(entity);
-
-				//Renderer::DrawQuad(transform.GetTransform(), sprite.Color);
-				//Renderer::DrawMesh(transform.GetTransform(), Mesh);
-			}
-
-			Renderer::EndScene();
-		}*/
+		
 	}
 
 	void Scene::OnViewportResize(uint32_t width, uint32_t height)
@@ -75,14 +67,6 @@ namespace CrashEngine {
 		m_ViewportWidth = width;
 		m_ViewportHeight = height;
 
-		// Resize our non-FixedAspectRatio cameras
-		/*auto view = m_Registry.view<CameraComponent>();
-		for (auto entity : view)
-		{
-			auto& cameraComponent = view.get<CameraComponent>(entity);
-			if (!cameraComponent.FixedAspectRatio)
-				cameraComponent.Camera.SetViewportSize(width, height);
-		}*/
 	}
 
 	template<typename T>
@@ -105,11 +89,13 @@ namespace CrashEngine {
 	template<>
 	void Scene::OnComponentAdded<MeshComponent>(Entity entity, MeshComponent& component)
 	{
+
 	}
 
 	template<>
 	void Scene::OnComponentAdded<TagComponent>(Entity entity, TagComponent& component)
 	{
+
 	}
 
 

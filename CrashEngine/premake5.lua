@@ -38,6 +38,7 @@ project "CrashEngine"
 		"%{IncludeDir.stb}",
 		"%{IncludeDir.assimp}",
 		"%{IncludeDir.entt}",
+		"%{IncludeDir.yaml_cpp}",
 	}
 
 	links 
@@ -46,6 +47,7 @@ project "CrashEngine"
 		"GLFW",
 		"ImGui",
 		"assimp",
+		"yaml-cpp",
 		"opengl32.lib",
 	}
 	

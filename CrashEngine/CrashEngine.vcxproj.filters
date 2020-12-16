@@ -7,6 +7,9 @@
     <Filter Include="src\CrashEngine">
       <UniqueIdentifier>{23F092EA-8F7B-00AF-988C-83A304975CAF}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\CrashEngine\Core">
+      <UniqueIdentifier>{5BA20681-4731-904A-F04F-A445DCBDA0F0}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\CrashEngine\Events">
       <UniqueIdentifier>{A7B65AE2-93B0-8334-7C1D-1A4568B6E9A0}</UniqueIdentifier>
     </Filter>
@@ -15,6 +18,12 @@
     </Filter>
     <Filter Include="src\CrashEngine\Renderer">
       <UniqueIdentifier>{290BDEDA-1530-2D5B-3E7B-12EB2AFF2B79}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\CrashEngine\Scene">
+      <UniqueIdentifier>{80ABF5A2-EC17-B19D-B50B-49FB2137D305}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\CrashEngine\Utils">
+      <UniqueIdentifier>{C33F23A3-2FAC-DE9D-F89F-76FB64CB0006}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\Platform">
       <UniqueIdentifier>{21CA02E5-0D2D-9289-B6B2-CA3FA2F45D0C}</UniqueIdentifier>
@@ -69,6 +78,45 @@
     <ClInclude Include="src\Crash.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="src\CrashEngine\Core\Application.h">
+      <Filter>src\CrashEngine\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\CrashEngine\Core\Core.h">
+      <Filter>src\CrashEngine\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\CrashEngine\Core\Defines.h">
+      <Filter>src\CrashEngine\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\CrashEngine\Core\EntryPoint.h">
+      <Filter>src\CrashEngine\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\CrashEngine\Core\FileManager.h">
+      <Filter>src\CrashEngine\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\CrashEngine\Core\Input.h">
+      <Filter>src\CrashEngine\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\CrashEngine\Core\KeyCodes.h">
+      <Filter>src\CrashEngine\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\CrashEngine\Core\Layer.h">
+      <Filter>src\CrashEngine\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\CrashEngine\Core\LayerStack.h">
+      <Filter>src\CrashEngine\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\CrashEngine\Core\Log.h">
+      <Filter>src\CrashEngine\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\CrashEngine\Core\MouseButtonCodes.h">
+      <Filter>src\CrashEngine\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\CrashEngine\Core\Timestep.h">
+      <Filter>src\CrashEngine\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\CrashEngine\Core\Window.h">
+      <Filter>src\CrashEngine\Core</Filter>
+    </ClInclude>
     <ClInclude Include="src\CrashEngine\Events\ApplicationEvent.h">
       <Filter>src\CrashEngine\Events</Filter>
     </ClInclude>
@@ -91,6 +139,9 @@
       <Filter>src\CrashEngine\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\CrashEngine\Renderer\Camera.h">
+      <Filter>src\CrashEngine\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\CrashEngine\Renderer\CameraController.h">
       <Filter>src\CrashEngine\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\CrashEngine\Renderer\Framebuffer.h">
@@ -122,6 +173,24 @@
     </ClInclude>
     <ClInclude Include="src\CrashEngine\Renderer\VertexArray.h">
       <Filter>src\CrashEngine\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\CrashEngine\Scene\Components.h">
+      <Filter>src\CrashEngine\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="src\CrashEngine\Scene\Entity.h">
+      <Filter>src\CrashEngine\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="src\CrashEngine\Scene\Scene.h">
+      <Filter>src\CrashEngine\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="src\CrashEngine\Scene\SceneCamera.h">
+      <Filter>src\CrashEngine\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="src\CrashEngine\Scene\SceneSerializer.h">
+      <Filter>src\CrashEngine\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="src\CrashEngine\Utils\PlatformUtils.h">
+      <Filter>src\CrashEngine\Utils</Filter>
     </ClInclude>
     <ClInclude Include="src\Platform\OpenGl\OpenGLBuffer.h">
       <Filter>src\Platform\OpenGl</Filter>
@@ -1632,50 +1701,21 @@
     <ClInclude Include="vendor\glm\glm\vector_relational.hpp">
       <Filter>vendor\glm\glm</Filter>
     </ClInclude>
-    <ClInclude Include="src\CrashEngine\Core\Application.h">
-      <Filter>src\CrashEngine</Filter>
-    </ClInclude>
-    <ClInclude Include="src\CrashEngine\Core\Core.h">
-      <Filter>src\CrashEngine</Filter>
-    </ClInclude>
-    <ClInclude Include="src\CrashEngine\Core\Defines.h">
-      <Filter>src\CrashEngine</Filter>
-    </ClInclude>
-    <ClInclude Include="src\CrashEngine\Core\EntryPoint.h">
-      <Filter>src\CrashEngine</Filter>
-    </ClInclude>
-    <ClInclude Include="src\CrashEngine\Core\FileManager.h">
-      <Filter>src\CrashEngine</Filter>
-    </ClInclude>
-    <ClInclude Include="src\CrashEngine\Core\Input.h">
-      <Filter>src\CrashEngine</Filter>
-    </ClInclude>
-    <ClInclude Include="src\CrashEngine\Core\KeyCodes.h">
-      <Filter>src\CrashEngine</Filter>
-    </ClInclude>
-    <ClInclude Include="src\CrashEngine\Core\Layer.h">
-      <Filter>src\CrashEngine</Filter>
-    </ClInclude>
-    <ClInclude Include="src\CrashEngine\Core\LayerStack.h">
-      <Filter>src\CrashEngine</Filter>
-    </ClInclude>
-    <ClInclude Include="src\CrashEngine\Core\Log.h">
-      <Filter>src\CrashEngine</Filter>
-    </ClInclude>
-    <ClInclude Include="src\CrashEngine\Core\MouseButtonCodes.h">
-      <Filter>src\CrashEngine</Filter>
-    </ClInclude>
-    <ClInclude Include="src\CrashEngine\Core\Window.h">
-      <Filter>src\CrashEngine</Filter>
-    </ClInclude>
-    <ClInclude Include="src\CrashEngine\Scene\Entity.h" />
-    <ClInclude Include="src\CrashEngine\Scene\Scene.h" />
-    <ClInclude Include="src\CrashEngine\Scene\Components.h" />
-    <ClInclude Include="src\CrashEngine\Scene\SceneCamera.h" />
-    <ClInclude Include="src\CrashEngine\Renderer\CameraController.h" />
-    <ClInclude Include="src\CrashEngine\Core\Timestep.h" />
+    <ClInclude Include="src\CrashEngine\Test\Scenetest.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\CrashEngine\Core\Application.cpp">
+      <Filter>src\CrashEngine\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CrashEngine\Core\Layer.cpp">
+      <Filter>src\CrashEngine\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CrashEngine\Core\LayerStack.cpp">
+      <Filter>src\CrashEngine\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CrashEngine\Core\Log.cpp">
+      <Filter>src\CrashEngine\Core</Filter>
+    </ClCompile>
     <ClCompile Include="src\CrashEngine\ImGui\ImGuiBuild.cpp">
       <Filter>src\CrashEngine\ImGui</Filter>
     </ClCompile>
@@ -1689,6 +1729,9 @@
       <Filter>src\CrashEngine\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\CrashEngine\Renderer\Camera.cpp">
+      <Filter>src\CrashEngine\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CrashEngine\Renderer\CameraController.cpp">
       <Filter>src\CrashEngine\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\CrashEngine\Renderer\Framebuffer.cpp">
@@ -1718,6 +1761,18 @@
     <ClCompile Include="src\CrashEngine\Renderer\VertexArray.cpp">
       <Filter>src\CrashEngine\Renderer</Filter>
     </ClCompile>
+    <ClCompile Include="src\CrashEngine\Scene\Entity.cpp">
+      <Filter>src\CrashEngine\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CrashEngine\Scene\Scene.cpp">
+      <Filter>src\CrashEngine\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CrashEngine\Scene\SceneCamera.cpp">
+      <Filter>src\CrashEngine\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CrashEngine\Scene\SceneSerializer.cpp">
+      <Filter>src\CrashEngine\Scene</Filter>
+    </ClCompile>
     <ClCompile Include="src\Platform\OpenGl\OpenGLBuffer.cpp">
       <Filter>src\Platform\OpenGl</Filter>
     </ClCompile>
@@ -1739,6 +1794,9 @@
     <ClCompile Include="src\Platform\OpenGl\OpenGLVertexArray.cpp">
       <Filter>src\Platform\OpenGl</Filter>
     </ClCompile>
+    <ClCompile Include="src\Platform\Windows\WindowPlatformUtils.cpp">
+      <Filter>src\Platform\Windows</Filter>
+    </ClCompile>
     <ClCompile Include="src\Platform\Windows\WindowsInput.cpp">
       <Filter>src\Platform\Windows</Filter>
     </ClCompile>
@@ -1748,22 +1806,7 @@
     <ClCompile Include="src\cepch.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\CrashEngine\Core\Application.cpp">
-      <Filter>src\CrashEngine</Filter>
-    </ClCompile>
-    <ClCompile Include="src\CrashEngine\Core\Layer.cpp">
-      <Filter>src\CrashEngine</Filter>
-    </ClCompile>
-    <ClCompile Include="src\CrashEngine\Core\LayerStack.cpp">
-      <Filter>src\CrashEngine</Filter>
-    </ClCompile>
-    <ClCompile Include="src\CrashEngine\Core\Log.cpp">
-      <Filter>src\CrashEngine</Filter>
-    </ClCompile>
-    <ClCompile Include="src\CrashEngine\Scene\Entity.cpp" />
-    <ClCompile Include="src\CrashEngine\Scene\Scene.cpp" />
-    <ClCompile Include="src\CrashEngine\Scene\SceneCamera.cpp" />
-    <ClCompile Include="src\CrashEngine\Renderer\CameraController.cpp" />
+    <ClCompile Include="src\CrashEngine\Test\Scenetest.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="vendor\assimp\include\assimp\config.h.in">

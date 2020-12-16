@@ -27,6 +27,8 @@ namespace CrashEngine {
 		static void Submit(const std::shared_ptr<VertexArray>& vertexArray, bool strip = false);
 		static void SubmitDebug(const std::shared_ptr<VertexArray>& vertexArray, unsigned int trianglesNumber);
 
+		static void DrawModel(Model* model, Shader* shader);
+
 		inline static RendererAPI::API GetAPI() { return RendererAPI::GetAPI(); }
 	};
 

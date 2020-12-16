@@ -132,9 +132,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="src\Layers\EditorLayer.h" />
+    <ClInclude Include="src\Layers\Panels\SceneHierarchyPanel.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Layers\EditorLayer.cpp" />
+    <ClCompile Include="src\Layers\Panels\SceneHierarchyPanel.cpp" />
     <ClCompile Include="src\SandboxApp.cpp" />
   </ItemGroup>
   <ItemGroup>

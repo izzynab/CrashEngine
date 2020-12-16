@@ -252,15 +252,16 @@ namespace CrashEngine {
 
 	void ImGuiLayer::Menu()
 	{
-        ImGui::Begin("Menu");
-
-        ImGui::End();
+        //ImGui::Begin("Menu");
+		ImGui::ShowDemoWindow();
+        //ImGui::End();
 		
 	}
 
 	void ImGuiLayer::WindowMetrics()
 	{
 		ImGui::ShowMetricsWindow();
+		
 	}
 
 	void ImGuiLayer::OnImGuiRender()

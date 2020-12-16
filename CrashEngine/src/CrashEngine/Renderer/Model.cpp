@@ -18,6 +18,9 @@ namespace CrashEngine
  
 		//set gamma correction
 		loadModel(path);
+
+        //CE_CORE_INFO("Meshes size: {0}", std::to_string(meshes.size()));
+
 	}
 
 	void Model::Draw(Shader* shader)

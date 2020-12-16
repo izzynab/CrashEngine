@@ -7,6 +7,12 @@ namespace CrashEngine {
 	{
 		//auto window = Application::Get().GetWindow();
 
+
+		// initialize default shapes
+		sphere.reset(new Sphere());
+		square.reset(new Square());
+		quad.reset(new Quad());
+
 		float Height = Application::Get().GetWindow().GetHeight();
 		float Width = Application::Get().GetWindow().GetWidth();
 
@@ -21,7 +27,7 @@ namespace CrashEngine {
 		pbrShader = Shader::Create("pbr.vert", "pbr.frag");
 		pbrShader->Bind();
 
-		pbrShader->SetUniformVec3("albedo", glm::vec3(1.0f, 0.0f, 1.0f));
+		pbrShader->SetUniformVec3("albedo", glm::vec3(0.3f, 0.3f, 0.3f));
 		pbrShader->SetUniformFloat("ao", 1.0f);
 		pbrShader->SetUniformInt("irradianceMap", 0);
 		pbrShader->SetUniformInt("prefilterMap", 1);
@@ -74,19 +80,13 @@ namespace CrashEngine {
 
 
 
-		// initialize default shapes
-		sphere.reset(new Sphere());
-		square.reset(new Square());
-		quad.reset(new Quad());
-
-
 		// set default settings
 		RenderCommand::Enable(CE_DEPTH_TEST);
 		RenderCommand::Enable(CE_TEXTURE_CUBE_MAP_SEAMLESS);
 		RenderCommand::DepthFunc(CE_LEQUAL);
 
 
-		// pbr: load the HDR environment map
+		//----------------------------Here should be func that loads hdr and calcualate maps--------------------------------
 		HDR = TextureHDR::Create("hdr\\14-Hamarikyu_Bridge_B_3k.hdr");
 
 		// pbr: setup cubemap to render to and attach to framebuffer
@@ -204,7 +204,6 @@ namespace CrashEngine {
 
 		Framebuffer->Unbind();
 
-
 		UniformBufferLayout uniformLayout = {
 			{ ShaderDataType::Mat4, "projection" },
 			{ ShaderDataType::Mat4, "view"},
@@ -218,8 +217,60 @@ namespace CrashEngine {
 		m_MatrixUB->setData("projection", glm::value_ptr(projection));
 
 
-
 		RenderCommand::SetViewport(Width, Height);
+
+	//-------------------------End of initialize-----------------------------------------
+
+
+
+
+
+
+		//albedo = Texture2D::Create("cerberus\\cerberus_A.tga");
+		//normal = Texture2D::Create("cerberus\\cerberus_N.tga");
+		//metallic = Texture2D::Create("cerberus\\cerberus_M.tga");
+		//roughness = Texture2D::Create("cerberus\\cerberus_R.tga");
+		//ao = Texture2D::Create("cerberus\\cerberus_AO.tga");
+
+		//Model* testModel;
+		testModel = new Model("C:\\EngineDev\\CrashEngine\\Models\\cerberus\\cerberus.obj");
+
+		for (int i = 0; i < testModel->meshes.size(); i++)
+		{
+			/*testModel->meshes[i].albedo = albedo;
+			testModel->meshes[i].normal = normal;
+			testModel->meshes[i].metallic = metallic;
+			testModel->meshes[i].roughness = roughness;
+			testModel->meshes[i].ao = ao;*/
+			//CE_INFO("Mesh texture");
+		}
+
+
+		//Scene and entities----------------------------------
+		m_ActiveScene = std::make_shared<Scene>();
+
+		auto mesh1 = m_ActiveScene->CreateEntity("Mesh #1");
+		mesh1.AddComponent<MeshComponent>(testModel);
+		mesh1.GetComponent<TransformComponent>().Translation = glm::vec3(0,0,0);
+
+		/*auto mesh2 = m_ActiveScene->CreateEntity("Mesh #2");
+		mesh2.AddComponent<MeshComponent>(testModel);
+		mesh2.GetComponent<TransformComponent>().Translation = glm::vec3(1,0,0);
+
+		auto mesh3 = m_ActiveScene->CreateEntity("Mesh #3");
+		mesh3.AddComponent<MeshComponent>(testModel);
+		mesh3.GetComponent<TransformComponent>().Translation = glm::vec3(2,0,0);*/
+
+
+		m_ActiveScene->SetDefaultShader(pbrTextureShader);
+
+		auto view = m_ActiveScene->m_Registry.view<TransformComponent, MeshComponent>();
+	
+		CE_CORE_INFO("size of view in scene: {0}", view.size());
+
+		HierarchyPanel = new SceneHierarchyPanel(m_ActiveScene);
+
+		//m_SceneHierarchyPanel.SetContext(m_ActiveScene);
 	}
 
 	void Editor::OnUpdate(Timestep ts)
@@ -236,22 +287,29 @@ namespace CrashEngine {
 		glm::mat4 view = cameraController->GetCamera().GetViewMatrix();
 		m_MatrixUB->setData("view", glm::value_ptr(view));
 
-
 		pbrTextureShader->Bind();
 		//pbrTextureShader->SetUniformMat4("view", view);
 		pbrTextureShader->SetUniformVec3("camPos", cameraController->GetCamera().GetPosition());
+
+		/*RenderCommand::BindTexture(albedo->GetRendererID(), 0);
+		RenderCommand::BindTexture(normal->GetRendererID(), 1);
+		RenderCommand::BindTexture(metallic->GetRendererID(), 2);
+		RenderCommand::BindTexture(roughness->GetRendererID(), 3);
+		RenderCommand::BindTexture(ao->GetRendererID(), 4);*/
 
 		RenderCommand::BindCubemap(Irradiancemap->GetRendererID(), 5);
 		RenderCommand::BindCubemap(Prefiltermap->GetRendererID(), 6);
 		RenderCommand::BindTexture(brdfLUTTexture->GetRendererID(), 7);
 
 		model = glm::mat4(1.0f);
-		model = glm::translate(model, glm::vec3(1, 1, 2));
+		model = glm::translate(model, glm::vec3(0, 0, 0));
 		pbrTextureShader->SetUniformMat4("model", model);
 		//testModel->Draw(pbrTextureShader);
+		//Renderer::DrawModel(testModel, pbrTextureShader);
 		//sphere->RenderSphere();
+		m_ActiveScene->OnUpdate(ts);
 
-		pbrShader->Bind();
+		/*pbrShader->Bind();
 		pbrShader->SetUniformVec3("camPos", cameraController->GetCamera().GetPosition());
 
 		RenderCommand::BindCubemap(Irradiancemap->GetRendererID(), 0);
@@ -277,12 +335,17 @@ namespace CrashEngine {
 					0.0f
 				));
 				pbrShader->SetUniformMat4("model", model);
-				pbrShader->SetUniformVec3("albedo", glm::vec3(1.0f, 0.0f, 1.0f));
-				sphere->RenderSphere();
+				pbrShader->SetUniformVec3("albedo", glm::vec3(0.3f, 0.3f, 0.3f));
+				//sphere->RenderSphere();
 				//square->RenderSquare();
-				//gun->Draw(pbrShader);
 			}
 		}
+
+		//testModel->Draw(pbrShader);
+
+
+
+
 
 		// render light source (simply re-render sphere at light positions)
 		// this looks a bit off as we use the same shader, but it'll make their positions obvious and 
@@ -305,6 +368,8 @@ namespace CrashEngine {
 			pbrTextureShader->SetUniformVec3("lightPositions[" + std::to_string(i) + "]", newPos);
 			pbrTextureShader->SetUniformVec3("lightColors[" + std::to_string(i) + "]", lightColors[i]);
 		}
+		*/
+
 
 		// render skybox (render as last to prevent overdraw)
 		backgroundShader->Bind();
@@ -335,6 +400,8 @@ namespace CrashEngine {
 		if (imguilayer->WindowMetricsEnabled) { imguilayer->WindowMetrics(); }
 
 		if (imguilayer->EditorStyleEnabled) { imguilayer->StyleEditor(); }
+
+		HierarchyPanel->OnImGuiRender();
 
 
 		RenderCommand::SetViewport(imguilayer->CurrentWindowView.x, imguilayer->CurrentWindowView.y);

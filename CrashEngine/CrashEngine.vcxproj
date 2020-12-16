@@ -77,7 +77,7 @@
       <PrecompiledHeaderFile>cepch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;CE_PLATFORM_WINDOWS;CE_BUILD_DLL;GLFW_INCLUDE_NONE;CE_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\GLFW\include;vendor\GLAD\include;vendor\imgui;vendor\glm;vendor\stb_image;vendor\assimp\include;vendor\entt\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\GLFW\include;vendor\GLAD\include;vendor\imgui;vendor\glm;vendor\stb_image;vendor\assimp\include;vendor\entt\include;vendor\yaml-cpp\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -100,7 +100,7 @@
       <PrecompiledHeaderFile>cepch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;CE_PLATFORM_WINDOWS;CE_BUILD_DLL;GLFW_INCLUDE_NONE;CE_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\GLFW\include;vendor\GLAD\include;vendor\imgui;vendor\glm;vendor\stb_image;vendor\assimp\include;vendor\entt\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\GLFW\include;vendor\GLAD\include;vendor\imgui;vendor\glm;vendor\stb_image;vendor\assimp\include;vendor\entt\include;vendor\yaml-cpp\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -127,7 +127,7 @@
       <PrecompiledHeaderFile>cepch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;CE_PLATFORM_WINDOWS;CE_BUILD_DLL;GLFW_INCLUDE_NONE;CE_DIST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\GLFW\include;vendor\GLAD\include;vendor\imgui;vendor\glm;vendor\stb_image;vendor\assimp\include;vendor\entt\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\GLFW\include;vendor\GLAD\include;vendor\imgui;vendor\glm;vendor\stb_image;vendor\assimp\include;vendor\entt\include;vendor\yaml-cpp\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -154,19 +154,20 @@
     <ClInclude Include="src\CrashEngine\Core\Core.h" />
     <ClInclude Include="src\CrashEngine\Core\Defines.h" />
     <ClInclude Include="src\CrashEngine\Core\EntryPoint.h" />
-    <ClInclude Include="src\CrashEngine\Core\Timestep.h" />
-    <ClInclude Include="src\CrashEngine\Events\ApplicationEvent.h" />
-    <ClInclude Include="src\CrashEngine\Events\Event.h" />
-    <ClInclude Include="src\CrashEngine\Events\KeyEvent.h" />
-    <ClInclude Include="src\CrashEngine\Events\MouseEvent.h" />
     <ClInclude Include="src\CrashEngine\Core\FileManager.h" />
-    <ClInclude Include="src\CrashEngine\ImGui\ImGuiLayer.h" />
     <ClInclude Include="src\CrashEngine\Core\Input.h" />
     <ClInclude Include="src\CrashEngine\Core\KeyCodes.h" />
     <ClInclude Include="src\CrashEngine\Core\Layer.h" />
     <ClInclude Include="src\CrashEngine\Core\LayerStack.h" />
     <ClInclude Include="src\CrashEngine\Core\Log.h" />
     <ClInclude Include="src\CrashEngine\Core\MouseButtonCodes.h" />
+    <ClInclude Include="src\CrashEngine\Core\Timestep.h" />
+    <ClInclude Include="src\CrashEngine\Core\Window.h" />
+    <ClInclude Include="src\CrashEngine\Events\ApplicationEvent.h" />
+    <ClInclude Include="src\CrashEngine\Events\Event.h" />
+    <ClInclude Include="src\CrashEngine\Events\KeyEvent.h" />
+    <ClInclude Include="src\CrashEngine\Events\MouseEvent.h" />
+    <ClInclude Include="src\CrashEngine\ImGui\ImGuiLayer.h" />
     <ClInclude Include="src\CrashEngine\Renderer\BasicShapes.h" />
     <ClInclude Include="src\CrashEngine\Renderer\Buffer.h" />
     <ClInclude Include="src\CrashEngine\Renderer\Camera.h" />
@@ -181,11 +182,13 @@
     <ClInclude Include="src\CrashEngine\Renderer\Shader.h" />
     <ClInclude Include="src\CrashEngine\Renderer\Texture.h" />
     <ClInclude Include="src\CrashEngine\Renderer\VertexArray.h" />
-    <ClInclude Include="src\CrashEngine\Core\Window.h" />
     <ClInclude Include="src\CrashEngine\Scene\Components.h" />
     <ClInclude Include="src\CrashEngine\Scene\Entity.h" />
     <ClInclude Include="src\CrashEngine\Scene\Scene.h" />
     <ClInclude Include="src\CrashEngine\Scene\SceneCamera.h" />
+    <ClInclude Include="src\CrashEngine\Scene\SceneSerializer.h" />
+    <ClInclude Include="src\CrashEngine\Test\Scenetest.h" />
+    <ClInclude Include="src\CrashEngine\Utils\PlatformUtils.h" />
     <ClInclude Include="src\Platform\OpenGl\OpenGLBuffer.h" />
     <ClInclude Include="src\Platform\OpenGl\OpenGLContext.h" />
     <ClInclude Include="src\Platform\OpenGl\OpenGLFramebuffer.h" />
@@ -692,11 +695,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\CrashEngine\Core\Application.cpp" />
-    <ClCompile Include="src\CrashEngine\ImGui\ImGuiBuild.cpp" />
-    <ClCompile Include="src\CrashEngine\ImGui\ImGuiLayer.cpp" />
     <ClCompile Include="src\CrashEngine\Core\Layer.cpp" />
     <ClCompile Include="src\CrashEngine\Core\LayerStack.cpp" />
     <ClCompile Include="src\CrashEngine\Core\Log.cpp" />
+    <ClCompile Include="src\CrashEngine\ImGui\ImGuiBuild.cpp" />
+    <ClCompile Include="src\CrashEngine\ImGui\ImGuiLayer.cpp" />
     <ClCompile Include="src\CrashEngine\Renderer\BasicShapes.cpp" />
     <ClCompile Include="src\CrashEngine\Renderer\Buffer.cpp" />
     <ClCompile Include="src\CrashEngine\Renderer\Camera.cpp" />
@@ -713,6 +716,8 @@
     <ClCompile Include="src\CrashEngine\Scene\Entity.cpp" />
     <ClCompile Include="src\CrashEngine\Scene\Scene.cpp" />
     <ClCompile Include="src\CrashEngine\Scene\SceneCamera.cpp" />
+    <ClCompile Include="src\CrashEngine\Scene\SceneSerializer.cpp" />
+    <ClCompile Include="src\CrashEngine\Test\Scenetest.cpp" />
     <ClCompile Include="src\Platform\OpenGl\OpenGLBuffer.cpp" />
     <ClCompile Include="src\Platform\OpenGl\OpenGLContext.cpp" />
     <ClCompile Include="src\Platform\OpenGl\OpenGLFramebuffer.cpp" />
@@ -720,6 +725,7 @@
     <ClCompile Include="src\Platform\OpenGl\OpenGLShader.cpp" />
     <ClCompile Include="src\Platform\OpenGl\OpenGLTexture.cpp" />
     <ClCompile Include="src\Platform\OpenGl\OpenGLVertexArray.cpp" />
+    <ClCompile Include="src\Platform\Windows\WindowPlatformUtils.cpp" />
     <ClCompile Include="src\Platform\Windows\WindowsInput.cpp" />
     <ClCompile Include="src\Platform\Windows\WindowsWindow.cpp" />
     <ClCompile Include="src\cepch.cpp">
@@ -741,6 +747,9 @@
     </ProjectReference>
     <ProjectReference Include="vendor\assimp\assimp.vcxproj">
       <Project>{724885F2-5EEA-AFC8-47A5-C31C33E63619}</Project>
+    </ProjectReference>
+    <ProjectReference Include="vendor\yaml-cpp\yaml-cpp.vcxproj">
+      <Project>{88F1A057-74BE-FB62-9DD7-E90A890331F1}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
