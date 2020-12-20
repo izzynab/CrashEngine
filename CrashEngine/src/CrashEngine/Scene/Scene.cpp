@@ -6,6 +6,7 @@
 #include "CrashEngine/Renderer/Renderer.h"
 
 #include "Components.h"
+#include "MeshComponent.h"
 
 
 namespace CrashEngine {
@@ -40,15 +41,6 @@ namespace CrashEngine {
 		{
 			auto& mod = view.get<MeshComponent>(entity);
 			auto &transform = view.get<TransformComponent>(entity);
-
-			for (int i = 0; i < mod.model->meshes.size(); i++)
-			{
-				mod.model->meshes[i].albedo = mod.albedo;
-				mod.model->meshes[i].normal = mod.normal;
-				mod.model->meshes[i].metallic = mod.metallic;
-				mod.model->meshes[i].roughness = mod.roughness;
-				mod.model->meshes[i].ao = mod.ao;
-			}
 
 			glm::mat4 model = transform.GetTransform();
 			

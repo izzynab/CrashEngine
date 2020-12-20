@@ -311,10 +311,11 @@ namespace CrashEngine {
 					if (filepath)
 					{
 						component.albedo = Texture2D::Create(filepath.value());
+						component.UpdateModel();
 					}
 				}
 
-				if (!(&component.albedoTextureUse))
+				if (!component.albedoTextureUse)
 				{
 					ImGui::ColorPicker4("Albedo color", &component.albedoColor.x);
 				}
@@ -331,6 +332,7 @@ namespace CrashEngine {
 					if (filepath)
 					{
 						component.normal = Texture2D::Create(filepath.value());
+						component.UpdateModel();
 					}
 				}
 
@@ -349,10 +351,11 @@ namespace CrashEngine {
 					if (filepath)
 					{
 						component.metallic = Texture2D::Create(filepath.value());
+						component.UpdateModel();
 					}
 				}
 
-				ImGui::SliderFloat("Metallic Value", &component.metallicValue, 0.f, 1.f);
+				if(!component.metallicTextureUse)ImGui::SliderFloat("Metallic Value", &component.metallicValue, 0.f, 1.f);
 
 
 
@@ -369,10 +372,11 @@ namespace CrashEngine {
 					if (filepath)
 					{
 						component.roughness = Texture2D::Create(filepath.value());
+						component.UpdateModel();
 					}
 				}
 
-				ImGui::SliderFloat("Roughness Value", &component.roughnessValue, 0.f, 1.f);
+				if (!component.roughnessTextureUse) ImGui::SliderFloat("Roughness Value", &component.roughnessValue, 0.f, 1.f);
 
 
 
@@ -389,6 +393,7 @@ namespace CrashEngine {
 					if (filepath)
 					{
 						component.ao = Texture2D::Create(filepath.value());
+						component.UpdateModel();
 					}
 				}
 	

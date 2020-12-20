@@ -48,5 +48,14 @@ namespace CrashEngine
         std::shared_ptr<Texture2D> roughness;
         std::shared_ptr<Texture2D> ao;
 
+        bool albedoTextureUse;
+        bool metallicTextureUse;
+        bool roughnessTextureUse;
+
+
+        glm::vec4 albedoColor = glm::vec4(0.2f, 0.2f, 0.2f, 0.0f);
+        float metallicValue = 0.f;
+        float roughnessValue = 0.5f;
+
     };
 }

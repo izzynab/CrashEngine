@@ -1702,6 +1702,7 @@
       <Filter>vendor\glm\glm</Filter>
     </ClInclude>
     <ClInclude Include="src\CrashEngine\Test\Scenetest.h" />
+    <ClInclude Include="src\CrashEngine\Scene\MeshComponent.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\CrashEngine\Core\Application.cpp">
@@ -1807,10 +1808,26 @@
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\CrashEngine\Test\Scenetest.cpp" />
+    <ClCompile Include="src\CrashEngine\Scene\MeshComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="vendor\assimp\include\assimp\config.h.in">
       <Filter>vendor\assimp\include\assimp</Filter>
     </None>
+    <None Include="src\CrashEngine\Renderer\Shaders\background.frag" />
+    <None Include="src\CrashEngine\Renderer\Shaders\background.vert" />
+    <None Include="src\CrashEngine\Renderer\Shaders\Basic.frag" />
+    <None Include="src\CrashEngine\Renderer\Shaders\Basic.vert" />
+    <None Include="src\CrashEngine\Renderer\Shaders\brdf.frag" />
+    <None Include="src\CrashEngine\Renderer\Shaders\brdf.vert" />
+    <None Include="src\CrashEngine\Renderer\Shaders\cubemap.vert" />
+    <None Include="src\CrashEngine\Renderer\Shaders\equirectangularToCubemap.frag" />
+    <None Include="src\CrashEngine\Renderer\Shaders\irradiance.frag" />
+    <None Include="src\CrashEngine\Renderer\Shaders\pbr.frag" />
+    <None Include="src\CrashEngine\Renderer\Shaders\pbr.vert" />
+    <None Include="src\CrashEngine\Renderer\Shaders\pbrTexture.frag" />
+    <None Include="src\CrashEngine\Renderer\Shaders\prefilter.frag" />
+    <None Include="src\CrashEngine\Renderer\Shaders\Text.frag" />
+    <None Include="src\CrashEngine\Renderer\Shaders\Text.vert" />
   </ItemGroup>
 </Project>

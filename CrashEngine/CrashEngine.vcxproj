@@ -184,6 +184,7 @@
     <ClInclude Include="src\CrashEngine\Renderer\VertexArray.h" />
     <ClInclude Include="src\CrashEngine\Scene\Components.h" />
     <ClInclude Include="src\CrashEngine\Scene\Entity.h" />
+    <ClInclude Include="src\CrashEngine\Scene\MeshComponent.h" />
     <ClInclude Include="src\CrashEngine\Scene\Scene.h" />
     <ClInclude Include="src\CrashEngine\Scene\SceneCamera.h" />
     <ClInclude Include="src\CrashEngine\Scene\SceneSerializer.h" />
@@ -714,6 +715,7 @@
     <ClCompile Include="src\CrashEngine\Renderer\Texture.cpp" />
     <ClCompile Include="src\CrashEngine\Renderer\VertexArray.cpp" />
     <ClCompile Include="src\CrashEngine\Scene\Entity.cpp" />
+    <ClCompile Include="src\CrashEngine\Scene\MeshComponent.cpp" />
     <ClCompile Include="src\CrashEngine\Scene\Scene.cpp" />
     <ClCompile Include="src\CrashEngine\Scene\SceneCamera.cpp" />
     <ClCompile Include="src\CrashEngine\Scene\SceneSerializer.cpp" />
@@ -733,6 +735,21 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <None Include="src\CrashEngine\Renderer\Shaders\background.frag" />
+    <None Include="src\CrashEngine\Renderer\Shaders\background.vert" />
+    <None Include="src\CrashEngine\Renderer\Shaders\Basic.frag" />
+    <None Include="src\CrashEngine\Renderer\Shaders\Basic.vert" />
+    <None Include="src\CrashEngine\Renderer\Shaders\brdf.frag" />
+    <None Include="src\CrashEngine\Renderer\Shaders\brdf.vert" />
+    <None Include="src\CrashEngine\Renderer\Shaders\cubemap.vert" />
+    <None Include="src\CrashEngine\Renderer\Shaders\equirectangularToCubemap.frag" />
+    <None Include="src\CrashEngine\Renderer\Shaders\irradiance.frag" />
+    <None Include="src\CrashEngine\Renderer\Shaders\pbr.frag" />
+    <None Include="src\CrashEngine\Renderer\Shaders\pbr.vert" />
+    <None Include="src\CrashEngine\Renderer\Shaders\pbrTexture.frag" />
+    <None Include="src\CrashEngine\Renderer\Shaders\prefilter.frag" />
+    <None Include="src\CrashEngine\Renderer\Shaders\Text.frag" />
+    <None Include="src\CrashEngine\Renderer\Shaders\Text.vert" />
     <None Include="vendor\assimp\include\assimp\config.h.in" />
   </ItemGroup>
   <ItemGroup>

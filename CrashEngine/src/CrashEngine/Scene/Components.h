@@ -44,42 +44,6 @@ namespace CrashEngine {
 		}
 	};
 
-	struct MeshComponent
-	{
-		Model* model;
-		std::string path;
-
-		MeshComponent() = default;
-		MeshComponent(const MeshComponent&) = default;
-		MeshComponent(Model* mod)
-			:model(mod)
-		{
-			albedo = Texture2D::Create("C:\\EngineDev\\CrashEngine\\Textures\\cerberus\\cerberus_A.tga");
-			normal = Texture2D::Create("C:\\EngineDev\\CrashEngine\\Textures\\cerberus\\cerberus_N.tga");
-			metallic = Texture2D::Create("C:\\EngineDev\\CrashEngine\\Textures\\cerberus\\cerberus_M.tga");
-			roughness = Texture2D::Create("C:\\EngineDev\\CrashEngine\\Textures\\cerberus\\cerberus_R.tga");
-			ao = Texture2D::Create("C:\\EngineDev\\CrashEngine\\Textures\\cerberus\\cerberus_AO.tga");
-		}
-
-		void Draw(Shader* shader) { model->Draw(shader); }
-
-		std::shared_ptr<Texture2D> albedo;
-		std::shared_ptr<Texture2D> normal;
-		std::shared_ptr<Texture2D> metallic;
-		std::shared_ptr<Texture2D> roughness;
-		std::shared_ptr<Texture2D> ao;
-
-		bool albedoTextureUse;
-		bool metallicTextureUse;
-		bool roughnessTextureUse;
-
-
-		glm::vec4 albedoColor = glm::vec4(0.2f, 0.2f, 0.2f,0.0f);
-		float metallicValue = 0.f;
-		float roughnessValue = 0.5f;
-
-	};
-
 	struct CameraComponent
 	{
 		SceneCamera Camera;

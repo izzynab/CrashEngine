@@ -3,6 +3,7 @@
 #include "Renderer.h"
 
 #include "glad/glad.h"
+#include "Texture.h"
 
 namespace CrashEngine
 {
@@ -48,6 +49,7 @@ namespace CrashEngine
         if (metallic)   RenderCommand::BindTexture(metallic->GetRendererID(), 2);
         if (roughness)  RenderCommand::BindTexture(roughness->GetRendererID(), 3);
         if (ao)         RenderCommand::BindTexture(ao->GetRendererID(), 4);
+
 
         // draw mesh
         VA->Bind();
