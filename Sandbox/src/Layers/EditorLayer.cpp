@@ -128,7 +128,7 @@ namespace CrashEngine {
 		Cubemap->CreateMipmap();
 
 		// pbr: create an irradiance cubemap, and re-scale capture FBO to irradiance scale.
-		Irradiancemap = CubemapTexture::Create(32, 32, false);//TODO: more that 512 pixels make irradiance map wrong because when there is more than 512 cubemap is scaled and irrradiance map captures smaller section of cubemap
+		Irradiancemap = CubemapTexture::Create(32, 32, false);
 		Framebuffer->Bind();
 		Renderbuffer->Bind();
 		Renderbuffer->SetStorage(CE_DEPTH_COMPONENT24, 32, 32);
@@ -188,21 +188,11 @@ namespace CrashEngine {
 		}
 		Framebuffer->Unbind();
 
-		// pbr: generate a 2D LUT from the BRDF equations used.
-		brdfLUTTexture = Texture2D::Create(512, 512);
 
-		// then re-configure capture framebuffer object and render screen-space quad with BRDF shader.
-		Framebuffer->Bind();
-		Renderbuffer->Bind();
-		Renderbuffer->SetStorage(CE_DEPTH_COMPONENT24, 512, 512);
-		Framebuffer->SetTexture(CE_TEXTURE_2D, brdfLUTTexture->GetRendererID(), 0);
+		texCreat = new TextureCreator();
+		brdfLUTTexture = texCreat->CreateTexture(512, 512, brdfShader);
 
-		RenderCommand::SetViewport(512, 512);
-		brdfShader->Bind();
-		RenderCommand::Clear();
-		quad->RenderQuad();
 
-		Framebuffer->Unbind();
 
 		UniformBufferLayout uniformLayout = {
 			{ ShaderDataType::Mat4, "projection" },
@@ -222,44 +212,12 @@ namespace CrashEngine {
 	//-------------------------End of initialize-----------------------------------------
 
 
-
-
-
-
-		//albedo = Texture2D::Create("cerberus\\cerberus_A.tga");
-		//normal = Texture2D::Create("cerberus\\cerberus_N.tga");
-		//metallic = Texture2D::Create("cerberus\\cerberus_M.tga");
-		//roughness = Texture2D::Create("cerberus\\cerberus_R.tga");
-		//ao = Texture2D::Create("cerberus\\cerberus_AO.tga");
-
-		//Model* testModel;
-		testModel = new Model("C:\\EngineDev\\CrashEngine\\Models\\cerberus\\cerberus.obj");
-
-		for (int i = 0; i < testModel->meshes.size(); i++)
-		{
-			/*testModel->meshes[i].albedo = albedo;
-			testModel->meshes[i].normal = normal;
-			testModel->meshes[i].metallic = metallic;
-			testModel->meshes[i].roughness = roughness;
-			testModel->meshes[i].ao = ao;*/
-			//CE_INFO("Mesh texture");
-		}
-
-
 		//Scene and entities----------------------------------
 		m_ActiveScene = std::make_shared<Scene>();
 
-		auto mesh1 = m_ActiveScene->CreateEntity("Mesh #1");
-		mesh1.AddComponent<MeshComponent>(testModel);
-		mesh1.GetComponent<TransformComponent>().Translation = glm::vec3(0,0,0);
-
-		/*auto mesh2 = m_ActiveScene->CreateEntity("Mesh #2");
-		mesh2.AddComponent<MeshComponent>(testModel);
-		mesh2.GetComponent<TransformComponent>().Translation = glm::vec3(1,0,0);
-
-		auto mesh3 = m_ActiveScene->CreateEntity("Mesh #3");
-		mesh3.AddComponent<MeshComponent>(testModel);
-		mesh3.GetComponent<TransformComponent>().Translation = glm::vec3(2,0,0);*/
+		//auto mesh1 = m_ActiveScene->CreateEntity("Mesh #1");
+		//mesh1.AddComponent<MeshComponent>(testModel);
+		//mesh1.GetComponent<TransformComponent>().Translation = glm::vec3(0,0,0);
 
 
 		m_ActiveScene->SetDefaultShader(pbrTextureShader);
@@ -309,44 +267,7 @@ namespace CrashEngine {
 		//sphere->RenderSphere();
 		m_ActiveScene->OnUpdate(ts);
 
-		/*pbrShader->Bind();
-		pbrShader->SetUniformVec3("camPos", cameraController->GetCamera().GetPosition());
-
-		RenderCommand::BindCubemap(Irradiancemap->GetRendererID(), 0);
-		RenderCommand::BindCubemap(Prefiltermap->GetRendererID(), 1);
-		RenderCommand::BindTexture(brdfLUTTexture->GetRendererID(), 2);
-
-		model = glm::mat4(1.0f);
-		model = glm::scale(model, glm::vec3(1, 1, 1));
-		pbrShader->SetUniformMat4("model", model);
-
-		// render rows*column number of spheres with material properties defined by textures (they all have the same material properties)
-		glm::mat4 model = glm::mat4(1.0f);
-		for (int row = 0; row < nrRows; ++row)
-		{
-			pbrShader->SetUniformFloat("metallic", (float)row / (float)nrRows);
-			for (int col = 0; col < nrColumns; ++col)
-			{
-				pbrShader->SetUniformFloat("roughness", glm::clamp((float)col / (float)nrColumns, 0.05f, 1.0f));//TODO: when rougness is low normal doesnt work and lighting dont make good spheres
-				model = glm::mat4(1.0f);
-				model = glm::translate(model, glm::vec3(
-					(float)(col - (nrColumns / 2)) * spacing,
-					(float)(row - (nrRows / 2)) * spacing,
-					0.0f
-				));
-				pbrShader->SetUniformMat4("model", model);
-				pbrShader->SetUniformVec3("albedo", glm::vec3(0.3f, 0.3f, 0.3f));
-				//sphere->RenderSphere();
-				//square->RenderSquare();
-			}
-		}
-
-		//testModel->Draw(pbrShader);
-
-
-
-
-
+		
 		// render light source (simply re-render sphere at light positions)
 		// this looks a bit off as we use the same shader, but it'll make their positions obvious and 
 		// keeps the codeprint small.
@@ -368,7 +289,7 @@ namespace CrashEngine {
 			pbrTextureShader->SetUniformVec3("lightPositions[" + std::to_string(i) + "]", newPos);
 			pbrTextureShader->SetUniformVec3("lightColors[" + std::to_string(i) + "]", lightColors[i]);
 		}
-		*/
+		
 
 
 		// render skybox (render as last to prevent overdraw)

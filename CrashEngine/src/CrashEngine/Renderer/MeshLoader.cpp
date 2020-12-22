@@ -1,76 +1,32 @@
 #include "cepch.h"
-#include "Model.h"
+#include "MeshLoader.h"
 
-#include "Renderer.h"
+namespace CrashEngine {
 
-//#include "Platform/OpenGl/OpenGLModel.h"
+    MeshLoader::MeshLoader(std::string const& path)
+    {
+        // read file via ASSIMP
+        Assimp::Importer importer;
+        const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
+        // check for errors
+        if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) // if is Not Zero
+        {
+            CE_CORE_ERROR("ERROR::ASSIMP:: {}", importer.GetErrorString());
+            return;
+        }
 
-#include <assimp/Importer.hpp>
-#include <assimp/scene.h>
-#include <assimp/postprocess.h>
+        if (scene->mRootNode->mNumMeshes > 1) CE_WARN("Engine doesn't support loading multiple meshes in one model");
+        aiMesh* mesh = scene->mMeshes[0];
+
+        loadMeshData(mesh, scene);
+    }
 
 
-namespace CrashEngine
-{
-	Model::Model(std::string const& path, bool gamma)
-	{
-		gammaCorrection = gamma;
- 
-		//set gamma correction
-		loadModel(path);
-
-        //CE_CORE_INFO("Meshes size: {0}", std::to_string(meshes.size()));
-
-	}
-
-	void Model::Draw(Shader* shader)
-	{
-		for (unsigned int i = 0; i < meshes.size(); i++)
-		{
-			meshes[i].Draw(shader);
-		}
-	}
-
-	void Model::loadModel(std::string const& path)
-	{
-		// read file via ASSIMP
-		Assimp::Importer importer;
-		const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
-		// check for errors
-		if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) // if is Not Zero
-		{
-			CE_CORE_ERROR("ERROR::ASSIMP:: {}", importer.GetErrorString());
-			return;
-		}
-		// retrieve the directory path of the filepath
-		directory = path.substr(0, path.find_last_of('\\'));
-
-		// process ASSIMP's root node recursively
-		processNode(scene->mRootNode, scene);
-	}
-
-	void Model::processNode(aiNode* node, const aiScene* scene)
-	{
-		// process each mesh located at the current node
-		for (unsigned int i = 0; i < node->mNumMeshes; i++)
-		{
-			// the node object only contains indices to index the actual objects in the scene. 
-			// the scene contains all the data, node is just to keep stuff organized (like relations between nodes).
-			aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
-			meshes.push_back(processMesh(mesh, scene));
-		}
-		// after we've processed all of the meshes (if any) we then recursively process each of the children nodes
-		for (unsigned int i = 0; i < node->mNumChildren; i++)
-		{
-			processNode(node->mChildren[i], scene);
-		}
-	}
-
-	Mesh Model::processMesh(aiMesh* mesh, const aiScene* scene)
-	{
+    void MeshLoader::loadMeshData(aiMesh* mesh, const aiScene* scene)
+    {
         // data to fill
-        std::vector<Vertex> vertices;
-        std::vector<unsigned int> indices;
+        std::vector<Vertex> Vertices;
+        std::vector<unsigned int> Indices;
 
         // walk through each of the mesh's vertices
         for (unsigned int i = 0; i < mesh->mNumVertices; i++)
@@ -115,7 +71,7 @@ namespace CrashEngine
                 vertex.TexCoords = glm::vec2(0.0f, 0.0f);
             }
 
-            vertices.push_back(vertex);
+            Vertices.push_back(vertex);
         }
         // now walk through each of the mesh's faces (a face is a mesh its triangle) and retrieve the corresponding vertex indices.
         for (unsigned int i = 0; i < mesh->mNumFaces; i++)
@@ -123,13 +79,39 @@ namespace CrashEngine
             aiFace face = mesh->mFaces[i];
             // retrieve all indices of the face and store them in the indices vector
             for (unsigned int j = 0; j < face.mNumIndices; j++)
-                indices.push_back(face.mIndices[j]);
+                Indices.push_back(face.mIndices[j]);
         }
+
+        vertices = Vertices;
+        indices = Indices;
+
+
 
         aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
 
-        // return a mesh object created from the extracted mesh data
-        return Mesh(vertices, indices);
+        albedo = LoadTexture(material, aiTextureType_BASE_COLOR);
+        normal = LoadTexture(material, aiTextureType_NORMAL_CAMERA);
+        metallic = LoadTexture(material, aiTextureType_METALNESS);
+        roughness = LoadTexture(material, aiTextureType_DIFFUSE_ROUGHNESS);
+        ao = LoadTexture(material, aiTextureType_AMBIENT_OCCLUSION);
+
+
+    }
+
+
+
+    std::shared_ptr<Texture2D> MeshLoader::LoadTexture(aiMaterial* mat, aiTextureType type)
+    {
+        std::shared_ptr<Texture2D> texture;
+
+        aiString str;
+        mat->GetTexture(type, 0, &str);
+
+        texture = Texture2D::Create(str.C_Str());
+
+        CE_INFO("Directory of texture: {0}", str.C_Str());
+
+        return texture;
     }
 
 }

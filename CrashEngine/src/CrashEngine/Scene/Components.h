@@ -6,7 +6,6 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 #include "SceneCamera.h"
-#include "CrashEngine/Renderer/Model.h"
 #include "CrashEngine/Renderer/Texture.h"
 
 namespace CrashEngine {

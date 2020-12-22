@@ -9,8 +9,8 @@ namespace CrashEngine {
 	OpenGLTexture2D::OpenGLTexture2D(uint32_t width, uint32_t height)
 		: m_Width(width), m_Height(height)
 	{
-		m_InternalFormat = GL_RG16F;
-		m_DataFormat = GL_RG;
+		m_InternalFormat = GL_RGB16F;
+		m_DataFormat = GL_RGB;
 
 		glGenTextures(1, &m_RendererID);
 		// pre-allocate enough memory for the LUT texture.

@@ -6,13 +6,14 @@
 #include "CrashEngine/Core/Timestep.h"
 
 #include "CrashEngine/Renderer/Renderer.h"
-
+#include "CrashEngine/Renderer/TextureCreator.h"
 #include "CrashEngine/Renderer/Buffer.h"
 #include "CrashEngine/Renderer/VertexArray.h"
 
 #include "CrashEngine/Scene/Entity.h"
 #include "CrashEngine/Scene/Scene.h"
 #include "CrashEngine/Scene/Components.h"
+#include "CrashEngine/Scene/MeshComponent.h"
 
 #include "Panels/SceneHierarchyPanel.h"
 
@@ -42,7 +43,7 @@ namespace CrashEngine {
 		std::shared_ptr<Texture2D> roughness;
 		std::shared_ptr<Texture2D> ao;
 
-		Model* testModel;
+		//Model* testModel;
 
 		std::shared_ptr<ImGuiLayer> imguilayer;
 		SceneHierarchyPanel* HierarchyPanel;
@@ -98,6 +99,8 @@ namespace CrashEngine {
 
 		std::shared_ptr<Framebuffer> Framebuffer;
 		std::shared_ptr<Renderbuffer> Renderbuffer;
+
+		TextureCreator* texCreat;
 	};
 
 }

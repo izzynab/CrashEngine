@@ -150,12 +150,6 @@
     <ClInclude Include="src\CrashEngine\Renderer\GraphicsContext.h">
       <Filter>src\CrashEngine\Renderer</Filter>
     </ClInclude>
-    <ClInclude Include="src\CrashEngine\Renderer\Mesh.h">
-      <Filter>src\CrashEngine\Renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="src\CrashEngine\Renderer\Model.h">
-      <Filter>src\CrashEngine\Renderer</Filter>
-    </ClInclude>
     <ClInclude Include="src\CrashEngine\Renderer\RenderCommand.h">
       <Filter>src\CrashEngine\Renderer</Filter>
     </ClInclude>
@@ -1703,6 +1697,8 @@
     </ClInclude>
     <ClInclude Include="src\CrashEngine\Test\Scenetest.h" />
     <ClInclude Include="src\CrashEngine\Scene\MeshComponent.h" />
+    <ClInclude Include="src\CrashEngine\Renderer\MeshLoader.h" />
+    <ClInclude Include="src\CrashEngine\Renderer\TextureCreator.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\CrashEngine\Core\Application.cpp">
@@ -1736,12 +1732,6 @@
       <Filter>src\CrashEngine\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\CrashEngine\Renderer\Framebuffer.cpp">
-      <Filter>src\CrashEngine\Renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="src\CrashEngine\Renderer\Mesh.cpp">
-      <Filter>src\CrashEngine\Renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="src\CrashEngine\Renderer\Model.cpp">
       <Filter>src\CrashEngine\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\CrashEngine\Renderer\RenderCommand.cpp">
@@ -1809,6 +1799,8 @@
     </ClCompile>
     <ClCompile Include="src\CrashEngine\Test\Scenetest.cpp" />
     <ClCompile Include="src\CrashEngine\Scene\MeshComponent.cpp" />
+    <ClCompile Include="src\CrashEngine\Renderer\MeshLoader.cpp" />
+    <ClCompile Include="src\CrashEngine\Renderer\TextureCreator.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="vendor\assimp\include\assimp\config.h.in">

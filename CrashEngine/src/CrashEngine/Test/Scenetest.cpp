@@ -9,8 +9,8 @@ namespace CrashEngine {
 
     Scenetest::Scenetest()
     {
-        entt::registry registry;
-        auto view1 = registry.view<TransformComponent, MeshComponent>();
-        view1.size();
+        //entt::registry registry;
+        //auto view1 = registry.view<TransformComponent, MeshComponent>();
+        //view1.size();
     }
 }

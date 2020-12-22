@@ -43,9 +43,6 @@ namespace CrashEngine {
 			auto &transform = view.get<TransformComponent>(entity);
 
 			glm::mat4 model = transform.GetTransform();
-			
-			//glm::mat4 model = glm::mat4(1.0f);
-			//model = glm::translate(model, glm::vec3(1, 0, 0));
 			defaultShader->SetUniformMat4("model", model);
 
 			mod.Draw(defaultShader);	
