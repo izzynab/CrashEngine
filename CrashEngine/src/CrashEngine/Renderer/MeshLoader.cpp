@@ -109,7 +109,10 @@ namespace CrashEngine {
 
         texture = Texture2D::Create(str.C_Str());
 
-        CE_INFO("Directory of texture: {0}", str.C_Str());
+        CE_INFO("Directory of texture: '{0}'", str.C_Str());
+
+        char* a = "   ";
+        if (str.data < a) return 0;
 
         return texture;
     }

@@ -40,8 +40,6 @@ namespace CrashEngine {
 		std::shared_ptr<Texture2D> roughness;
 		std::shared_ptr<Texture2D> ao;
 
-
-		//------------Temporary------------------
 		bool albedoTextureUse;
 		bool metallicTextureUse;
 		bool roughnessTextureUse;

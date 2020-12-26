@@ -215,16 +215,60 @@ namespace CrashEngine {
 		//Scene and entities----------------------------------
 		m_ActiveScene = std::make_shared<Scene>();
 
-		//auto mesh1 = m_ActiveScene->CreateEntity("Mesh #1");
-		//mesh1.AddComponent<MeshComponent>(testModel);
-		//mesh1.GetComponent<TransformComponent>().Translation = glm::vec3(0,0,0);
+		auto sponza = m_ActiveScene->CreateEntity("sponza");
+
+		MeshComponent spon = MeshComponent("C:\\EngineDev\\CrashEngine\\Models\\sponza\\sponza.obj");
+
+		sponza.AddComponent<MeshComponent>(spon);
+
+
+
+		/*auto mesh1 = m_ActiveScene->CreateEntity("Mesh #1");
+
+		MeshComponent mesh = MeshComponent("C:\\EngineDev\\CrashEngine\\Models\\cerberus\\cerberus.obj");
+
+		mesh.albedo = Texture2D::Create("C:\\EngineDev\\CrashEngine\\Textures\\cerberus\\cerberus_A.tga");
+		mesh.normal = Texture2D::Create("C:\\EngineDev\\CrashEngine\\Textures\\cerberus\\cerberus_N.tga");
+		mesh.metallic = Texture2D::Create("C:\\EngineDev\\CrashEngine\\Textures\\cerberus\\cerberus_M.tga");
+		mesh.roughness = Texture2D::Create("C:\\EngineDev\\CrashEngine\\Textures\\cerberus\\cerberus_R.tga");
+		mesh.ao = Texture2D::Create("C:\\EngineDev\\CrashEngine\\Textures\\cerberus\\cerberus_AO.tga");
+
+		mesh1.AddComponent<MeshComponent>(mesh);
+
+		auto light1 = m_ActiveScene->CreateEntity("Light #1");
+
+		MeshComponent light01 = MeshComponent("C:\\EngineDev\\CrashEngine\\Models\\sphere.obj");
+
+		light1.AddComponent<MeshComponent>(light01);
+		light1.GetComponent<TransformComponent>().Translation = lightPositions[0];
+
+
+		auto light2 = m_ActiveScene->CreateEntity("Light #2");
+
+		MeshComponent light02 = MeshComponent("C:\\EngineDev\\CrashEngine\\Models\\sphere.obj");
+
+		light2.AddComponent<MeshComponent>(light02);
+		light2.GetComponent<TransformComponent>().Translation = lightPositions[1];
+
+
+		auto light3 = m_ActiveScene->CreateEntity("Light #3");
+
+		MeshComponent light03 = MeshComponent("C:\\EngineDev\\CrashEngine\\Models\\sphere.obj");
+
+		light3.AddComponent<MeshComponent>(light03);
+		light3.GetComponent<TransformComponent>().Translation = lightPositions[2];
+
+
+		auto light4 = m_ActiveScene->CreateEntity("Light #4");
+
+		MeshComponent light04 = MeshComponent("C:\\EngineDev\\CrashEngine\\Models\\sphere.obj");
+
+		light4.AddComponent<MeshComponent>(light04);
+		light4.GetComponent<TransformComponent>().Translation = lightPositions[3];*/
+
 
 
 		m_ActiveScene->SetDefaultShader(pbrTextureShader);
-
-		auto view = m_ActiveScene->m_Registry.view<TransformComponent, MeshComponent>();
-	
-		CE_CORE_INFO("size of view in scene: {0}", view.size());
 
 		HierarchyPanel = new SceneHierarchyPanel(m_ActiveScene);
 
@@ -249,41 +293,17 @@ namespace CrashEngine {
 		//pbrTextureShader->SetUniformMat4("view", view);
 		pbrTextureShader->SetUniformVec3("camPos", cameraController->GetCamera().GetPosition());
 
-		/*RenderCommand::BindTexture(albedo->GetRendererID(), 0);
-		RenderCommand::BindTexture(normal->GetRendererID(), 1);
-		RenderCommand::BindTexture(metallic->GetRendererID(), 2);
-		RenderCommand::BindTexture(roughness->GetRendererID(), 3);
-		RenderCommand::BindTexture(ao->GetRendererID(), 4);*/
-
 		RenderCommand::BindCubemap(Irradiancemap->GetRendererID(), 5);
 		RenderCommand::BindCubemap(Prefiltermap->GetRendererID(), 6);
 		RenderCommand::BindTexture(brdfLUTTexture->GetRendererID(), 7);
 
-		model = glm::mat4(1.0f);
-		model = glm::translate(model, glm::vec3(0, 0, 0));
-		pbrTextureShader->SetUniformMat4("model", model);
-		//testModel->Draw(pbrTextureShader);
-		//Renderer::DrawModel(testModel, pbrTextureShader);
-		//sphere->RenderSphere();
 		m_ActiveScene->OnUpdate(ts);
 
-		
-		// render light source (simply re-render sphere at light positions)
-		// this looks a bit off as we use the same shader, but it'll make their positions obvious and 
-		// keeps the codeprint small.
+
 		for (unsigned int i = 0; i < sizeof(lightPositions) / sizeof(lightPositions[0]); ++i)
 		{
 			glm::vec3 newPos = lightPositions[i] + glm::vec3(sin(RenderCommand::GetTime() * 5.0) * 5.0, 0.0, 0.0);
 			newPos = lightPositions[i];
-			pbrShader->Bind();
-			pbrShader->SetUniformVec3("albedo", glm::vec3(1.0f, 1.0f, 1.0f));
-			pbrShader->SetUniformVec3("lightPositions[" + std::to_string(i) + "]", newPos);
-			pbrShader->SetUniformVec3("lightColors[" + std::to_string(i) + "]", lightColors[i]);
-			model = glm::mat4(1.0f);
-			model = glm::translate(model, newPos);
-			model = glm::scale(model, glm::vec3(0.5f));
-			pbrShader->SetUniformMat4("model", model);
-			sphere->RenderSphere();
 
 			pbrTextureShader->Bind();
 			pbrTextureShader->SetUniformVec3("lightPositions[" + std::to_string(i) + "]", newPos);

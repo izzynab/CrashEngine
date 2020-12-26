@@ -45,26 +45,22 @@ namespace CrashEngine {
 		CE_INFO("size of verticies: {0}", vertices.size());
 		CE_INFO("size of indices: {0}", indices.size());
 
-		/*if (loader.albedo) albedo = loader.albedo;
-		else CE_WARN("Failed to load default albedo texture");
+		if (loader.albedo) albedo = loader.albedo;
+		else albedo = 0;
 
 		if (loader.normal)normal = loader.normal;
-		else CE_WARN("Failed to load default normal texture");
+		else normal = 0;
 
 		if (loader.metallic)metallic = loader.metallic;
-		else CE_WARN("Failed to load default metallic texture");
+		else metallic = 0;
 
 		if (loader.roughness)roughness = loader.roughness;
-		else CE_WARN("Failed to load default roughness texture");
+		else roughness = 0;
 
 		if (loader.ao)ao = loader.ao;
-		else CE_WARN("Failed to load default ao texture");*/
+		else ao = 0;
 
-		/*albedo = Texture2D::Create("C:\\EngineDev\\CrashEngine\\Textures\\cerberus\\cerberus_A.tga");
-		normal = Texture2D::Create("C:\\EngineDev\\CrashEngine\\Textures\\cerberus\\cerberus_N.tga");
-		metallic = Texture2D::Create("C:\\EngineDev\\CrashEngine\\Textures\\cerberus\\cerberus_M.tga");
-		roughness = Texture2D::Create("C:\\EngineDev\\CrashEngine\\Textures\\cerberus\\cerberus_R.tga");
-		ao = Texture2D::Create("C:\\EngineDev\\CrashEngine\\Textures\\cerberus\\cerberus_AO.tga");*/
+		//TODO: move here default texutres definitions
 
 		texCreator.reset(new TextureCreator());
 

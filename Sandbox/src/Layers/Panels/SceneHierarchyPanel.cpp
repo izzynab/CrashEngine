@@ -280,7 +280,7 @@ namespace CrashEngine {
 				ImGui::Columns(2);
 				ImGui::SetColumnWidth(0, 100);
 				ImGui::Text("File Path:");
-				if (ImGui::SmallButton("Change"))
+				/*if (ImGui::SmallButton("Change"))
 				{
 					std::optional<std::string> filepath = FileDialogs::OpenFile("");
 					if (filepath)
@@ -288,7 +288,7 @@ namespace CrashEngine {
 						component.path = filepath.value();
 						component.LoadMesh(filepath.value());
 					}
-				}
+				}*/
 				ImGui::NextColumn();
 				ImGui::Text(component.path.c_str());
 				ImGui::EndColumns();
@@ -329,6 +329,7 @@ namespace CrashEngine {
 				ImGui::Text("Normal Texture");
 				
 				if (component.normal) ImGui::Image((void*)component.normal->GetRendererID(), ImVec2(150, 150));
+				else component.normal = component.texCreator->CreateTexture(150, 150, glm::vec3(0.5, 0.5, 1));
 				ImGui::SameLine();
 
 				if (ImGui::Button("Open normal"))
@@ -346,6 +347,7 @@ namespace CrashEngine {
 				ImGui::Text("metallic Texture");
 
 				if (component.metallic) ImGui::Image((void*)component.metallic->GetRendererID(), ImVec2(150, 150));
+				else component.metallic = component.texCreator->CreateTexture(150, 150, glm::vec3(component.metallicTextureUse, component.metallicTextureUse, component.metallicTextureUse));
 				ImGui::SameLine();
 				ImGui::Checkbox("Use metallic", &component.metallicTextureUse);
 
@@ -374,6 +376,7 @@ namespace CrashEngine {
 				ImGui::Text("roughness Texture");
 
 				if (component.roughness) ImGui::Image((void*)component.roughness->GetRendererID(), ImVec2(150, 150));
+				else component.roughness = component.texCreator->CreateTexture(150, 150, glm::vec3(component.roughnessTextureUse, component.roughnessTextureUse, component.roughnessTextureUse));
 				ImGui::SameLine();
 				ImGui::Checkbox("Use roughness", &component.roughnessTextureUse);
 
