@@ -20,15 +20,15 @@ namespace CrashEngine {
 		std::shared_ptr<IndexBuffer> SphereIB;
 	};
 
-	class Square
+	class Cube
 	{
     public:
-		Square();
+        Cube();
 
-		void RenderSquare();
+		void RenderCube();
 
 	private:
-		unsigned int squareVAO = 0;
+		unsigned int cubeVAO = 0;
 		unsigned int indexCount = 0;
 
         std::vector<float> vertices = {
@@ -77,8 +77,8 @@ namespace CrashEngine {
         };
 
 
-		std::shared_ptr<VertexArray> SquareVA;
-		std::shared_ptr<IndexBuffer> SquareIB;
+		std::shared_ptr<VertexArray> cubeVA;
+		std::shared_ptr<IndexBuffer> cubeIB;
 	};
 
     class Quad

@@ -54,6 +54,12 @@ namespace CrashEngine {
 			if (ImGui::MenuItem("Create Empty Entity"))
 				m_Context->CreateEntity("Empty Entity");
 
+			if (ImGui::MenuItem("Create Mesh"))
+				m_Context->CreateMesh("Mesh");
+
+			if (ImGui::MenuItem("Create Point Light"))
+				m_Context->CreateLight("Point Light");
+
 			ImGui::EndPopup();
 		}
 
@@ -280,15 +286,8 @@ namespace CrashEngine {
 				ImGui::Columns(2);
 				ImGui::SetColumnWidth(0, 100);
 				ImGui::Text("File Path:");
-				/*if (ImGui::SmallButton("Change"))
-				{
-					std::optional<std::string> filepath = FileDialogs::OpenFile("");
-					if (filepath)
-					{
-						component.path = filepath.value();
-						component.LoadMesh(filepath.value());
-					}
-				}*/
+			
+
 				ImGui::NextColumn();
 				ImGui::Text(component.path.c_str());
 				ImGui::EndColumns();

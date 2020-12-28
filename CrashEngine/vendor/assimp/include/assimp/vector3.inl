@@ -93,14 +93,14 @@ void aiVector3t<TReal>::Set( TReal pX, TReal pY, TReal pZ) {
 // ------------------------------------------------------------------------------------------------
 template <typename TReal>
 AI_FORCE_INLINE
-TReal aiVector3t<TReal>::SquareLength() const {
+TReal aiVector3t<TReal>::cubeLength() const {
     return x*x + y*y + z*z;
 }
 // ------------------------------------------------------------------------------------------------
 template <typename TReal>
 AI_FORCE_INLINE
 TReal aiVector3t<TReal>::Length() const {
-    return std::sqrt( SquareLength());
+    return std::sqrt( cubeLength());
 }
 // ------------------------------------------------------------------------------------------------
 template <typename TReal>

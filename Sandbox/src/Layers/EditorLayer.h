@@ -6,7 +6,6 @@
 #include "CrashEngine/Core/Timestep.h"
 
 #include "CrashEngine/Renderer/Renderer.h"
-#include "CrashEngine/Renderer/TextureCreator.h"
 #include "CrashEngine/Renderer/Buffer.h"
 #include "CrashEngine/Renderer/VertexArray.h"
 
@@ -16,6 +15,7 @@
 #include "CrashEngine/Scene/MeshComponent.h"
 
 #include "Panels/SceneHierarchyPanel.h"
+#include "Panels/SceneEnvironmentPanel.h"
 
 
 
@@ -37,18 +37,11 @@ namespace CrashEngine {
 		std::shared_ptr<Scene> m_ActiveScene;
 		Entity m_Entity;
 
-		std::shared_ptr<Texture2D> albedo;
-		std::shared_ptr<Texture2D> normal;
-		std::shared_ptr<Texture2D> metallic;
-		std::shared_ptr<Texture2D> roughness;
-		std::shared_ptr<Texture2D> ao;
-
-		//Model* testModel;
-
 		std::shared_ptr<ImGuiLayer> imguilayer;
-		SceneHierarchyPanel* HierarchyPanel;
+		std::shared_ptr <SceneHierarchyPanel> HierarchyPanel;
+		std::shared_ptr <SceneEnvironmentPanel> EnvironmentPanel;
 
-
+		std::shared_ptr<SkyLight> skyLight;
 
 
 		std::shared_ptr<VertexArray> m_SquareVA;
@@ -56,14 +49,9 @@ namespace CrashEngine {
 		std::shared_ptr<CameraController> cameraController;
 
 		Shader* basicShader;
-
 		Shader* pbrShader;
 		Shader* pbrTextureShader;
-		Shader* equirectangularToCubemapShader;
-		Shader* irradianceShader;
-		Shader* prefilterShader;
-		Shader* brdfShader;
-		Shader* backgroundShader;
+
 
 		glm::mat4 model;
 
@@ -80,25 +68,14 @@ namespace CrashEngine {
 			glm::vec3(300.0f, 300.0f, 300.0f),
 			glm::vec3(300.0f, 300.0f, 300.0f)
 		};
-		int nrRows = 7;
-		int nrColumns = 7;
-		float spacing = 2.5;
+
 
 		std::shared_ptr<Sphere> sphere;
-		std::shared_ptr<Square> square;
+		std::shared_ptr<Cube> cube;
 		std::shared_ptr<Quad> quad;
 
-		std::shared_ptr<TextureHDR> HDR;
-		std::shared_ptr<CubemapTexture> Cubemap;
-		std::shared_ptr<CubemapTexture> Irradiancemap;
-		std::shared_ptr<CubemapTexture> Prefiltermap;
-		std::shared_ptr<Texture2D> brdfLUTTexture;
-
-
-		std::shared_ptr<Framebuffer> renderFramebuffer;
 
 		std::shared_ptr<Framebuffer> Framebuffer;
-		std::shared_ptr<Renderbuffer> Renderbuffer;
 
 		TextureCreator* texCreat;
 	};

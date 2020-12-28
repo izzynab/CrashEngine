@@ -180,6 +180,7 @@ namespace CrashEngine {
 
 			ImGui::Begin("Render context");
 
+
 			CurrentWindowView = ImVec2(ImGui::GetWindowWidth(), ImGui::GetWindowHeight() - 40);
 
 			ImGui::Image((void*)renderFramebuffer->GetColorAttachmentRendererID(), CurrentWindowView, ImVec2(0, 1), ImVec2(1, 0));
@@ -190,6 +191,8 @@ namespace CrashEngine {
 				OldWindowSize = CurrentWindowView;
 
 			}
+			
+			
 			ImGui::End();
 		}
 		else

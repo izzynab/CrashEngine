@@ -1699,6 +1699,7 @@
     <ClInclude Include="src\CrashEngine\Scene\MeshComponent.h" />
     <ClInclude Include="src\CrashEngine\Renderer\MeshLoader.h" />
     <ClInclude Include="src\CrashEngine\Renderer\TextureCreator.h" />
+    <ClInclude Include="src\CrashEngine\Scene\SkyLight.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\CrashEngine\Core\Application.cpp">
@@ -1801,6 +1802,7 @@
     <ClCompile Include="src\CrashEngine\Scene\MeshComponent.cpp" />
     <ClCompile Include="src\CrashEngine\Renderer\MeshLoader.cpp" />
     <ClCompile Include="src\CrashEngine\Renderer\TextureCreator.cpp" />
+    <ClCompile Include="src\CrashEngine\Scene\SkyLight.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="vendor\assimp\include\assimp\config.h.in">

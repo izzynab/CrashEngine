@@ -100,38 +100,37 @@ namespace CrashEngine {
     }
 
 
-    Square::Square()
+    Cube::Cube()
     {
-        SquareVA.reset(VertexArray::Create());
-       // SquareIB.reset(IndexBuffer::Create(&indices[0], indices.size()));
+        cubeVA.reset(VertexArray::Create());
+       // cubeIB.reset(IndexBuffer::Create(&indices[0], indices.size()));
 
-        std::shared_ptr<VertexBuffer> SquareVB;
-        SquareVB.reset(VertexBuffer::Create(&vertices[0], vertices.size() * sizeof(float)));
+        std::shared_ptr<VertexBuffer> cubeVB;
+        cubeVB.reset(VertexBuffer::Create(&vertices[0], vertices.size() * sizeof(float)));
 
         BufferLayout layout1 = {
             { ShaderDataType::Float3, "aPosition" },
             { ShaderDataType::Float2, "aTexCoords"},
             { ShaderDataType::Float3, "aNormals"},
         };
-        SquareVB->SetLayout(layout1);
+        cubeVB->SetLayout(layout1);
 
-        SquareVA->AddVertexBuffer(SquareVB);
-        //SquareVA->SetIndexBuffer(SquareIB);
+        cubeVA->AddVertexBuffer(cubeVB);
+        //cubeVA->SetIndexBuffer(cubeIB);
         
     }
 
-
-    void Square::RenderSquare()
+    void Cube::RenderCube()
     {
-        SquareVA->Bind();
-        Renderer::SubmitDebug(SquareVA,36);
+        cubeVA->Bind();
+        Renderer::SubmitDebug(cubeVA,36);
     }
 
 
     Quad::Quad()
     {
         QuadVA.reset(VertexArray::Create());
-        //SquareIB.reset(IndexBuffer::Create(&indices[0], indices.size()));
+        //cubeIB.reset(IndexBuffer::Create(&indices[0], indices.size()));
 
         std::shared_ptr<VertexBuffer> QuadVB;
         QuadVB.reset(VertexBuffer::Create(&vertices[0], vertices.size() * sizeof(float)));

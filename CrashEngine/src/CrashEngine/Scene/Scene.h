@@ -19,6 +19,9 @@ namespace CrashEngine {
 		~Scene();
 
 		Entity CreateEntity(const std::string& name = std::string());
+		Entity CreateMesh(const std::string& name = std::string());
+		Entity CreateLight(const std::string& name = std::string());
+
 		void DestroyEntity(Entity entity);
 
 		void OnUpdate(Timestep ts);

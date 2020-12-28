@@ -69,7 +69,7 @@ void aiVector2t<TReal>::Set( TReal pX, TReal pY) {
 // ------------------------------------------------------------------------------------------------
 template <typename TReal>
 inline
-TReal aiVector2t<TReal>::SquareLength() const {
+TReal aiVector2t<TReal>::cubeLength() const {
     return x*x + y*y;
 }
 
@@ -77,7 +77,7 @@ TReal aiVector2t<TReal>::SquareLength() const {
 template <typename TReal>
 inline
 TReal aiVector2t<TReal>::Length() const {
-    return std::sqrt( SquareLength());
+    return std::sqrt( cubeLength());
 }
 
 // ------------------------------------------------------------------------------------------------

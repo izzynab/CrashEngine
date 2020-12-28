@@ -10,7 +10,7 @@
       <Filter>Layers</Filter>
     </ClInclude>
     <ClInclude Include="src\Layers\Panels\SceneHierarchyPanel.h" />
-    <ClInclude Include="src\Layers\Panels\SceneProperties.h" />
+    <ClInclude Include="src\Layers\Panels\SceneEnvironmentPanel.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Layers\EditorLayer.cpp">
@@ -18,6 +18,6 @@
     </ClCompile>
     <ClCompile Include="src\SandboxApp.cpp" />
     <ClCompile Include="src\Layers\Panels\SceneHierarchyPanel.cpp" />
-    <ClCompile Include="src\Layers\Panels\SceneProperties.cpp" />
+    <ClCompile Include="src\Layers\Panels\SceneEnvironmentPanel.cpp" />
   </ItemGroup>
 </Project>

@@ -69,7 +69,7 @@ public:
     aiVector2t (const aiVector2t& o) = default;
 
     void Set( TReal pX, TReal pY);
-    TReal SquareLength() const ;
+    TReal cubeLength() const ;
     TReal Length() const ;
     aiVector2t& Normalize();
 

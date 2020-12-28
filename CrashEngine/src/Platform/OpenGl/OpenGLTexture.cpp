@@ -97,7 +97,8 @@ namespace CrashEngine {
 
 	OpenGLTextureHDR::OpenGLTextureHDR(const std::string& path)
 	{
-		m_Path = "C:\\EngineDev\\CrashEngine\\Textures\\" + path;
+		//m_Path = "C:\\EngineDev\\CrashEngine\\Textures\\" + path;
+		m_Path = path;
 
 		stbi_set_flip_vertically_on_load(true);
 		int width, height, nrComponents;

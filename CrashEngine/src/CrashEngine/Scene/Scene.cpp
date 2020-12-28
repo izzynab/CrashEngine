@@ -11,15 +11,15 @@
 
 namespace CrashEngine {
 
-	CrashEngine::Scene::Scene()
+	Scene::Scene()
 	{	
 	}
 
-	CrashEngine::Scene::~Scene()
+	Scene::~Scene()
 	{
 	}
 
-	Entity CrashEngine::Scene::CreateEntity(const std::string& name)
+	Entity Scene::CreateEntity(const std::string& name)
 	{
 		Entity entity = { m_Registry.create(), this };
 		entity.AddComponent<TransformComponent>();
@@ -28,7 +28,17 @@ namespace CrashEngine {
 		return entity;
 	}
 
-	void CrashEngine::Scene::DestroyEntity(Entity entity)
+	Entity Scene::CreateMesh(const std::string& name)
+	{
+		
+	}
+
+	Entity Scene::CreateLight(const std::string& name)
+	{
+
+	}
+
+	void Scene::DestroyEntity(Entity entity)
 	{
 		m_Registry.destroy(entity);
 	}
@@ -76,15 +86,8 @@ namespace CrashEngine {
 	}*/
 
 	template<>
-	void Scene::OnComponentAdded<MeshComponent>(Entity entity, MeshComponent& component)
-	{
-
-	}
-
-	template<>
 	void Scene::OnComponentAdded<TagComponent>(Entity entity, TagComponent& component)
 	{
-
 	}
 
 

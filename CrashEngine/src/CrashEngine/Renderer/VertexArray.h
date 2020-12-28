@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <vector>
 #include "CrashEngine/Renderer/Buffer.h"
 
 namespace CrashEngine {
