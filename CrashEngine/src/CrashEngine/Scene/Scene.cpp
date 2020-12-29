@@ -4,9 +4,10 @@
 #include "Entity.h"
 
 #include "CrashEngine/Renderer/Renderer.h"
+#include "CrashEngine/Utils/PlatformUtils.h"
 
 #include "Components.h"
-#include "MeshComponent.h"
+#include "Mesh.h"
 
 
 namespace CrashEngine {
@@ -30,12 +31,28 @@ namespace CrashEngine {
 
 	Entity Scene::CreateMesh(const std::string& name)
 	{
-		
+		Entity entity = { m_Registry.create(), this };
+		entity.AddComponent<TransformComponent>();
+		auto& tag = entity.AddComponent<TagComponent>();
+		tag.Tag = name.empty() ? "Mesh" : name;
+
+		std::optional<std::string> filepath = FileDialogs::OpenFile("");
+		if (filepath)
+		{
+			Mesh& mesh = Mesh(filepath.value());
+			mesh.directory = filepath.value();
+			entity.AddComponent<Mesh>(mesh);
+		}
+		return entity;
 	}
 
 	Entity Scene::CreateLight(const std::string& name)
 	{
-
+		Entity entity = { m_Registry.create(), this };
+		entity.AddComponent<TransformComponent>();
+		auto& tag = entity.AddComponent<TagComponent>();
+		tag.Tag = name.empty() ? "Light" : name;
+		return entity;
 	}
 
 	void Scene::DestroyEntity(Entity entity)
@@ -45,11 +62,11 @@ namespace CrashEngine {
 
 	void Scene::OnUpdate(Timestep ts)
 	{
-		auto view = m_Registry.view<TransformComponent, MeshComponent>();
+		auto view = m_Registry.view<TransformComponent, Mesh>();
 
 		for (auto entity : view) 
 		{
-			auto& mod = view.get<MeshComponent>(entity);
+			auto& mod = view.get<Mesh>(entity);
 			auto &transform = view.get<TransformComponent>(entity);
 
 			glm::mat4 model = transform.GetTransform();
@@ -88,6 +105,12 @@ namespace CrashEngine {
 	template<>
 	void Scene::OnComponentAdded<TagComponent>(Entity entity, TagComponent& component)
 	{
+	}
+
+	template<>
+	void Scene::OnComponentAdded<Mesh>(Entity entity, Mesh& component)
+	{
+		
 	}
 
 

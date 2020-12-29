@@ -12,7 +12,7 @@
 #include "CrashEngine/Scene/Entity.h"
 #include "CrashEngine/Scene/Scene.h"
 #include "CrashEngine/Scene/Components.h"
-#include "CrashEngine/Scene/MeshComponent.h"
+#include "CrashEngine/Scene/Mesh.h"
 
 #include "Panels/SceneHierarchyPanel.h"
 #include "Panels/SceneEnvironmentPanel.h"

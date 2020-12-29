@@ -28,7 +28,6 @@ namespace CrashEngine {
 			return m_RendererID == ((OpenGLTexture2D&)other).m_RendererID;
 		}
 	private:
-		std::string m_Path;
 		uint32_t m_Width, m_Height;
 		uint32_t m_RendererID;
 		GLenum m_InternalFormat, m_DataFormat;

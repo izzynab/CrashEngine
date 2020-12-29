@@ -80,7 +80,7 @@ namespace CrashEngine {
 
 		auto mesh1 = m_ActiveScene->CreateEntity("Gun");
 
-		MeshComponent mesh = MeshComponent("C:\\EngineDev\\CrashEngine\\Models\\cerberus\\cerberus.obj");
+		Mesh mesh = Mesh("C:\\EngineDev\\CrashEngine\\Models\\cerberus\\cerberus.obj");
 
 		/*mesh.albedo = Texture2D::Create("C:\\EngineDev\\CrashEngine\\Textures\\cerberus\\cerberus_A.tga");
 		mesh.normal = Texture2D::Create("C:\\EngineDev\\CrashEngine\\Textures\\cerberus\\cerberus_N.tga");
@@ -88,7 +88,7 @@ namespace CrashEngine {
 		mesh.roughness = Texture2D::Create("C:\\EngineDev\\CrashEngine\\Textures\\cerberus\\cerberus_R.tga");
 		mesh.ao = Texture2D::Create("C:\\EngineDev\\CrashEngine\\Textures\\cerberus\\cerberus_AO.tga");*/
 
-		mesh1.AddComponent<MeshComponent>(mesh);
+		mesh1.AddComponent<Mesh>(mesh);
 
 		m_ActiveScene->SetDefaultShader(pbrTextureShader);
 

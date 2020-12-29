@@ -8,7 +8,7 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include "CrashEngine/Scene/Components.h"
-#include "CrashEngine/Scene/MeshComponent.h"
+#include "CrashEngine/Scene/Mesh.h"
 #include <cstring>
 
 //#include "CrashEngine/Renderer/Model.h"
@@ -250,22 +250,7 @@ namespace CrashEngine {
 					CE_CORE_ERROR("This entity already has the Camera Component!");*/
 				ImGui::CloseCurrentPopup();
 			}
-
-			if (ImGui::MenuItem("Mesh Component"))
-			{
-				if (!m_SelectionContext.HasComponent<MeshComponent>())
-				{
-					std::optional<std::string> filepath = FileDialogs::OpenFile("");
-					if (filepath)
-					{			
-						m_SelectionContext.AddComponent<MeshComponent>(filepath.value());
-						m_SelectionContext.GetComponent<MeshComponent>().path = filepath.value();
-					}
-				}
-				else
-					CE_CORE_ERROR("This entity already has the Sprite Renderer Component!");
-				ImGui::CloseCurrentPopup();
-			}
+	
 
 			ImGui::EndPopup();
 		}
@@ -281,20 +266,17 @@ namespace CrashEngine {
 				DrawVec3Control("Scale", component.Scale, 1.0f);
 			});
 
-		DrawComponent<MeshComponent>("Mesh Component", entity, [](auto& component)
+		DrawComponent<Mesh>("Mesh", entity, [](auto& component)
 			{
 				ImGui::Columns(2);
 				ImGui::SetColumnWidth(0, 100);
 				ImGui::Text("File Path:");
 			
-
 				ImGui::NextColumn();
-				ImGui::Text(component.path.c_str());
+				ImGui::Text(component.directory.c_str());
 				ImGui::EndColumns();
 
-
-
-				ImGui::NewLine();
+				/*ImGui::NewLine();
 				ImGui::Separator();
 				ImGui::Text("Albedo Texture");
 				if (component.albedo) ImGui::Image((void*)component.albedo->GetRendererID(), ImVec2(150, 150));
@@ -414,7 +396,7 @@ namespace CrashEngine {
 					{
 						component.ao = Texture2D::Create(filepath.value());
 					}
-				}
+				}*/
 	
 			});
 
