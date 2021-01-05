@@ -2,6 +2,7 @@
 
 #include "CrashEngine/Scene/Scene.h"
 #include "CrashEngine/Scene/Entity.h"
+#include "MaterialPanel.h"
 
 namespace CrashEngine {
 
@@ -20,6 +21,9 @@ namespace CrashEngine {
 	private:
 		std::shared_ptr<Scene> m_Context;
 		Entity m_SelectionContext;
+
+		std::shared_ptr <MaterialPanel> MaterialPanel;
 	};
+
 
 }

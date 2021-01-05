@@ -29,6 +29,18 @@ namespace CrashEngine {
 		return nullptr;
 	}
 
+	std::shared_ptr<DepthTexture> DepthTexture::Create(uint32_t width, uint32_t height)
+	{
+		switch (Renderer::GetAPI())
+		{
+		case RendererAPI::API::None:    CE_CORE_ASSERT(false, "RendererAPI::None is currently not supported!"); return nullptr;
+		case RendererAPI::API::OpenGL:  return std::make_shared<OpenGLDepthTexture>(width, height);
+		}
+
+		CE_CORE_ASSERT(false, "Unknown RendererAPI!");
+		return nullptr;
+	}
+
 	std::shared_ptr<TextureHDR> TextureHDR::Create(const std::string& path)
 	{
 		switch (Renderer::GetAPI())

@@ -6,9 +6,9 @@
 namespace CrashEngine {
 
 	Mesh::Mesh(std::string const& path)
-		: directory(path)
 	{
-		LoadMesh(path);
+        LoadMesh(path);
+        material = new Material("default_material");
 	}
 
 	void Mesh::LoadMesh(std::string const& path)
@@ -22,7 +22,7 @@ namespace CrashEngine {
 			return;
 		}
 
-		directory = path.substr(0, path.find_last_of('/'));
+		directory = path.substr(0, path.find_last_of("\\"));
 
 		processNode(scene->mRootNode, scene);	
 
@@ -47,7 +47,6 @@ namespace CrashEngine {
     {
         std::vector<Vertex> vertices;
         std::vector<unsigned int> indices;
-        std::vector<std::shared_ptr<Texture2D>> textures;
 
         for (unsigned int i = 0; i < mesh->mNumVertices; i++)
         {
@@ -98,77 +97,53 @@ namespace CrashEngine {
         }
 
 
-        aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
-        // we assume a convention for sampler names in the shaders. Each diffuse texture should be named
-        // as 'texture_diffuseN' where N is a sequential number ranging from 1 to MAX_SAMPLER_NUMBER. 
-        // Same applies to other texture as the following list summarizes:
-        // diffuse: texture_diffuseN
-        // specular: texture_specularN
-        // normal: texture_normalN
+       /*aiMaterial* mat = scene->mMaterials[mesh->mMaterialIndex];
+        std::shared_ptr<Material> material;
+        material.reset(new Material);
 
-        // 1. diffuse maps
-        std::vector<std::shared_ptr<Texture2D>> diffuseMaps = loadMaterialTextures(material, aiTextureType_DIFFUSE, "texture_diffuse");
-        textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
-        // 2. specular maps
-        std::vector<std::shared_ptr<Texture2D>> specularMaps = loadMaterialTextures(material, aiTextureType_SPECULAR, "texture_specular");
-        textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
-        // 3. normal maps
-        std::vector<std::shared_ptr<Texture2D>> normalMaps = loadMaterialTextures(material, aiTextureType_HEIGHT, "texture_normal");
-        textures.insert(textures.end(), normalMaps.begin(), normalMaps.end());
-        // 4. height maps
-        std::vector<std::shared_ptr<Texture2D>> heightMaps = loadMaterialTextures(material, aiTextureType_AMBIENT, "texture_height");
-        textures.insert(textures.end(), heightMaps.begin(), heightMaps.end());
+        material->albedo = LoadTexture(mat, aiTextureType_BASE_COLOR);
+        material->metallic = LoadTexture(mat, aiTextureType_METALNESS);
+        material->normal = LoadTexture(mat, aiTextureType_NORMAL_CAMERA);
+        material->roughness = LoadTexture(mat, aiTextureType_DIFFUSE_ROUGHNESS);
+        material->ao = LoadTexture(mat, aiTextureType_AMBIENT_OCCLUSION);*/
 
         // return a mesh object created from the extracted mesh data
-        return ChildMesh(vertices, indices, textures);
+        return ChildMesh(vertices, indices);
     }
 
-    // checks all material textures of a given type and loads the textures if they're not loaded yet.
-    // the required info is returned as a Texture struct.
-    std::vector<std::shared_ptr<Texture2D>> Mesh::loadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName)
+    std::shared_ptr<Texture2D> Mesh::LoadTexture(aiMaterial* mat, aiTextureType texturetype)
     {
-        std::vector<std::shared_ptr<Texture2D>> textures;
-        for (unsigned int i = 0; i < mat->GetTextureCount(type); i++)
-        {
-            aiString str;
-            mat->GetTexture(type, i, &str);
-            // check if texture was loaded before and if so, continue to next iteration: skip loading a new texture
-            bool skip = false;
-            for (unsigned int j = 0; j < textures_loaded.size(); j++)
-            {
-                if (std::strcmp(textures_loaded[j]->m_Path.data(), str.C_Str()) == 0)
-                {
-                    textures.push_back(textures_loaded[j]);
-                    skip = true; // a texture with the same filepath has already been loaded, continue to next one. (optimization)
-                    break;
-                }
-            }
-            if (!skip)
-            {   // if texture hasn't been loaded already, load it
-                std::string filename = std::string(str.C_Str());
-                filename = this->directory + '/' + filename;
-                std::shared_ptr<Texture2D> texture = Texture2D::Create(filename);
+        aiString str;
+        mat->GetTexture(texturetype, 0, &str);
+        if (str.C_Str() < "   ") return NULL;
+        std::string filename = std::string(str.C_Str());
+        filename = this->directory + '/' + filename;
+        std::shared_ptr<Texture2D> texture = Texture2D::Create(filename);
 
-                textures.push_back(texture);
-                textures_loaded.push_back(texture);  // store it as texture loaded for entire model, to ensure we won't unnecesery load duplicate textures.
-            }
-        }
-        return textures;
+        CE_CORE_INFO("{0}", filename);
+
+        return texture;
     }
+
+    
 
 
 	void Mesh::Draw(Shader* shader)
 	{
+        RenderCommand::BindTexture(material->albedo->GetRendererID(), 0);
+        RenderCommand::BindTexture(material->normal->GetRendererID(), 1);
+        RenderCommand::BindTexture(material->metallic->GetRendererID(), 2);
+        RenderCommand::BindTexture(material->roughness->GetRendererID(), 3);
+        RenderCommand::BindTexture(material->ao->GetRendererID(), 4);
+
 		for (unsigned int i = 0; i < meshes.size(); i++)
 			meshes[i].Draw(shader);
 	}
 
 
 
-	ChildMesh::ChildMesh(std::vector<Vertex> Vertices, std::vector<unsigned int> Indices, std::vector<std::shared_ptr<Texture2D>> Textures)
+	ChildMesh::ChildMesh(std::vector<Vertex> Vertices, std::vector<unsigned int> Indices)
 	{
-		//this->vertices = vertices;
-
         for (Vertex i : Vertices)
         {
             this->vertices.push_back(i.Position.x);
@@ -192,7 +167,6 @@ namespace CrashEngine {
         }
 
 		this->indices = Indices;
-		this->textures = Textures;
 
 		VA.reset(VertexArray::Create());
 		IB.reset(IndexBuffer::Create(&indices[0], indices.size()));
@@ -216,11 +190,6 @@ namespace CrashEngine {
 	void ChildMesh::Draw(Shader* shader)
 	{
 		shader->Bind();
-		//if (albedo)     RenderCommand::BindTexture(albedo->GetRendererID(), 0);
-		//if (normal)     RenderCommand::BindTexture(normal->GetRendererID(), 1);
-		//if (metallic)   RenderCommand::BindTexture(metallic->GetRendererID(), 2);
-		//if (roughness)  RenderCommand::BindTexture(roughness->GetRendererID(), 3);
-		//if (ao)         RenderCommand::BindTexture(ao->GetRendererID(), 4);
 
 		// draw mesh
 		VA->Bind();

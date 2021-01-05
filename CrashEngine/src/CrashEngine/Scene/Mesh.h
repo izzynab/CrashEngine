@@ -6,6 +6,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 #include "SceneCamera.h"
+#include "Material.h"
 #include "CrashEngine/Renderer/Texture.h"
 #include "CrashEngine/Renderer/Shader.h"
 #include "CrashEngine/Renderer/VertexArray.h"
@@ -30,13 +31,12 @@ namespace CrashEngine {
 	class ChildMesh
 	{
 	public:
-		ChildMesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<std::shared_ptr<Texture2D>> textures);
+		ChildMesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices);
 
 		void Draw(Shader* shader);
 
 		std::vector<float>       vertices;
 		std::vector<unsigned int> indices;
-		std::vector<std::shared_ptr<Texture2D>>   textures;
 
 	private:
 		std::shared_ptr <VertexArray> VA;
@@ -48,9 +48,9 @@ namespace CrashEngine {
 	class Mesh
 	{
 	public:
-		std::vector<std::shared_ptr<Texture2D>> textures_loaded;
 		std::vector<ChildMesh> meshes;
 		std::string directory;
+		Material* material;
 
 	public:
 		Mesh() = default;
@@ -65,15 +65,7 @@ namespace CrashEngine {
 
 		ChildMesh processMesh(aiMesh* mesh, const aiScene* scene);
 
-		std::vector<std::shared_ptr<Texture2D>> loadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName);//TODO: make material system
-
-	public:
-		/*std::shared_ptr<Texture2D> albedo;
-		std::shared_ptr<Texture2D> normal;
-		std::shared_ptr<Texture2D> metallic;
-		std::shared_ptr<Texture2D> roughness;
-		std::shared_ptr<Texture2D> ao;*/
-
+		std::shared_ptr<Texture2D> LoadTexture(aiMaterial* mat,aiTextureType texturetype);
 	};
 
 }

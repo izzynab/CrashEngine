@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <memory>
 
 namespace CrashEngine {
 
@@ -29,7 +30,14 @@ namespace CrashEngine {
 		static std::shared_ptr<Texture2D> Create(const std::string& path);
 
 		std::string m_Path;
+	};
 
+	class DepthTexture : public Texture
+	{
+	public:
+		static std::shared_ptr<DepthTexture> Create(uint32_t width, uint32_t height);
+
+		std::string m_Path;
 	};
 
 	class TextureHDR : public Texture

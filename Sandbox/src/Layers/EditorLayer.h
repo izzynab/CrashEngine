@@ -16,6 +16,7 @@
 
 #include "Panels/SceneHierarchyPanel.h"
 #include "Panels/SceneEnvironmentPanel.h"
+#include "Panels/MaterialPanel.h"
 
 
 
@@ -40,44 +41,34 @@ namespace CrashEngine {
 		std::shared_ptr<ImGuiLayer> imguilayer;
 		std::shared_ptr <SceneHierarchyPanel> HierarchyPanel;
 		std::shared_ptr <SceneEnvironmentPanel> EnvironmentPanel;
+		//std::shared_ptr <MaterialPanel> MaterialPanel;
 
 		std::shared_ptr<SkyLight> skyLight;
-
+		std::shared_ptr<DirectionalLight> directionalLight;
 
 		std::shared_ptr<VertexArray> m_SquareVA;
 		std::shared_ptr<UniformBuffer> m_MatrixUB;
 		std::shared_ptr<CameraController> cameraController;
 
 		Shader* basicShader;
-		Shader* pbrShader;
 		Shader* pbrTextureShader;
-
+		Shader* depthMapShader;
+		Shader* depthMapTextureShader;
 
 		glm::mat4 model;
-
-		// lights
-		glm::vec3 lightPositions[4] = {
-			glm::vec3(-10.0f,  10.0f, 10.0f),
-			glm::vec3(10.0f,  10.0f, 10.0f),
-			glm::vec3(-10.0f, -10.0f, 10.0f),
-			glm::vec3(10.0f, -10.0f, 10.0f),
-		};
-		glm::vec3 lightColors[4] = {
-			glm::vec3(300.0f, 300.0f, 300.0f),
-			glm::vec3(300.0f, 300.0f, 300.0f),
-			glm::vec3(300.0f, 300.0f, 300.0f),
-			glm::vec3(300.0f, 300.0f, 300.0f)
-		};
-
 
 		std::shared_ptr<Sphere> sphere;
 		std::shared_ptr<Cube> cube;
 		std::shared_ptr<Quad> quad;
 
 
-		std::shared_ptr<Framebuffer> Framebuffer;
+		std::shared_ptr<Framebuffer> framebuffer;
 
-		TextureCreator* texCreat;
+		//-----------------------------------
+		glm::vec3 lightPos = glm::vec3(-2.0f, 4.0f, -1.0f);
+
+		std::shared_ptr<DepthTexture> depthMap;
+		std::shared_ptr<Framebuffer> depthFramebuffer;
 	};
 
 }

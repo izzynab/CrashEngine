@@ -21,6 +21,7 @@ namespace CrashEngine {
 		Camera& GetCamera() { return m_Camera; }
 		const Camera& GetCamera() const { return m_Camera; }
 
+		float m_CameraSpeed = 5.0f;
 	private:
 		bool OnMouseScrolled(MouseScrolledEvent& e);
 		bool OnWindowResized(WindowResizeEvent& e);
@@ -28,7 +29,6 @@ namespace CrashEngine {
 		Camera m_Camera;
 
 		glm::vec3 m_CameraPosition = { 0.0f, 0.0f, 0.0f };
-		float m_CameraSpeed = 5.0f;
 		bool firstMouse = true;
 		float sensitivity = 0.1f;
 

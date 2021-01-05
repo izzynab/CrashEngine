@@ -1699,6 +1699,8 @@
     <ClInclude Include="src\CrashEngine\Renderer\TextureCreator.h" />
     <ClInclude Include="src\CrashEngine\Scene\SkyLight.h" />
     <ClInclude Include="src\CrashEngine\Scene\Mesh.h" />
+    <ClInclude Include="src\CrashEngine\Scene\Material.h" />
+    <ClInclude Include="src\CrashEngine\Scene\DirectionalLight.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\CrashEngine\Core\Application.cpp">
@@ -1801,6 +1803,8 @@
     <ClCompile Include="src\CrashEngine\Renderer\TextureCreator.cpp" />
     <ClCompile Include="src\CrashEngine\Scene\SkyLight.cpp" />
     <ClCompile Include="src\CrashEngine\Scene\Mesh.cpp" />
+    <ClCompile Include="src\CrashEngine\Scene\Material.cpp" />
+    <ClCompile Include="src\CrashEngine\Scene\DirectionalLight.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="vendor\assimp\include\assimp\config.h.in">
@@ -1821,5 +1825,9 @@
     <None Include="src\CrashEngine\Renderer\Shaders\prefilter.frag" />
     <None Include="src\CrashEngine\Renderer\Shaders\Text.frag" />
     <None Include="src\CrashEngine\Renderer\Shaders\Text.vert" />
+    <None Include="src\CrashEngine\Renderer\Shaders\depthMap.vert" />
+    <None Include="src\CrashEngine\Renderer\Shaders\depthMap.frag" />
+    <None Include="src\CrashEngine\Renderer\Shaders\depthMapTexture.frag" />
+    <None Include="src\CrashEngine\Renderer\Shaders\depthMapTexture.vert" />
   </ItemGroup>
 </Project>

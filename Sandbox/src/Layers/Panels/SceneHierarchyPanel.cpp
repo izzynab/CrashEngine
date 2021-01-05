@@ -27,6 +27,7 @@ namespace CrashEngine {
 	SceneHierarchyPanel::SceneHierarchyPanel(const std::shared_ptr<Scene>& context)
 	{
 		SetContext(context);
+		MaterialPanel.reset(new CrashEngine::MaterialPanel());
 	}
 
 	void SceneHierarchyPanel::SetContext(const std::shared_ptr<Scene>& context)
@@ -37,6 +38,8 @@ namespace CrashEngine {
 
 	void SceneHierarchyPanel::OnImGuiRender()
 	{
+		//MaterialPanel->OnImGuiRender();
+
 		ImGui::Begin("Scene Hierarchy");
 
 		m_Context->m_Registry.each([&](auto entityID)
@@ -84,6 +87,14 @@ namespace CrashEngine {
 		if (ImGui::IsItemClicked())
 		{
 			m_SelectionContext = entity;
+
+			if (entity.HasComponent<Mesh>())
+			{
+				auto& component = entity.GetComponent<Mesh>();
+				MaterialPanel->SetEntity(&component);
+
+				CE_CORE_WARN("selected mesh entity");
+			}
 		}
 
 		bool entityDeleted = false;
@@ -179,7 +190,7 @@ namespace CrashEngine {
 	}
 
 	template<typename T, typename UIFunction>
-	static void DrawComponent(const std::string& name, Entity entity, UIFunction uiFunction)
+	void DrawComponent(const std::string& name, Entity entity, UIFunction uiFunction)
 	{
 		const ImGuiTreeNodeFlags treeNodeFlags = ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_AllowItemOverlap | ImGuiTreeNodeFlags_FramePadding;
 		if (entity.HasComponent<T>())
@@ -234,6 +245,14 @@ namespace CrashEngine {
 			}
 		}
 
+		if (entity.HasComponent<Mesh>())
+		{
+			auto& component = entity.GetComponent<Mesh>();
+			MaterialPanel->OnImGuiRender();
+
+			//CE_CORE_WARN("new material panel should open {0}", component.material->name->c_str());
+		}
+
 		ImGui::SameLine();
 		ImGui::PushItemWidth(-1);
 
@@ -274,129 +293,7 @@ namespace CrashEngine {
 			
 				ImGui::NextColumn();
 				ImGui::Text(component.directory.c_str());
-				ImGui::EndColumns();
-
-				/*ImGui::NewLine();
-				ImGui::Separator();
-				ImGui::Text("Albedo Texture");
-				if (component.albedo) ImGui::Image((void*)component.albedo->GetRendererID(), ImVec2(150, 150));
-				else component.albedo = component.texCreator->CreateTexture(150, 150, glm::vec3(0.7, 0.7, 0.7));
-				ImGui::SameLine();
-				ImGui::Checkbox("Use albedo", &component.albedoTextureUse);
-				
-				if (ImGui::Button("Open albedo"))
-				{
-					std::optional<std::string> filepath = FileDialogs::OpenFile("");
-					if (filepath)
-					{
-						component.albedo = Texture2D::Create(filepath.value());
-					}
-				}
-
-				if (!component.albedoTextureUse)
-				{
-					ImGui::ColorPicker3("Albedo color", &component.albedoColor.x);
-
-					if (ImGui::Button("Create albedo texture"))
-					{
-						component.albedo = component.texCreator->CreateTexture(150, 150, component.albedoColor);
-					}
-				}
-
-
-
-
-				ImGui::Separator();
-				ImGui::Text("Normal Texture");
-				
-				if (component.normal) ImGui::Image((void*)component.normal->GetRendererID(), ImVec2(150, 150));
-				else component.normal = component.texCreator->CreateTexture(150, 150, glm::vec3(0.5, 0.5, 1));
-				ImGui::SameLine();
-
-				if (ImGui::Button("Open normal"))
-				{
-					std::optional<std::string> filepath = FileDialogs::OpenFile("");
-					if (filepath)
-					{
-						component.normal = Texture2D::Create(filepath.value());
-					}
-				}
-
-
-
-				ImGui::Separator();
-				ImGui::Text("metallic Texture");
-
-				if (component.metallic) ImGui::Image((void*)component.metallic->GetRendererID(), ImVec2(150, 150));
-				else component.metallic = component.texCreator->CreateTexture(150, 150, glm::vec3(component.metallicTextureUse, component.metallicTextureUse, component.metallicTextureUse));
-				ImGui::SameLine();
-				ImGui::Checkbox("Use metallic", &component.metallicTextureUse);
-
-				if (ImGui::Button("Open metallic"))
-				{
-					std::optional<std::string> filepath = FileDialogs::OpenFile("");
-					if (filepath)
-					{
-						component.metallic = Texture2D::Create(filepath.value());
-					}
-				}
-
-				if (!component.metallicTextureUse)
-				{
-					if (ImGui::Button("Create metallic texture"))
-					{
-						component.metallic = component.texCreator->CreateTexture(150, 150, glm::vec3(component.metallicValue, component.metallicValue, component.metallicValue));
-					}
-
-					ImGui::SliderFloat("Metallic Value", &component.metallicValue, 0.f, 1.f);
-				}
-
-
-
-				ImGui::Separator();
-				ImGui::Text("roughness Texture");
-
-				if (component.roughness) ImGui::Image((void*)component.roughness->GetRendererID(), ImVec2(150, 150));
-				else component.roughness = component.texCreator->CreateTexture(150, 150, glm::vec3(component.roughnessTextureUse, component.roughnessTextureUse, component.roughnessTextureUse));
-				ImGui::SameLine();
-				ImGui::Checkbox("Use roughness", &component.roughnessTextureUse);
-
-				if (ImGui::Button("Open roughness" ))
-				{
-					std::optional<std::string> filepath = FileDialogs::OpenFile("");
-					if (filepath)
-					{
-						component.roughness = Texture2D::Create(filepath.value());
-					}
-				}
-
-				if (!component.roughnessTextureUse)
-				{
-					if (ImGui::Button("Create roughness texture"))
-					{
-						component.roughness = component.texCreator->CreateTexture(150, 150, glm::vec3(component.roughnessValue, component.roughnessValue, component.roughnessValue));
-					}
-
-					ImGui::SliderFloat("Roughness Value", &component.roughnessValue, 0.f, 1.f);
-				}
-
-
-
-				ImGui::Separator();
-				ImGui::Text("ao Texture");
-
-				if (component.ao) ImGui::Image((void*)component.ao->GetRendererID(), ImVec2(150, 150));
-				else component.ao = component.texCreator->CreateTexture(150, 150, glm::vec3(1, 1, 1));
-				ImGui::SameLine();
-
-				if (ImGui::Button("Open ao"))
-				{
-					std::optional<std::string> filepath = FileDialogs::OpenFile("");
-					if (filepath)
-					{
-						component.ao = Texture2D::Create(filepath.value());
-					}
-				}*/
+				ImGui::EndColumns();		
 	
 			});
 

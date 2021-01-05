@@ -182,7 +182,9 @@
     <ClInclude Include="src\CrashEngine\Renderer\TextureCreator.h" />
     <ClInclude Include="src\CrashEngine\Renderer\VertexArray.h" />
     <ClInclude Include="src\CrashEngine\Scene\Components.h" />
+    <ClInclude Include="src\CrashEngine\Scene\DirectionalLight.h" />
     <ClInclude Include="src\CrashEngine\Scene\Entity.h" />
+    <ClInclude Include="src\CrashEngine\Scene\Material.h" />
     <ClInclude Include="src\CrashEngine\Scene\Mesh.h" />
     <ClInclude Include="src\CrashEngine\Scene\Scene.h" />
     <ClInclude Include="src\CrashEngine\Scene\SceneCamera.h" />
@@ -713,7 +715,9 @@
     <ClCompile Include="src\CrashEngine\Renderer\Texture.cpp" />
     <ClCompile Include="src\CrashEngine\Renderer\TextureCreator.cpp" />
     <ClCompile Include="src\CrashEngine\Renderer\VertexArray.cpp" />
+    <ClCompile Include="src\CrashEngine\Scene\DirectionalLight.cpp" />
     <ClCompile Include="src\CrashEngine\Scene\Entity.cpp" />
+    <ClCompile Include="src\CrashEngine\Scene\Material.cpp" />
     <ClCompile Include="src\CrashEngine\Scene\Mesh.cpp" />
     <ClCompile Include="src\CrashEngine\Scene\Scene.cpp" />
     <ClCompile Include="src\CrashEngine\Scene\SceneCamera.cpp" />
@@ -742,6 +746,10 @@
     <None Include="src\CrashEngine\Renderer\Shaders\brdf.frag" />
     <None Include="src\CrashEngine\Renderer\Shaders\brdf.vert" />
     <None Include="src\CrashEngine\Renderer\Shaders\cubemap.vert" />
+    <None Include="src\CrashEngine\Renderer\Shaders\depthMap.frag" />
+    <None Include="src\CrashEngine\Renderer\Shaders\depthMap.vert" />
+    <None Include="src\CrashEngine\Renderer\Shaders\depthMapTexture.frag" />
+    <None Include="src\CrashEngine\Renderer\Shaders\depthMapTexture.vert" />
     <None Include="src\CrashEngine\Renderer\Shaders\equirectangularToCubemap.frag" />
     <None Include="src\CrashEngine\Renderer\Shaders\irradiance.frag" />
     <None Include="src\CrashEngine\Renderer\Shaders\pbr.frag" />

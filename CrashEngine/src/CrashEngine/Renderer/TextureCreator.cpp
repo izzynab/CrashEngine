@@ -3,6 +3,8 @@
 
 #include "CrashEngine/Core/Defines.h"
 #include "RenderCommand.h"
+#include "Renderer.h"
+#include "glm/glm.hpp"
 
 namespace CrashEngine {
 
@@ -71,4 +73,6 @@ namespace CrashEngine {
 
 		return Texture;
 	}
+
+
 }

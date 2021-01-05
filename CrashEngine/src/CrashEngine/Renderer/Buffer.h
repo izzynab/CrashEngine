@@ -1,5 +1,6 @@
 #pragma once
 
+#include "CrashEngine/Core/Core.h"
 #include <memory>
 #include <vector>
 #include <string>

@@ -21,24 +21,13 @@ namespace CrashEngine {
 		spec.Height = 1080;
 		spec.Width = 2560;
 
-		Framebuffer = Framebuffer::Create(spec);
+		framebuffer = Framebuffer::Create(spec);
 
 		imguilayer.reset(new ImGuiLayer);
 
 		glm::mat4 projection = cameraController->GetCamera().GetProjectionMatrix();
 
 		basicShader = Shader::Create("Basic.vert", "Basic.frag");
-
-
-		pbrShader = Shader::Create("pbr.vert", "pbr.frag");
-		pbrShader->Bind();
-
-		pbrShader->SetUniformVec3("albedo", glm::vec3(0.3f, 0.3f, 0.3f));
-		pbrShader->SetUniformFloat("ao", 1.0f);
-		pbrShader->SetUniformInt("irradianceMap", 0);
-		pbrShader->SetUniformInt("prefilterMap", 1);
-		pbrShader->SetUniformInt("brdfLUT", 2);
-
 
 		pbrTextureShader = Shader::Create("pbr.vert", "pbrTexture.frag");
 		pbrTextureShader->Bind();
@@ -54,7 +43,44 @@ namespace CrashEngine {
 		pbrTextureShader->SetUniformInt("brdfLUT", 7);
 
 
+
+
+		depthMapShader = Shader::Create("depthMap.vert", "depthMap.frag");
+		depthMapTextureShader = Shader::Create("depthMapTexture.vert", "depthMapTexture.frag");
+		depthMapTextureShader->Bind();
+		depthMapTextureShader->SetUniformInt("DepthMap", 0);
+
+		FramebufferSpecification depthspec;
+		spec.Height = 1024;
+		spec.Width = 1024;
+
+		depthFramebuffer = Framebuffer::Create(depthspec,false);
+
+		depthMap = DepthTexture::Create(1024, 1024);
+		depthFramebuffer->Bind();
+		depthFramebuffer->SetDepthTexture(CE_TEXTURE_2D, depthMap->GetRendererID());
+		depthFramebuffer->Unbind();
+
+		glm::mat4 lightProjection, lightView;
+		glm::mat4 lightSpaceMatrix;
+		float near_plane = 1.0f, far_plane = 7.5f;
+		//lightProjection = glm::perspective(glm::radians(45.0f), (GLfloat)SHADOW_WIDTH / (GLfloat)SHADOW_HEIGHT, near_plane, far_plane); // note that if you use a perspective projection matrix you'll have to change the light position as the current light position isn't enough to reflect the whole scene
+		lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, near_plane, far_plane);
+		lightView = glm::lookAt(lightPos, glm::vec3(0.0f), glm::vec3(0.0, 1.0, 0.0));
+		lightSpaceMatrix = lightProjection * lightView;
+		// render scene from light's point of view
+		depthMapShader->Bind();
+		depthMapShader->SetUniformMat4("lightSpaceMatrix", lightSpaceMatrix);
+
+
+
+
+
+
 		skyLight.reset(new SkyLight);
+		skyLight->LoadHDR("C:\\EngineDev\\CrashEngine\\Textures\\hdr/14-Hamarikyu_Bridge_B_3k.hdr");
+
+		directionalLight.reset(new DirectionalLight);
 
 		UniformBufferLayout uniformLayout = {
 			{ ShaderDataType::Mat4, "projection" },
@@ -62,7 +88,6 @@ namespace CrashEngine {
 		};
 
 		m_MatrixUB.reset(UniformBuffer::Create(uniformLayout, 0));
-		m_MatrixUB->linkShader(pbrShader->GetID(), "Matrices");
 		m_MatrixUB->linkShader(pbrTextureShader->GetID(), "Matrices");
 		m_MatrixUB->linkShader(skyLight->GetSkyShader()->GetID(), "Matrices");
 
@@ -78,35 +103,58 @@ namespace CrashEngine {
 		m_ActiveScene = std::make_shared<Scene>();
 
 
-		auto mesh1 = m_ActiveScene->CreateEntity("Gun");
+		auto mesh1 = m_ActiveScene->CreateEntity("Cube 1");
+		auto mesh2 = m_ActiveScene->CreateEntity("Cube 2");
+		auto mesh3 = m_ActiveScene->CreateEntity("Cube 3");
+		auto mesh4 = m_ActiveScene->CreateEntity("Cube 4");
 
-		Mesh mesh = Mesh("C:\\EngineDev\\CrashEngine\\Models\\cerberus\\cerberus.obj");
+		Mesh mesh10 = Mesh("C:\\EngineDev\\CrashEngine\\Models\\cube.obj");
+		Mesh mesh20 = Mesh("C:\\EngineDev\\CrashEngine\\Models\\cube.obj");
+		Mesh mesh30 = Mesh("C:\\EngineDev\\CrashEngine\\Models\\cube.obj");
+		Mesh mesh40 = Mesh("C:\\EngineDev\\CrashEngine\\Models\\cube.obj");
+		mesh10.material->name.reset(new std::string("material for fisrt mesh"));
 
-		/*mesh.albedo = Texture2D::Create("C:\\EngineDev\\CrashEngine\\Textures\\cerberus\\cerberus_A.tga");
-		mesh.normal = Texture2D::Create("C:\\EngineDev\\CrashEngine\\Textures\\cerberus\\cerberus_N.tga");
-		mesh.metallic = Texture2D::Create("C:\\EngineDev\\CrashEngine\\Textures\\cerberus\\cerberus_M.tga");
-		mesh.roughness = Texture2D::Create("C:\\EngineDev\\CrashEngine\\Textures\\cerberus\\cerberus_R.tga");
-		mesh.ao = Texture2D::Create("C:\\EngineDev\\CrashEngine\\Textures\\cerberus\\cerberus_AO.tga");*/
+		mesh1.AddComponent<Mesh>(mesh10);
+		mesh1.GetComponent<TransformComponent>().Translation = glm::vec3(-4, -2, 0);
+		mesh1.GetComponent<TransformComponent>().Scale = glm::vec3(10, 0.1, 14);
 
-		mesh1.AddComponent<Mesh>(mesh);
+		mesh2.AddComponent<Mesh>(mesh20);
+		mesh2.GetComponent<TransformComponent>().Translation = glm::vec3(-7, 0, 0);
+		mesh2.GetComponent<TransformComponent>().Scale = glm::vec3(1, 2.5, 5);
+
+		mesh3.AddComponent<Mesh>(mesh30);
+		mesh3.GetComponent<TransformComponent>().Translation = glm::vec3(0, 3, 3);
+		mesh3.GetComponent<TransformComponent>().Scale = glm::vec3(1, 3, 4);
+		mesh3.GetComponent<TransformComponent>().Rotation = glm::vec3(0, 0.2, 0.44);
+
+		mesh4.AddComponent<Mesh>(mesh40);
+		mesh4.GetComponent<TransformComponent>().Translation = glm::vec3(-6, 2, 6);
+		mesh4.GetComponent<TransformComponent>().Scale = glm::vec3(1, 1, 1);
 
 		m_ActiveScene->SetDefaultShader(pbrTextureShader);
+		m_ActiveScene->SetDepthShader(depthMapShader);
 
 		HierarchyPanel.reset(new SceneHierarchyPanel(m_ActiveScene));
-		EnvironmentPanel.reset(new SceneEnvironmentPanel(skyLight));
+		EnvironmentPanel.reset(new SceneEnvironmentPanel(skyLight, directionalLight));
 
 	}
 
 	void Editor::OnUpdate(Timestep ts)
 	{
+		Renderer::BeginScene();
 		cameraController->OnUpdate(ts);
 
-		Framebuffer->Bind();
+		//----------------shadows----------------
+		RenderCommand::SetViewport(1024, 1024);
+		depthFramebuffer->Bind();	
+		RenderCommand::Clear(); 
+		m_ActiveScene->DepthRender();
+		depthFramebuffer->Unbind();
+		//----------------shadows----------------
 
-		RenderCommand::Clear();
+		framebuffer->Bind();
 		RenderCommand::SetClearColor({ 1.f, 0.f, 0.0f, 1.0f });
-
-		Renderer::BeginScene();
+		RenderCommand::Clear();
 
 		glm::mat4 view = cameraController->GetCamera().GetViewMatrix();
 		m_MatrixUB->setData("view", glm::value_ptr(view));
@@ -122,21 +170,16 @@ namespace CrashEngine {
 		m_ActiveScene->OnUpdate(ts);
 
 
-		for (unsigned int i = 0; i < sizeof(lightPositions) / sizeof(lightPositions[0]); ++i)
-		{
-			glm::vec3 newPos = lightPositions[i] + glm::vec3(sin(RenderCommand::GetTime() * 5.0) * 5.0, 0.0, 0.0);
-			newPos = lightPositions[i];
-
-			pbrTextureShader->Bind();
-			pbrTextureShader->SetUniformVec3("lightPositions[" + std::to_string(i) + "]", newPos);
-			pbrTextureShader->SetUniformVec3("lightColors[" + std::to_string(i) + "]", lightColors[i]);
-		}
-
-		// render skybox (render as last to prevent overdraw)
+		pbrTextureShader->Bind();
+		pbrTextureShader->SetUniformVec3("lightRotation", directionalLight->rotation);
+		pbrTextureShader->SetUniformVec3("lightColor", directionalLight->color* directionalLight->intensity);
+		
 		skyLight->RenderSky();
+		
+		
 
+		framebuffer->Unbind();
 		Renderer::EndScene();
-		Framebuffer->Unbind();
 
 
 	}
@@ -144,7 +187,7 @@ namespace CrashEngine {
 	void Editor::OnImGuiRender()
 	{
 		imguilayer->MainMenu();
-		imguilayer->Dockspace(Framebuffer);
+		imguilayer->Dockspace(framebuffer);
 
 		if (imguilayer->MenuEnabled) { imguilayer->Menu(); }
 
@@ -154,6 +197,11 @@ namespace CrashEngine {
 
 		HierarchyPanel->OnImGuiRender();
 		EnvironmentPanel->OnImGuiRender();
+	
+		ImGui::Begin("Camera controller");
+		ImGui::SliderFloat("Camera Speed", &cameraController->m_CameraSpeed, 1.f, 40.f);
+		ImGui::Image((void*)depthMap->GetRendererID(), ImVec2(400,400));
+		ImGui::End();
 
 	
 		RenderCommand::SetViewport(imguilayer->CurrentWindowView.x, imguilayer->CurrentWindowView.y);

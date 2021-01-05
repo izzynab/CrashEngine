@@ -7,10 +7,11 @@ namespace CrashEngine {
 
 	static const uint32_t s_MaxFramebufferSize = 8192;
 
-	OpenGLFramebuffer::OpenGLFramebuffer(const FramebufferSpecification& spec)
+	OpenGLFramebuffer::OpenGLFramebuffer(const FramebufferSpecification& spec, bool createTextures)
 		: m_Specification(spec)
 	{
 		Invalidate();
+		if (createTextures)	CreateTextures();
 	}
 
 	OpenGLFramebuffer::~OpenGLFramebuffer()
@@ -25,8 +26,8 @@ namespace CrashEngine {
 		if (m_RendererID)
 		{
 			glDeleteFramebuffers(1, &m_RendererID);
-			glDeleteTextures(1, &m_ColorAttachment);
-			glDeleteTextures(1, &m_DepthAttachment);
+			//glDeleteTextures(1, &m_ColorAttachment);
+			//glDeleteTextures(1, &m_DepthAttachment);
 		}
 
 		//glCreateFramebuffers(1, &m_RendererID);
@@ -34,6 +35,22 @@ namespace CrashEngine {
 
 		glGenFramebuffers(1, &m_RendererID);
 		glBindFramebuffer(GL_FRAMEBUFFER, m_RendererID);
+
+	}
+
+	void OpenGLFramebuffer::Bind()
+	{
+		glBindFramebuffer(GL_FRAMEBUFFER, m_RendererID);
+		//glViewport(0, 0, m_Specification.Width, m_Specification.Height);
+	}
+
+	void OpenGLFramebuffer::Unbind()
+	{
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	}
+
+	void OpenGLFramebuffer::CreateTextures()
+	{
 
 		glCreateTextures(GL_TEXTURE_2D, 1, &m_ColorAttachment);
 		glBindTexture(GL_TEXTURE_2D, m_ColorAttachment);
@@ -50,18 +67,6 @@ namespace CrashEngine {
 
 		CE_CORE_ASSERT(glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE, "Framebuffer is incomplete!");
 
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
-	}
-
-	void OpenGLFramebuffer::Bind()
-	{
-		glBindFramebuffer(GL_FRAMEBUFFER, m_RendererID);
-		//glViewport(0, 0, m_Specification.Width, m_Specification.Height);
-	}
-
-	void OpenGLFramebuffer::Unbind()
-	{
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 
@@ -82,6 +87,13 @@ namespace CrashEngine {
 	{
 		//glBindFramebuffer(GL_FRAMEBUFFER, m_RendererID);
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, texTarget, textureID, mipMapLevel);
+	}
+
+	void OpenGLFramebuffer::SetDepthTexture(int texTarget, uint32_t textureID)
+	{
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, texTarget, textureID,0);
+		glDrawBuffer(GL_NONE);
+		glReadBuffer(GL_NONE);
 	}
 
 	void OpenGLFramebuffer::SetNewTexture(uint32_t width, uint32_t height)

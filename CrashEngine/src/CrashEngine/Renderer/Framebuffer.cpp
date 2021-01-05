@@ -5,12 +5,12 @@
 
 namespace CrashEngine {
 
-	std::shared_ptr<Framebuffer> Framebuffer::Create(const FramebufferSpecification& spec)
+	std::shared_ptr<Framebuffer> Framebuffer::Create(const FramebufferSpecification& spec, bool createTetures )
 	{
 		switch (Renderer::GetAPI())
 		{
 		case RendererAPI::API::None:    CE_CORE_ASSERT(false, "RendererAPI::None is currently not supported!"); return nullptr;
-		case RendererAPI::API::OpenGL:  return std::make_shared<OpenGLFramebuffer>(spec);
+		case RendererAPI::API::OpenGL:  return std::make_shared<OpenGLFramebuffer>(spec, createTetures);
 		}
 
 		CE_CORE_ASSERT(false, "Unknown RendererAPI!");

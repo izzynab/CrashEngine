@@ -8,7 +8,7 @@ namespace CrashEngine
 	class OpenGLFramebuffer : public Framebuffer
 	{
 	public:
-		OpenGLFramebuffer(const FramebufferSpecification& spec);
+		OpenGLFramebuffer(const FramebufferSpecification& spec,bool createTextures = true);
 		virtual ~OpenGLFramebuffer();
 
 		void Invalidate();
@@ -16,11 +16,15 @@ namespace CrashEngine
 		virtual void Bind() override;
 		virtual void Unbind() override;
 
+		virtual void CreateTextures();
+
 		virtual void Resize(uint32_t width, uint32_t height) override;
 		virtual void SetTexture(int texTarget, uint32_t textureID, int mipMapLevel) override;
+		virtual void SetDepthTexture(int texTarget, uint32_t textureID) override;
 		virtual void SetNewTexture(uint32_t width, uint32_t height) override;
 
 		virtual uint32_t GetColorAttachmentRendererID() const override { return m_ColorAttachment; }
+		virtual uint32_t GetDepthAttachmentRendererID() const override { return m_DepthAttachment; }
 
 		virtual const FramebufferSpecification& GetSpecification() const override { return m_Specification; }
 	private:

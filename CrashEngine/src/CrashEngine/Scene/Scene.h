@@ -27,7 +27,10 @@ namespace CrashEngine {
 		void OnUpdate(Timestep ts);
 		void OnViewportResize(uint32_t width, uint32_t height);
 
+		void DepthRender();
+
 		inline void SetDefaultShader(Shader* shader) { defaultShader = shader; }
+		inline void SetDepthShader(Shader* shader) { depthShader = shader; }
 	private:
 		template<typename T>
 		void OnComponentAdded(Entity entity, T& component);
@@ -43,6 +46,7 @@ namespace CrashEngine {
 		friend class SceneHierarchyPanel;
 
 		Shader *defaultShader;
+		Shader* depthShader;
 
 
 	};

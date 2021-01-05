@@ -78,6 +78,24 @@ namespace CrashEngine {
 		
 	}
 
+	void Scene::DepthRender()
+	{
+		auto view = m_Registry.view<TransformComponent, Mesh>();
+
+		for (auto entity : view)
+		{
+			auto& mod = view.get<Mesh>(entity);
+			auto& transform = view.get<TransformComponent>(entity);
+
+			glm::mat4 model = transform.GetTransform();
+			depthShader->SetUniformMat4("model", model);
+
+			mod.Draw(depthShader);
+		}
+
+
+	}
+
 	void Scene::OnViewportResize(uint32_t width, uint32_t height)
 	{
 		m_ViewportWidth = width;
