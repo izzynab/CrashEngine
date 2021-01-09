@@ -1827,7 +1827,5 @@
     <None Include="src\CrashEngine\Renderer\Shaders\Text.vert" />
     <None Include="src\CrashEngine\Renderer\Shaders\depthMap.vert" />
     <None Include="src\CrashEngine\Renderer\Shaders\depthMap.frag" />
-    <None Include="src\CrashEngine\Renderer\Shaders\depthMapTexture.frag" />
-    <None Include="src\CrashEngine\Renderer\Shaders\depthMapTexture.vert" />
   </ItemGroup>
 </Project>

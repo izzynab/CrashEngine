@@ -53,7 +53,6 @@ namespace CrashEngine {
 		Shader* basicShader;
 		Shader* pbrTextureShader;
 		Shader* depthMapShader;
-		Shader* depthMapTextureShader;
 
 		glm::mat4 model;
 
@@ -63,9 +62,6 @@ namespace CrashEngine {
 
 
 		std::shared_ptr<Framebuffer> framebuffer;
-
-		//-----------------------------------
-		glm::vec3 lightPos = glm::vec3(-2.0f, 4.0f, -1.0f);
 
 		std::shared_ptr<DepthTexture> depthMap;
 		std::shared_ptr<Framebuffer> depthFramebuffer;

@@ -128,14 +128,16 @@ namespace CrashEngine {
     
 
 
-	void Mesh::Draw(Shader* shader)
+	void Mesh::Draw(Shader* shader,bool bindTextures)
 	{
-        RenderCommand::BindTexture(material->albedo->GetRendererID(), 0);
-        RenderCommand::BindTexture(material->normal->GetRendererID(), 1);
-        RenderCommand::BindTexture(material->metallic->GetRendererID(), 2);
-        RenderCommand::BindTexture(material->roughness->GetRendererID(), 3);
-        RenderCommand::BindTexture(material->ao->GetRendererID(), 4);
-
+        if (bindTextures)
+        {
+            RenderCommand::BindTexture(material->albedo->GetRendererID(), 0);
+            RenderCommand::BindTexture(material->normal->GetRendererID(), 1);
+            RenderCommand::BindTexture(material->metallic->GetRendererID(), 2);
+            RenderCommand::BindTexture(material->roughness->GetRendererID(), 3);
+            RenderCommand::BindTexture(material->ao->GetRendererID(), 4);
+        }
 		for (unsigned int i = 0; i < meshes.size(); i++)
 			meshes[i].Draw(shader);
 	}

@@ -32,6 +32,8 @@ namespace CrashEngine {
 		glm::vec3 m_Front = glm::vec3(0.0f, 0.0f, -1.0f);
 		glm::vec3 m_Up = glm::vec3(0.0f, 1.0f, 0.0f);
 
+		float fov = 45.f;
+
 	private:	
 		glm::mat4 m_ProjectionMatrix;
 		glm::mat4 m_ViewMatrix;

@@ -90,7 +90,7 @@ namespace CrashEngine {
 			glm::mat4 model = transform.GetTransform();
 			depthShader->SetUniformMat4("model", model);
 
-			mod.Draw(depthShader);
+			mod.Draw(depthShader,false);//todo: depth render couses errors 
 		}
 
 

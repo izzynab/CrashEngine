@@ -748,8 +748,6 @@
     <None Include="src\CrashEngine\Renderer\Shaders\cubemap.vert" />
     <None Include="src\CrashEngine\Renderer\Shaders\depthMap.frag" />
     <None Include="src\CrashEngine\Renderer\Shaders\depthMap.vert" />
-    <None Include="src\CrashEngine\Renderer\Shaders\depthMapTexture.frag" />
-    <None Include="src\CrashEngine\Renderer\Shaders\depthMapTexture.vert" />
     <None Include="src\CrashEngine\Renderer\Shaders\equirectangularToCubemap.frag" />
     <None Include="src\CrashEngine\Renderer\Shaders\irradiance.frag" />
     <None Include="src\CrashEngine\Renderer\Shaders\pbr.frag" />

@@ -121,6 +121,8 @@ namespace CrashEngine {
 		bool directional = ImGui::TreeNodeEx("Directional Light", treeNodeFlags);
 		if (directional)
 		{
+			DrawVec3Control("Position", m_DirectionalLight->position);
+
 			glm::vec3 rotation = glm::degrees(m_DirectionalLight->rotation);
 			DrawVec3Control("Rotation", rotation);
 			m_DirectionalLight->rotation = glm::radians(rotation);

@@ -6,6 +6,7 @@ in vec3 Normal;
 in vec2 TexCoords;
 in vec3 aTangent;
 in vec3 aBitangent;
+in vec4 FragPosLightSpace;
 
 // material parameters
 uniform sampler2D albedoMap;
@@ -13,6 +14,7 @@ uniform sampler2D normalMap;
 uniform sampler2D metallicMap;
 uniform sampler2D roughnessMap;
 uniform sampler2D aoMap;
+uniform sampler2D shadowMap;
 
 // IBL
 uniform samplerCube irradianceMap;
@@ -20,8 +22,9 @@ uniform samplerCube prefilterMap;
 uniform sampler2D brdfLUT;
 
 // lights
-uniform vec3 lightRotation;
+uniform vec3 lightPosition;
 uniform vec3 lightColor;
+
 
 uniform vec3 camPos;
 
@@ -93,6 +96,43 @@ vec3 fresnelSchlickRoughness(float cosTheta, vec3 F0, float roughness)
     return F0 + (max(vec3(1.0 - roughness), F0) - F0) * pow(1.0 - cosTheta, 5.0);
 }   
 // ----------------------------------------------------------------------------
+float ShadowCalculation(vec4 fragPosLightSpace)
+{
+     // perform perspective divide
+    vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
+    // transform to [0,1] range
+    projCoords = projCoords * 0.5 + 0.5;
+    // get closest depth value from light's perspective (using [0,1] range fragPosLight as coords)
+    float closestDepth = texture(shadowMap, projCoords.xy).r; 
+    // get depth of current fragment from light's perspective
+    float currentDepth = projCoords.z;
+    // calculate bias (based on depth map resolution and slope)
+    vec3 normal = getNormalFromMap();
+    vec3 lightDir = normalize(vec3(-2.0f, 4.0f, -1.0f) - WorldPos);
+    float bias = max(0.05 * (1.0 - dot(normal, lightDir)), 0.005);
+    // check whether current frag pos is in shadow
+    // float shadow = currentDepth - bias > closestDepth  ? 1.0 : 0.0;
+    // PCF
+    float shadow = 0.0;
+    vec2 texelSize = 1.0 / textureSize(shadowMap, 0);
+    for(int x = -1; x <= 1; ++x)
+    {
+        for(int y = -1; y <= 1; ++y)
+        {
+            float pcfDepth = texture(shadowMap, projCoords.xy + vec2(x, y) * texelSize).r; 
+            shadow += currentDepth - bias > pcfDepth  ? 1.0 : 0.0;        
+        }    
+    }
+    shadow /= 9.0;
+    
+    // keep the shadow at 0.0 when outside the far_plane region of the light's frustum.
+    if(projCoords.z > 1.0)
+        shadow = 0.0;
+        
+    return shadow;
+}
+
+
 void main()
 {		
     // material properties
@@ -117,7 +157,7 @@ void main()
     for(int i = 0; i < 1; ++i) 
     {
         // calculate per-light radiance
-        vec3 L = normalize(lightRotation);
+        vec3 L = normalize(lightPosition-WorldPos);
         vec3 H = normalize(V + L);
 
         // Cook-Torrance BRDF
@@ -165,12 +205,16 @@ void main()
 
     vec3 ambient = (kD * diffuse + specular) * ao;
     
+    
+    float shadow = ShadowCalculation(FragPosLightSpace);   
+    if(shadow == 1) Lo = vec3(0);
     vec3 color = ambient + Lo;
+
 
     // HDR tonemapping
     color = color / (color + vec3(1.0));
     // gamma correct
-    color = pow(color, vec3(1.0/2.2)); 
+    color = pow(color, vec3(1.0/2.2));  
 
     FragColor = vec4(color , 1.0);
 }

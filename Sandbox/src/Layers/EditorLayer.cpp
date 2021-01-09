@@ -41,14 +41,12 @@ namespace CrashEngine {
 		pbrTextureShader->SetUniformInt("irradianceMap", 5);
 		pbrTextureShader->SetUniformInt("prefilterMap", 6);
 		pbrTextureShader->SetUniformInt("brdfLUT", 7);
+		pbrTextureShader->SetUniformInt("shadowMap", 8);
 
 
 
 
 		depthMapShader = Shader::Create("depthMap.vert", "depthMap.frag");
-		depthMapTextureShader = Shader::Create("depthMapTexture.vert", "depthMapTexture.frag");
-		depthMapTextureShader->Bind();
-		depthMapTextureShader->SetUniformInt("DepthMap", 0);
 
 		FramebufferSpecification depthspec;
 		spec.Height = 1024;
@@ -61,18 +59,8 @@ namespace CrashEngine {
 		depthFramebuffer->SetDepthTexture(CE_TEXTURE_2D, depthMap->GetRendererID());
 		depthFramebuffer->Unbind();
 
-		glm::mat4 lightProjection, lightView;
-		glm::mat4 lightSpaceMatrix;
-		float near_plane = 1.0f, far_plane = 7.5f;
-		//lightProjection = glm::perspective(glm::radians(45.0f), (GLfloat)SHADOW_WIDTH / (GLfloat)SHADOW_HEIGHT, near_plane, far_plane); // note that if you use a perspective projection matrix you'll have to change the light position as the current light position isn't enough to reflect the whole scene
-		lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, near_plane, far_plane);
-		lightView = glm::lookAt(lightPos, glm::vec3(0.0f), glm::vec3(0.0, 1.0, 0.0));
-		lightSpaceMatrix = lightProjection * lightView;
-		// render scene from light's point of view
-		depthMapShader->Bind();
-		depthMapShader->SetUniformMat4("lightSpaceMatrix", lightSpaceMatrix);
 
-
+		
 
 
 
@@ -106,12 +94,12 @@ namespace CrashEngine {
 		auto mesh1 = m_ActiveScene->CreateEntity("Cube 1");
 		auto mesh2 = m_ActiveScene->CreateEntity("Cube 2");
 		auto mesh3 = m_ActiveScene->CreateEntity("Cube 3");
-		auto mesh4 = m_ActiveScene->CreateEntity("Cube 4");
+		auto mesh4 = m_ActiveScene->CreateEntity("Cube 4");//todo: last mesh added to scene isnt visible to depth map
 
 		Mesh mesh10 = Mesh("C:\\EngineDev\\CrashEngine\\Models\\cube.obj");
 		Mesh mesh20 = Mesh("C:\\EngineDev\\CrashEngine\\Models\\cube.obj");
 		Mesh mesh30 = Mesh("C:\\EngineDev\\CrashEngine\\Models\\cube.obj");
-		Mesh mesh40 = Mesh("C:\\EngineDev\\CrashEngine\\Models\\cube.obj");
+		Mesh mesh40 = Mesh("C:\\EngineDev\\CrashEngine\\Models\\sphere.obj");
 		mesh10.material->name.reset(new std::string("material for fisrt mesh"));
 
 		mesh1.AddComponent<Mesh>(mesh10);
@@ -145,13 +133,28 @@ namespace CrashEngine {
 		cameraController->OnUpdate(ts);
 
 		//----------------shadows----------------
+		//directionalLight->position = cameraController->GetCamera().GetPosition() + glm::vec3(0, 20, 0);
+		glm::mat4 lightProjection, lightView;
+		glm::mat4 lightSpaceMatrix;
+		float near_plane = 1.0f, far_plane = 100.5f;
+		lightProjection = glm::ortho(-10.f, 10.f, -10.f, 10.f, near_plane, far_plane);
+		lightView = glm::lookAt(directionalLight->position, glm::vec3(0.0f), glm::vec3(0.0, 1.0, 0.0));
+		lightSpaceMatrix = lightProjection * lightView;
+		depthMapShader->Bind();
+		depthMapShader->SetUniformMat4("lightSpaceMatrix", lightSpaceMatrix);
+		pbrTextureShader->Bind();
+		pbrTextureShader->SetUniformMat4("lightSpaceMatrix", lightSpaceMatrix);
+
 		RenderCommand::SetViewport(1024, 1024);
 		depthFramebuffer->Bind();	
 		RenderCommand::Clear(); 
 		m_ActiveScene->DepthRender();
 		depthFramebuffer->Unbind();
+
+		
 		//----------------shadows----------------
 
+		RenderCommand::SetViewport(imguilayer->CurrentWindowView.x, imguilayer->CurrentWindowView.y);
 		framebuffer->Bind();
 		RenderCommand::SetClearColor({ 1.f, 0.f, 0.0f, 1.0f });
 		RenderCommand::Clear();
@@ -160,20 +163,20 @@ namespace CrashEngine {
 		m_MatrixUB->setData("view", glm::value_ptr(view));
 
 		pbrTextureShader->Bind();
-		//pbrTextureShader->SetUniformMat4("view", view);
 		pbrTextureShader->SetUniformVec3("camPos", cameraController->GetCamera().GetPosition());
 
 		skyLight->BindIrradianceMap(5);
 		skyLight->BindPrefilterMap(6);
 		skyLight->BindbrdfTexture(7);
 
+		pbrTextureShader->Bind();
+		pbrTextureShader->SetUniformVec3("lightPosition", directionalLight->position);
+		pbrTextureShader->SetUniformVec3("lightColor", directionalLight->color * directionalLight->intensity);
+		RenderCommand::BindTexture(depthMap->GetRendererID(), 8);
+
 		m_ActiveScene->OnUpdate(ts);
 
 
-		pbrTextureShader->Bind();
-		pbrTextureShader->SetUniformVec3("lightRotation", directionalLight->rotation);
-		pbrTextureShader->SetUniformVec3("lightColor", directionalLight->color* directionalLight->intensity);
-		
 		skyLight->RenderSky();
 		
 		
@@ -204,7 +207,7 @@ namespace CrashEngine {
 		ImGui::End();
 
 	
-		RenderCommand::SetViewport(imguilayer->CurrentWindowView.x, imguilayer->CurrentWindowView.y);
+		//RenderCommand::SetViewport(imguilayer->CurrentWindowView.x, imguilayer->CurrentWindowView.y);
 
 		glm::mat4 projection = glm::perspective(glm::radians(45.0f), (float)imguilayer->CurrentWindowView.x / (float)imguilayer->CurrentWindowView.y, 0.1f, 100.0f);
 		m_MatrixUB->setData("projection", glm::value_ptr(projection));
