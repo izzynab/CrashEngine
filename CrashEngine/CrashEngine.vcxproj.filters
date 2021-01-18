@@ -22,6 +22,9 @@
     <Filter Include="src\CrashEngine\Scene">
       <UniqueIdentifier>{80ABF5A2-EC17-B19D-B50B-49FB2137D305}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\CrashEngine\Test">
+      <UniqueIdentifier>{72CA0F81-5E59-994A-0778-AD45F3E5A9F0}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\CrashEngine\Utils">
       <UniqueIdentifier>{C33F23A3-2FAC-DE9D-F89F-76FB64CB0006}</UniqueIdentifier>
     </Filter>
@@ -165,13 +168,25 @@
     <ClInclude Include="src\CrashEngine\Renderer\Texture.h">
       <Filter>src\CrashEngine\Renderer</Filter>
     </ClInclude>
+    <ClInclude Include="src\CrashEngine\Renderer\TextureCreator.h">
+      <Filter>src\CrashEngine\Renderer</Filter>
+    </ClInclude>
     <ClInclude Include="src\CrashEngine\Renderer\VertexArray.h">
       <Filter>src\CrashEngine\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\CrashEngine\Scene\Components.h">
       <Filter>src\CrashEngine\Scene</Filter>
     </ClInclude>
+    <ClInclude Include="src\CrashEngine\Scene\DirectionalLight.h">
+      <Filter>src\CrashEngine\Scene</Filter>
+    </ClInclude>
     <ClInclude Include="src\CrashEngine\Scene\Entity.h">
+      <Filter>src\CrashEngine\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="src\CrashEngine\Scene\Material.h">
+      <Filter>src\CrashEngine\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="src\CrashEngine\Scene\Mesh.h">
       <Filter>src\CrashEngine\Scene</Filter>
     </ClInclude>
     <ClInclude Include="src\CrashEngine\Scene\Scene.h">
@@ -182,6 +197,12 @@
     </ClInclude>
     <ClInclude Include="src\CrashEngine\Scene\SceneSerializer.h">
       <Filter>src\CrashEngine\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="src\CrashEngine\Scene\SkyLight.h">
+      <Filter>src\CrashEngine\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="src\CrashEngine\Test\Scenetest.h">
+      <Filter>src\CrashEngine\Test</Filter>
     </ClInclude>
     <ClInclude Include="src\CrashEngine\Utils\PlatformUtils.h">
       <Filter>src\CrashEngine\Utils</Filter>
@@ -1695,12 +1716,6 @@
     <ClInclude Include="vendor\glm\glm\vector_relational.hpp">
       <Filter>vendor\glm\glm</Filter>
     </ClInclude>
-    <ClInclude Include="src\CrashEngine\Test\Scenetest.h" />
-    <ClInclude Include="src\CrashEngine\Renderer\TextureCreator.h" />
-    <ClInclude Include="src\CrashEngine\Scene\SkyLight.h" />
-    <ClInclude Include="src\CrashEngine\Scene\Mesh.h" />
-    <ClInclude Include="src\CrashEngine\Scene\Material.h" />
-    <ClInclude Include="src\CrashEngine\Scene\DirectionalLight.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\CrashEngine\Core\Application.cpp">
@@ -1751,10 +1766,22 @@
     <ClCompile Include="src\CrashEngine\Renderer\Texture.cpp">
       <Filter>src\CrashEngine\Renderer</Filter>
     </ClCompile>
+    <ClCompile Include="src\CrashEngine\Renderer\TextureCreator.cpp">
+      <Filter>src\CrashEngine\Renderer</Filter>
+    </ClCompile>
     <ClCompile Include="src\CrashEngine\Renderer\VertexArray.cpp">
       <Filter>src\CrashEngine\Renderer</Filter>
     </ClCompile>
+    <ClCompile Include="src\CrashEngine\Scene\DirectionalLight.cpp">
+      <Filter>src\CrashEngine\Scene</Filter>
+    </ClCompile>
     <ClCompile Include="src\CrashEngine\Scene\Entity.cpp">
+      <Filter>src\CrashEngine\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CrashEngine\Scene\Material.cpp">
+      <Filter>src\CrashEngine\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CrashEngine\Scene\Mesh.cpp">
       <Filter>src\CrashEngine\Scene</Filter>
     </ClCompile>
     <ClCompile Include="src\CrashEngine\Scene\Scene.cpp">
@@ -1765,6 +1792,12 @@
     </ClCompile>
     <ClCompile Include="src\CrashEngine\Scene\SceneSerializer.cpp">
       <Filter>src\CrashEngine\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CrashEngine\Scene\SkyLight.cpp">
+      <Filter>src\CrashEngine\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CrashEngine\Test\Scenetest.cpp">
+      <Filter>src\CrashEngine\Test</Filter>
     </ClCompile>
     <ClCompile Include="src\Platform\OpenGl\OpenGLBuffer.cpp">
       <Filter>src\Platform\OpenGl</Filter>
@@ -1799,17 +1832,12 @@
     <ClCompile Include="src\cepch.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\CrashEngine\Test\Scenetest.cpp" />
-    <ClCompile Include="src\CrashEngine\Renderer\TextureCreator.cpp" />
-    <ClCompile Include="src\CrashEngine\Scene\SkyLight.cpp" />
-    <ClCompile Include="src\CrashEngine\Scene\Mesh.cpp" />
-    <ClCompile Include="src\CrashEngine\Scene\Material.cpp" />
-    <ClCompile Include="src\CrashEngine\Scene\DirectionalLight.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="vendor\assimp\include\assimp\config.h.in">
       <Filter>vendor\assimp\include\assimp</Filter>
     </None>
+    <None Include="src\CrashEngine\Renderer\Shaders\Text.vert" />
     <None Include="src\CrashEngine\Renderer\Shaders\background.frag" />
     <None Include="src\CrashEngine\Renderer\Shaders\background.vert" />
     <None Include="src\CrashEngine\Renderer\Shaders\Basic.frag" />
@@ -1817,6 +1845,8 @@
     <None Include="src\CrashEngine\Renderer\Shaders\brdf.frag" />
     <None Include="src\CrashEngine\Renderer\Shaders\brdf.vert" />
     <None Include="src\CrashEngine\Renderer\Shaders\cubemap.vert" />
+    <None Include="src\CrashEngine\Renderer\Shaders\depthMap.frag" />
+    <None Include="src\CrashEngine\Renderer\Shaders\depthMap.vert" />
     <None Include="src\CrashEngine\Renderer\Shaders\equirectangularToCubemap.frag" />
     <None Include="src\CrashEngine\Renderer\Shaders\irradiance.frag" />
     <None Include="src\CrashEngine\Renderer\Shaders\pbr.frag" />
@@ -1824,8 +1854,5 @@
     <None Include="src\CrashEngine\Renderer\Shaders\pbrTexture.frag" />
     <None Include="src\CrashEngine\Renderer\Shaders\prefilter.frag" />
     <None Include="src\CrashEngine\Renderer\Shaders\Text.frag" />
-    <None Include="src\CrashEngine\Renderer\Shaders\Text.vert" />
-    <None Include="src\CrashEngine\Renderer\Shaders\depthMap.vert" />
-    <None Include="src\CrashEngine\Renderer\Shaders\depthMap.frag" />
   </ItemGroup>
 </Project>

@@ -21,7 +21,7 @@ namespace CrashEngine {
 		Camera& GetCamera() { return m_Camera; }
 		const Camera& GetCamera() const { return m_Camera; }
 
-		float m_CameraSpeed = 5.0f;
+		float m_CameraSpeed = 30.0f;
 	private:
 		bool OnMouseScrolled(MouseScrolledEvent& e);
 		bool OnWindowResized(WindowResizeEvent& e);

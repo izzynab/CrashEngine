@@ -1,5 +1,8 @@
 #include "EditorLayer.h"
 
+#include <math.h>
+#include <cfloat>
+
 namespace CrashEngine {
 
 	Editor::Editor()
@@ -12,8 +15,8 @@ namespace CrashEngine {
 		cube.reset(new Cube());
 		quad.reset(new Quad());
 
-		float Height = Application::Get().GetWindow().GetHeight();
-		float Width = Application::Get().GetWindow().GetWidth();
+		Height = Application::Get().GetWindow().GetHeight();
+		Width = Application::Get().GetWindow().GetWidth();
 
 		cameraController.reset(new CameraController(glm::vec3(0.0f, 0.0f, 3.0f), Width, Height));
 
@@ -44,31 +47,32 @@ namespace CrashEngine {
 		pbrTextureShader->SetUniformInt("shadowMap", 8);
 
 
-
-
+		//-----------shadows-------------------------------
 		depthMapShader = Shader::Create("depthMap.vert", "depthMap.frag");
 
 		FramebufferSpecification depthspec;
 		spec.Height = 1024;
 		spec.Width = 1024;
 
-		depthFramebuffer = Framebuffer::Create(depthspec,false);
+		for (int i = 0; i < 3; i++)
+		{
+			depthMap.push_back(DepthTexture::Create(1024, 1024));//todo: another size?
+		}
 
-		depthMap = DepthTexture::Create(1024, 1024);
-		depthFramebuffer->Bind();
-		depthFramebuffer->SetDepthTexture(CE_TEXTURE_2D, depthMap->GetRendererID());
-		depthFramebuffer->Unbind();
+		depthFramebuffer = Framebuffer::Create(depthspec, false);
 
-
-		
-
-
+		m_cascadeEnd.push_back(1.0f);
+		m_cascadeEnd.push_back(25.0f);
+		m_cascadeEnd.push_back(90.0f);
+		m_cascadeEnd.push_back(200.0f);
+		//-----------shadows-------------------------------
 
 
 		skyLight.reset(new SkyLight);
 		skyLight->LoadHDR("C:\\EngineDev\\CrashEngine\\Textures\\hdr/14-Hamarikyu_Bridge_B_3k.hdr");
 
 		directionalLight.reset(new DirectionalLight);
+		directionalLight->rotation = glm::vec3(1.f, -1.f, 0.f);
 
 		UniformBufferLayout uniformLayout = {
 			{ ShaderDataType::Mat4, "projection" },
@@ -133,26 +137,93 @@ namespace CrashEngine {
 		cameraController->OnUpdate(ts);
 
 		//----------------shadows----------------
-		//directionalLight->position = cameraController->GetCamera().GetPosition() + glm::vec3(0, 20, 0);
-		glm::mat4 lightProjection, lightView;
-		glm::mat4 lightSpaceMatrix;
-		float near_plane = 1.0f, far_plane = 100.5f;
-		lightProjection = glm::ortho(-10.f, 10.f, -10.f, 10.f, near_plane, far_plane);
-		lightView = glm::lookAt(directionalLight->position, glm::vec3(0.0f), glm::vec3(0.0, 1.0, 0.0));
-		lightSpaceMatrix = lightProjection * lightView;
-		depthMapShader->Bind();
-		depthMapShader->SetUniformMat4("lightSpaceMatrix", lightSpaceMatrix);
-		pbrTextureShader->Bind();
-		pbrTextureShader->SetUniformMat4("lightSpaceMatrix", lightSpaceMatrix);
 
-		RenderCommand::SetViewport(1024, 1024);
-		depthFramebuffer->Bind();	
-		RenderCommand::Clear(); 
-		m_ActiveScene->DepthRender();
-		depthFramebuffer->Unbind();
+		/*-------------calcorthoproj-------------------*/
+		Camera cam = cameraController->GetCamera();
+		glm::mat4 cameraview = cam.GetViewMatrix();
+		cameraview = glm::inverse(cameraview);
+
+		glm::mat4 lightView = glm::lookAt(glm::vec3(0.0f), directionalLight->rotation, glm::vec3(0.0, 1.0, 0.0));
+
+		float ar = Height / Width;
+		float tanHalfHFOV = tanf(glm::radians(cam.fov / 2.0f));
+		float tanHalfVFOV = tanf(glm::radians((cam.fov * ar) / 2.0f));
+
+		for (int i = 0; i < 3; i++) {
+			float xn = m_cascadeEnd[i] * tanHalfHFOV;
+			float xf = m_cascadeEnd[i + 1] * tanHalfHFOV;
+			float yn = m_cascadeEnd[i] * tanHalfVFOV;
+			float yf = m_cascadeEnd[i + 1] * tanHalfVFOV;
+
+			glm::vec4 frustumCorners[8] = {
+				// near face
+				glm::vec4(xn, yn, m_cascadeEnd[i], 1.0),
+				glm::vec4(-xn, yn, m_cascadeEnd[i], 1.0),
+				glm::vec4(xn, -yn, m_cascadeEnd[i], 1.0),
+				glm::vec4(-xn, -yn, m_cascadeEnd[i], 1.0),
+
+				// far face
+				glm::vec4(xf, yf, m_cascadeEnd[i + 1], 1.0),
+				glm::vec4(-xf, yf, m_cascadeEnd[i + 1], 1.0),
+				glm::vec4(xf, -yf, m_cascadeEnd[i + 1], 1.0),
+				glm::vec4(-xf, -yf, m_cascadeEnd[i + 1], 1.0)
+			};
+
+			glm::vec4 frustumCornersL[8];
+
+			float minX = std::numeric_limits<int>::max();
+			float maxX = std::numeric_limits<int>::min();
+			float minY = std::numeric_limits<int>::max();
+			float maxY = std::numeric_limits<int>::min();
+			float minZ = std::numeric_limits<int>::max();
+			float maxZ = std::numeric_limits<int>::min();
+			CE_CORE_INFO("{0},{1},{2},{3},{4},{5}", minX, maxX, minY, maxY, minZ, maxZ);
+			for (int j = 0; j < 8; j++) {
+
+				// Transform the frustum coordinate from view to world space
+				glm::vec4 vW = cameraview * frustumCorners[j];
+
+				// Transform the frustum coordinate from world to light space
+				frustumCornersL[j] = lightView * vW;
+
+				//frustumCornersL[j] = frustumCorners[j];
+				minX = std::min(minX, frustumCornersL[j].x);
+				maxX = std::max(maxX, frustumCornersL[j].x);
+				minY = std::min(minY, frustumCornersL[j].y);
+				maxY = std::max(maxY, frustumCornersL[j].y);
+				minZ = std::min(minZ, frustumCornersL[j].z);
+				maxZ = std::max(maxZ, frustumCornersL[j].z);
+			}
+			//-------------calcorthoproj-------------------
 
 		
+			glm::mat4 lightProjection = glm::ortho(minX, maxX, minY, maxY, minZ, maxZ);
+			//CE_CORE_INFO("{0},{1},{2},{3},{4},{5}", minX, maxX, minY, maxY, minZ, maxZ);
+
+
+			//glm::mat4 lightProjection = glm::ortho(-20.f, 20.f, 20.f, -20.f, -20.f, 100.f);
+			//m_MatrixUB->setData("projection", glm::value_ptr(lightProjection));
+
+			//lightView = glm::lookAt(directionalLight->rotation,glm::vec3(0.0f), glm::vec3(0.0, 1.0, 0.0));
+			//lightView = glm::lookAt(glm::vec3(0.0f), directionalLight->rotation, glm::vec3(0.0, 1.0, 0.0));
+
+			glm::mat4 lightSpaceMatrix = lightProjection;
+			depthMapShader->Bind();
+			depthMapShader->SetUniformMat4("lightSpaceMatrix", lightSpaceMatrix);
+			pbrTextureShader->Bind();
+			pbrTextureShader->SetUniformMat4("lightSpaceMatrix", lightSpaceMatrix);
+			
+			RenderCommand::SetViewport(1024, 1024);
+			depthFramebuffer->Bind();
+			depthFramebuffer->SetDepthTexture(CE_TEXTURE_2D, depthMap[i]->GetRendererID());
+			RenderCommand::Clear();
+
+			m_ActiveScene->DepthRender();
+			depthFramebuffer->Unbind();
+		
+		}
 		//----------------shadows----------------
+
 
 		RenderCommand::SetViewport(imguilayer->CurrentWindowView.x, imguilayer->CurrentWindowView.y);
 		framebuffer->Bind();
@@ -172,7 +243,7 @@ namespace CrashEngine {
 		pbrTextureShader->Bind();
 		pbrTextureShader->SetUniformVec3("lightPosition", directionalLight->position);
 		pbrTextureShader->SetUniformVec3("lightColor", directionalLight->color * directionalLight->intensity);
-		RenderCommand::BindTexture(depthMap->GetRendererID(), 8);
+		RenderCommand::BindTexture(depthMap[0]->GetRendererID(), 8);
 
 		m_ActiveScene->OnUpdate(ts);
 
@@ -203,13 +274,14 @@ namespace CrashEngine {
 	
 		ImGui::Begin("Camera controller");
 		ImGui::SliderFloat("Camera Speed", &cameraController->m_CameraSpeed, 1.f, 40.f);
-		ImGui::Image((void*)depthMap->GetRendererID(), ImVec2(400,400));
+		ImGui::SliderInt("Cascade map", &cascademapselected, 1, 3);
+		ImGui::Image((void*)depthMap[cascademapselected-1]->GetRendererID(), ImVec2(400,400));
 		ImGui::End();
 
 	
 		//RenderCommand::SetViewport(imguilayer->CurrentWindowView.x, imguilayer->CurrentWindowView.y);
 
-		glm::mat4 projection = glm::perspective(glm::radians(45.0f), (float)imguilayer->CurrentWindowView.x / (float)imguilayer->CurrentWindowView.y, 0.1f, 100.0f);
+		glm::mat4 projection = glm::perspective(glm::radians(cameraController->GetCamera().fov), (float)imguilayer->CurrentWindowView.x / (float)imguilayer->CurrentWindowView.y, 0.1f, 400.0f);
 		m_MatrixUB->setData("projection", glm::value_ptr(projection));
 		
 

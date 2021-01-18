@@ -19,8 +19,6 @@
 #include "Panels/MaterialPanel.h"
 
 
-
-
 namespace CrashEngine {
 
 	class Editor : public CrashEngine::Layer
@@ -41,10 +39,6 @@ namespace CrashEngine {
 		std::shared_ptr<ImGuiLayer> imguilayer;
 		std::shared_ptr <SceneHierarchyPanel> HierarchyPanel;
 		std::shared_ptr <SceneEnvironmentPanel> EnvironmentPanel;
-		//std::shared_ptr <MaterialPanel> MaterialPanel;
-
-		std::shared_ptr<SkyLight> skyLight;
-		std::shared_ptr<DirectionalLight> directionalLight;
 
 		std::shared_ptr<VertexArray> m_SquareVA;
 		std::shared_ptr<UniformBuffer> m_MatrixUB;
@@ -60,11 +54,21 @@ namespace CrashEngine {
 		std::shared_ptr<Cube> cube;
 		std::shared_ptr<Quad> quad;
 
-
 		std::shared_ptr<Framebuffer> framebuffer;
 
-		std::shared_ptr<DepthTexture> depthMap;
+
+		std::shared_ptr<SkyLight> skyLight;
+		std::shared_ptr<DirectionalLight> directionalLight;
+
+
 		std::shared_ptr<Framebuffer> depthFramebuffer;
+		std::vector<std::shared_ptr<DepthTexture>> depthMap;
+		int cascademapselected = 1;
+
+		float Height;
+		float Width;
+
+		std::vector<float> m_cascadeEnd;
 	};
 
 }

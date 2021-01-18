@@ -4,22 +4,37 @@
     <Filter Include="Layers">
       <UniqueIdentifier>{157446C0-0116-7196-EAD0-84EAD611F8E6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Layers\Panels">
+      <UniqueIdentifier>{C79A090F-335B-8545-FC95-CEC26815CA21}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Layers\EditorLayer.h">
       <Filter>Layers</Filter>
     </ClInclude>
-    <ClInclude Include="src\Layers\Panels\SceneHierarchyPanel.h" />
-    <ClInclude Include="src\Layers\Panels\SceneEnvironmentPanel.h" />
-    <ClInclude Include="src\Layers\Panels\MaterialPanel.h" />
+    <ClInclude Include="src\Layers\Panels\MaterialPanel.h">
+      <Filter>Layers\Panels</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Layers\Panels\SceneEnvironmentPanel.h">
+      <Filter>Layers\Panels</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Layers\Panels\SceneHierarchyPanel.h">
+      <Filter>Layers\Panels</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Layers\EditorLayer.cpp">
       <Filter>Layers</Filter>
     </ClCompile>
+    <ClCompile Include="src\Layers\Panels\MaterialPanel.cpp">
+      <Filter>Layers\Panels</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Layers\Panels\SceneEnvironmentPanel.cpp">
+      <Filter>Layers\Panels</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Layers\Panels\SceneHierarchyPanel.cpp">
+      <Filter>Layers\Panels</Filter>
+    </ClCompile>
     <ClCompile Include="src\SandboxApp.cpp" />
-    <ClCompile Include="src\Layers\Panels\SceneHierarchyPanel.cpp" />
-    <ClCompile Include="src\Layers\Panels\SceneEnvironmentPanel.cpp" />
-    <ClCompile Include="src\Layers\Panels\MaterialPanel.cpp" />
   </ItemGroup>
 </Project>
