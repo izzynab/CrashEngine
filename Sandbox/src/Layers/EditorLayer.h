@@ -46,7 +46,6 @@ namespace CrashEngine {
 
 		Shader* basicShader;
 		Shader* pbrTextureShader;
-		Shader* depthMapShader;
 
 		glm::mat4 model;
 
@@ -60,15 +59,10 @@ namespace CrashEngine {
 		std::shared_ptr<SkyLight> skyLight;
 		std::shared_ptr<DirectionalLight> directionalLight;
 
-
-		std::shared_ptr<Framebuffer> depthFramebuffer;
-		std::vector<std::shared_ptr<DepthTexture>> depthMap;
-		int cascademapselected = 1;
-
 		float Height;
 		float Width;
 
-		std::vector<float> m_cascadeEnd;
+		int cascademapselected = 1;
 	};
 
 }

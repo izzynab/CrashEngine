@@ -20,9 +20,10 @@ namespace CrashEngine{
 		virtual void Unbind() = 0;
 
 		virtual void CreateTextures() = 0;
+		virtual void CreateTexture(uint32_t id) = 0;
 
 		virtual void Resize(uint32_t width, uint32_t height) = 0;
-		virtual void SetTexture(int texTarget, uint32_t textureID, int mipMapLevel) = 0;
+		virtual void SetTexture(int texTarget, uint32_t textureID, int mipMapLevel, uint32_t id = 0) = 0;
 		virtual void SetDepthTexture(int texTarget, uint32_t textureID) = 0;
 		virtual void SetNewTexture(uint32_t width, uint32_t height) = 0;
 

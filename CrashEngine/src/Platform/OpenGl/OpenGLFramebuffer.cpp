@@ -17,8 +17,8 @@ namespace CrashEngine {
 	OpenGLFramebuffer::~OpenGLFramebuffer()
 	{
 		glDeleteFramebuffers(1, &m_RendererID);
-		glDeleteTextures(1, &m_ColorAttachment);
-		glDeleteTextures(1, &m_DepthAttachment);
+		//glDeleteTextures(1, &m_textures[0]);
+		//glDeleteTextures(1, &m_textures[1]);
 	}
 
 	void OpenGLFramebuffer::Invalidate()
@@ -51,23 +51,36 @@ namespace CrashEngine {
 
 	void OpenGLFramebuffer::CreateTextures()
 	{
-
-		glCreateTextures(GL_TEXTURE_2D, 1, &m_ColorAttachment);
-		glBindTexture(GL_TEXTURE_2D, m_ColorAttachment);
+		m_textures.push_back(0);
+		glCreateTextures(GL_TEXTURE_2D, 1, &m_textures[0]);
+		glBindTexture(GL_TEXTURE_2D, m_textures[0]);
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, m_Specification.Width, m_Specification.Height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_ColorAttachment, 0);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_textures[0], 0);
 
-		glCreateTextures(GL_TEXTURE_2D, 1, &m_DepthAttachment);
-		glBindTexture(GL_TEXTURE_2D, m_DepthAttachment);
+		m_textures.push_back(0);
+		glCreateTextures(GL_TEXTURE_2D, 1, &m_textures[1]);
+		glBindTexture(GL_TEXTURE_2D, m_textures[1]);
 		glTexStorage2D(GL_TEXTURE_2D, 1, GL_DEPTH24_STENCIL8, m_Specification.Width, m_Specification.Height);
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, m_DepthAttachment, 0);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, m_textures[1], 0);
 
 		CE_CORE_ASSERT(glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE, "Framebuffer is incomplete!");
 
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	}
+
+	void OpenGLFramebuffer::CreateTexture(uint32_t id)
+	{
+		m_textures.push_back(0);
+		glCreateTextures(GL_TEXTURE_2D, 1, &m_textures[id]);
+		glBindTexture(GL_TEXTURE_2D, m_textures[id]);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, m_Specification.Width, m_Specification.Height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + id, GL_TEXTURE_2D, m_textures[id], 0);
 	}
 
 	void OpenGLFramebuffer::Resize(uint32_t width, uint32_t height)
@@ -83,7 +96,7 @@ namespace CrashEngine {
 		Invalidate();
 	}
 
-	void OpenGLFramebuffer::SetTexture(int texTarget, uint32_t textureID, int mipMapLevel)
+	void OpenGLFramebuffer::SetTexture(int texTarget, uint32_t textureID, int mipMapLevel, uint32_t id)
 	{
 		//glBindFramebuffer(GL_FRAMEBUFFER, m_RendererID);
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, texTarget, textureID, mipMapLevel);
@@ -98,7 +111,7 @@ namespace CrashEngine {
 
 	void OpenGLFramebuffer::SetNewTexture(uint32_t width, uint32_t height)
 	{
-		glBindTexture(GL_TEXTURE_2D, m_ColorAttachment);
+		glBindTexture(GL_TEXTURE_2D, m_textures[0]);
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
 	}
 

@@ -1716,6 +1716,7 @@
     <ClInclude Include="vendor\glm\glm\vector_relational.hpp">
       <Filter>vendor\glm\glm</Filter>
     </ClInclude>
+    <ClInclude Include="src\CrashEngine\Scene\PointLight.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\CrashEngine\Core\Application.cpp">
@@ -1832,6 +1833,7 @@
     <ClCompile Include="src\cepch.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\CrashEngine\Scene\PointLight.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="vendor\assimp\include\assimp\config.h.in">

@@ -1,6 +1,7 @@
 #version 330 core
 out vec4 FragColor;
 
+
 in vec3 WorldPos;
 in vec3 Normal;
 in vec2 TexCoords;
@@ -22,7 +23,7 @@ uniform samplerCube prefilterMap;
 uniform sampler2D brdfLUT;
 
 // lights
-uniform vec3 lightPosition;
+uniform vec3 lightRotation;
 uniform vec3 lightColor;
 
 
@@ -157,7 +158,7 @@ void main()
     for(int i = 0; i < 1; ++i) 
     {
         // calculate per-light radiance
-        vec3 L = normalize(lightPosition-WorldPos);
+        vec3 L = normalize(lightRotation);
         vec3 H = normalize(V + L);
 
         // Cook-Torrance BRDF
@@ -170,21 +171,21 @@ void main()
         vec3 specular = nominator / denominator;
         
          // kS is equal to Fresnel
-        //vec3 kS = F;
+        vec3 kS = F;
         // for energy conservation, the diffuse and specular light can't
         // be above 1.0 (unless the surface emits light); to preserve this
         // relationship the diffuse component (kD) should equal 1.0 - kS.
-        //vec3 kD = vec3(1.0) - kS;
+        vec3 kD = vec3(1.0) - kS;
         // multiply kD by the inverse metalness such that only non-metals 
         // have diffuse lighting, or a linear blend if partly metal (pure metals
         // have no diffuse light).
-        //kD *= 1.0 - metallic;	                
+        kD *= 1.0 - metallic;	                
             
         // scale light by NdotL
         float NdotL = max(dot(N, L), 0.0);        
 
         // add to outgoing radiance Lo
-        Lo += specular * lightColor * NdotL; // note that we already multiplied the BRDF by the Fresnel (kS) so we won't multiply by kS again
+        Lo += specular * lightColor * NdotL*kD; // note that we already multiplied the BRDF by the Fresnel (kS) so we won't multiply by kS again
     }   
     
     // ambient lighting (we now use IBL as the ambient term)

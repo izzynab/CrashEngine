@@ -131,7 +131,7 @@ namespace CrashEngine {
 			ImGui::ColorPicker3("Light color", &m_DirectionalLight->color.x);
 
 			ImGui::NewLine();
-			ImGui::SliderFloat("Intensity", &m_DirectionalLight->intensity, 0.f, 50.f);
+			ImGui::SliderFloat("Intensity", &m_DirectionalLight->intensity, 0.f, 150.f);
 
 			ImGui::TreePop();
 		}
