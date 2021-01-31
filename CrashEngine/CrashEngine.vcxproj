@@ -748,13 +748,14 @@
     <None Include="src\CrashEngine\Renderer\Shaders\background.vert" />
     <None Include="src\CrashEngine\Renderer\Shaders\Basic.frag" />
     <None Include="src\CrashEngine\Renderer\Shaders\Basic.vert" />
+    <None Include="src\CrashEngine\Renderer\Shaders\blur.frag" />
     <None Include="src\CrashEngine\Renderer\Shaders\brdf.frag" />
-    <None Include="src\CrashEngine\Renderer\Shaders\brdf.vert" />
     <None Include="src\CrashEngine\Renderer\Shaders\cubemap.vert" />
     <None Include="src\CrashEngine\Renderer\Shaders\depthMap.frag" />
     <None Include="src\CrashEngine\Renderer\Shaders\depthMap.vert" />
     <None Include="src\CrashEngine\Renderer\Shaders\equirectangularToCubemap.frag" />
     <None Include="src\CrashEngine\Renderer\Shaders\irradiance.frag" />
+    <None Include="src\CrashEngine\Renderer\Shaders\mixbloom.frag" />
     <None Include="src\CrashEngine\Renderer\Shaders\pbr.frag" />
     <None Include="src\CrashEngine\Renderer\Shaders\pbr.vert" />
     <None Include="src\CrashEngine\Renderer\Shaders\pbrTexture.frag" />

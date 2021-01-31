@@ -25,7 +25,7 @@ namespace CrashEngine {
 		prefilterShader->SetUniformInt("environmentMap", 0);
 		prefilterShader->SetUniformMat4("projection", captureProjection);
 
-		brdfShader = Shader::Create("brdf.vert", "brdf.frag");
+		brdfShader = Shader::Create("Basic.vert", "brdf.frag");
 
 		backgroundShader = Shader::Create("background.vert", "background.frag");
 		backgroundShader->Bind();

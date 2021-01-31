@@ -1,4 +1,6 @@
 #include "EditorLayer.h"
+#include "CrashEngine/Scene/SceneSerializer.h"
+#include "CrashEngine/Utils/PlatformUtils.h"
 
 #include <math.h>
 #include <cfloat>
@@ -8,8 +10,6 @@ namespace CrashEngine {
 	Editor::Editor()
 		: Layer("Example")
 	{
-		//auto window = Application::Get().GetWindow();
-
 		// initialize default shapes
 		sphere.reset(new Sphere());
 		cube.reset(new Cube());
@@ -24,7 +24,19 @@ namespace CrashEngine {
 		spec.Height = 1080;
 		spec.Width = 2560;
 
+		MSAAframebuffer = Framebuffer::Create(spec,false);
+		MSAAframebuffer->CreateMSAATexture();
+
+		MSAArenderbuffer = Renderbuffer::Create();
+		MSAArenderbuffer->SetMSAAStorage(4, spec.Width, spec.Height);
+		MSAArenderbuffer->Unbind();
+		MSAArenderbuffer->AttachToFramebuffer();
+
 		framebuffer = Framebuffer::Create(spec);
+		framebuffer->Bind();
+		framebuffer->CreateTexture(1);
+		framebuffer->InitializeMultipleTextures(2);
+
 
 		imguilayer.reset(new ImGuiLayer);
 
@@ -47,8 +59,31 @@ namespace CrashEngine {
 		pbrTextureShader->SetUniformInt("shadowMap", 8);
 
 
+		RenderCommand::SetViewport(Width, Height);
+
+		//-------------------------End of initialize-----------------------------------------
+		m_ActiveScene = std::make_shared<Scene>();
+
+		directionalLight.reset(new DirectionalLight);
+		directionalLight->camera = &cameraController->GetCamera();
+		directionalLight->m_ActiveScene = m_ActiveScene;
+		directionalLight->Height = Application::Get().GetWindow().GetHeight();
+		directionalLight->Width = Application::Get().GetWindow().GetWidth();
+		directionalLight->pbrTextureShader = pbrTextureShader;
+
 		skyLight.reset(new SkyLight);
-		skyLight->LoadHDR("C:\\EngineDev\\CrashEngine\\Textures\\hdr/14-Hamarikyu_Bridge_B_3k.hdr");
+
+		m_ActiveScene->SetDefaultShader(pbrTextureShader);
+		m_ActiveScene->SetDepthShader(directionalLight->depthMapShader);
+		m_ActiveScene->SetFramebuffer(framebuffer);
+
+		HierarchyPanel.reset(new SceneHierarchyPanel(m_ActiveScene));
+		EnvironmentPanel.reset(new SceneEnvironmentPanel(skyLight, directionalLight, m_ActiveScene));
+
+		SceneSerializer serializer(m_ActiveScene, skyLight, directionalLight);
+		serializer.Deserialize("C:/EngineDev/CrashEngine/Models/Scenes/test3.crash");
+
+		//-------------------------End of initialize-----------------------------------------
 
 		UniformBufferLayout uniformLayout = {
 			{ ShaderDataType::Mat4, "projection" },
@@ -62,55 +97,6 @@ namespace CrashEngine {
 		m_MatrixUB->setData("projection", glm::value_ptr(projection));
 
 
-		RenderCommand::SetViewport(Width, Height);
-
-	//-------------------------End of initialize-----------------------------------------
-
-
-		//Scene and entities----------------------------------
-		m_ActiveScene = std::make_shared<Scene>();
-
-		directionalLight.reset(new DirectionalLight);
-		directionalLight->camera = &cameraController->GetCamera();
-		directionalLight->m_ActiveScene = m_ActiveScene;
-		directionalLight->Height = Application::Get().GetWindow().GetHeight();
-		directionalLight->Width = Application::Get().GetWindow().GetWidth();
-		directionalLight->pbrTextureShader = pbrTextureShader;
-
-		auto mesh1 = m_ActiveScene->CreateEntity("Cube 1");
-		auto mesh2 = m_ActiveScene->CreateEntity("Cube 2");
-		auto mesh3 = m_ActiveScene->CreateEntity("Cube 3");
-		auto mesh4 = m_ActiveScene->CreateEntity("Cube 4");//todo: last mesh added to scene isnt visible to depth map
-
-		Mesh mesh10 = Mesh("C:\\EngineDev\\CrashEngine\\Models\\cube.obj");
-		Mesh mesh20 = Mesh("C:\\EngineDev\\CrashEngine\\Models\\cube.obj");
-		Mesh mesh30 = Mesh("C:\\EngineDev\\CrashEngine\\Models\\cube.obj");
-		Mesh mesh40 = Mesh("C:\\EngineDev\\CrashEngine\\Models\\sphere.obj");
-		mesh10.material->name.reset(new std::string("material for fisrt mesh"));
-
-		mesh1.AddComponent<Mesh>(mesh10);
-		mesh1.GetComponent<TransformComponent>().Translation = glm::vec3(-4, -2, 0);
-		mesh1.GetComponent<TransformComponent>().Scale = glm::vec3(10, 0.1, 14);
-
-		mesh2.AddComponent<Mesh>(mesh20);
-		mesh2.GetComponent<TransformComponent>().Translation = glm::vec3(-7, 0, 0);
-		mesh2.GetComponent<TransformComponent>().Scale = glm::vec3(1, 2.5, 5);
-
-		mesh3.AddComponent<Mesh>(mesh30);
-		mesh3.GetComponent<TransformComponent>().Translation = glm::vec3(0, 3, 3);
-		mesh3.GetComponent<TransformComponent>().Scale = glm::vec3(1, 3, 4);
-		mesh3.GetComponent<TransformComponent>().Rotation = glm::vec3(0, 0.2, 0.44);
-
-		mesh4.AddComponent<Mesh>(mesh40);
-		mesh4.GetComponent<TransformComponent>().Translation = glm::vec3(-6, 2, 6);
-		mesh4.GetComponent<TransformComponent>().Scale = glm::vec3(1, 1, 1);
-
-		m_ActiveScene->SetDefaultShader(pbrTextureShader);
-		m_ActiveScene->SetDepthShader(directionalLight->depthMapShader);
-
-		HierarchyPanel.reset(new SceneHierarchyPanel(m_ActiveScene));
-		EnvironmentPanel.reset(new SceneEnvironmentPanel(skyLight, directionalLight));
-
 	}
 
 	void Editor::OnUpdate(Timestep ts)
@@ -123,15 +109,14 @@ namespace CrashEngine {
 		//----------------shadows----------------
 
 
-		RenderCommand::SetViewport(imguilayer->CurrentWindowView.x, imguilayer->CurrentWindowView.y);
 		framebuffer->Bind();
+		RenderCommand::SetViewport(imguilayer->CurrentWindowView.x, imguilayer->CurrentWindowView.y);
+		framebuffer->Resize(imguilayer->CurrentWindowView.x, imguilayer->CurrentWindowView.y);
 		RenderCommand::SetClearColor({ 1.f, 0.f, 0.0f, 1.0f });
 		RenderCommand::Clear();
 
 		glm::mat4 view = cameraController->GetCamera().GetViewMatrix();
 		m_MatrixUB->setData("view", glm::value_ptr(view));
-		//m_MatrixUB->setData("view", glm::value_ptr(directionalLight->lightView));
-		//m_MatrixUB->setData("projection", glm::value_ptr(directionalLight->lightOrthoProj));
 		
 		pbrTextureShader->Bind();
 		pbrTextureShader->SetUniformVec3("camPos", cameraController->GetCamera().GetPosition());
@@ -143,16 +128,16 @@ namespace CrashEngine {
 		pbrTextureShader->Bind();
 		pbrTextureShader->SetUniformVec3("lightRotation", directionalLight->rotation);
 		pbrTextureShader->SetUniformVec3("lightColor", directionalLight->color * directionalLight->intensity);
-		RenderCommand::BindTexture(directionalLight->depthMap[0]->GetRendererID(), 8);
+		//RenderCommand::BindTexture(directionalLight->depthMap[0]->GetRendererID(), 8);
 
 		m_ActiveScene->OnUpdate(ts);
 
-
-		skyLight->RenderSky();
-		
-		
+		skyLight->RenderSky();	
 
 		framebuffer->Unbind();
+
+		m_ActiveScene->BlurRender();
+		
 		Renderer::EndScene();
 
 
@@ -160,7 +145,81 @@ namespace CrashEngine {
 
 	void Editor::OnImGuiRender()
 	{
-		imguilayer->MainMenu();
+		//imguilayer->MainMenu();
+		if (ImGui::BeginMainMenuBar())
+		{
+			if (ImGui::BeginMenu("File"))
+			{
+				ImGui::MenuItem("Hello, it's my menu", NULL, false, false);
+				if (ImGui::MenuItem("New"))
+				{
+					m_ActiveScene = std::make_shared<Scene>();
+
+					directionalLight.reset(new DirectionalLight);
+					directionalLight->camera = &cameraController->GetCamera();
+					directionalLight->m_ActiveScene = m_ActiveScene;
+					directionalLight->Height = Application::Get().GetWindow().GetHeight();
+					directionalLight->Width = Application::Get().GetWindow().GetWidth();
+					directionalLight->pbrTextureShader = pbrTextureShader;
+
+					skyLight.reset(new SkyLight);
+
+					m_ActiveScene->SetDefaultShader(pbrTextureShader);
+					m_ActiveScene->SetDepthShader(directionalLight->depthMapShader);
+					m_ActiveScene->SetFramebuffer(framebuffer);
+
+					HierarchyPanel.reset(new SceneHierarchyPanel(m_ActiveScene));
+					EnvironmentPanel.reset(new SceneEnvironmentPanel(skyLight, directionalLight, m_ActiveScene));
+				}
+				if (ImGui::MenuItem("Open"))
+				{
+					std::optional<std::string> filepath = FileDialogs::OpenFile("(*.crash)\0*.crash\0");
+					if (filepath)
+					{
+						m_ActiveScene = std::make_shared<Scene>();
+
+						directionalLight.reset(new DirectionalLight);
+						directionalLight->camera = &cameraController->GetCamera();
+						directionalLight->m_ActiveScene = m_ActiveScene;
+						directionalLight->Height = Application::Get().GetWindow().GetHeight();
+						directionalLight->Width = Application::Get().GetWindow().GetWidth();
+						directionalLight->pbrTextureShader = pbrTextureShader;
+
+						skyLight.reset(new SkyLight);
+
+						m_ActiveScene->SetDefaultShader(pbrTextureShader);
+						m_ActiveScene->SetDepthShader(directionalLight->depthMapShader);
+						m_ActiveScene->SetFramebuffer(framebuffer);
+
+						HierarchyPanel.reset(new SceneHierarchyPanel(m_ActiveScene));
+						EnvironmentPanel.reset(new SceneEnvironmentPanel(skyLight, directionalLight, m_ActiveScene));
+
+						SceneSerializer serializer(m_ActiveScene, skyLight, directionalLight);
+						serializer.Deserialize(filepath.value());
+					}
+				}
+
+				if (ImGui::MenuItem("Save")) {}
+				if (ImGui::MenuItem("Save As.."))
+				{
+					std::optional<std::string> filepath = FileDialogs::SaveFile("(*.crash)\0*.crash\0");
+					if (filepath)
+					{
+						SceneSerializer serializer(m_ActiveScene, skyLight, directionalLight);
+						serializer.Serialize(filepath.value());
+					}
+				}
+
+				ImGui::Separator();
+
+				if (ImGui::MenuItem("Quit")) {}
+
+
+				ImGui::EndMenu();
+			}
+			ImGui::EndMainMenuBar();
+		}
+
 		imguilayer->Dockspace(framebuffer);
 
 		if (imguilayer->MenuEnabled) { imguilayer->Menu(); }
@@ -172,10 +231,11 @@ namespace CrashEngine {
 		HierarchyPanel->OnImGuiRender();
 		EnvironmentPanel->OnImGuiRender();
 	
-		ImGui::Begin("Camera controller");
+		ImGui::Begin("Debug");
 		ImGui::SliderFloat("Camera Speed", &cameraController->m_CameraSpeed, 1.f, 40.f);
-		ImGui::SliderInt("Cascade map", &cascademapselected, 1, 3);
-		ImGui::Image((void*)directionalLight->depthMap[cascademapselected-1]->GetRendererID(), ImVec2(400,400));
+		//ImGui::SliderInt("Cascade map", &cascademapselected, 1, 3);
+		//ImGui::Image((void*)directionalLight->depthMap[cascademapselected-1]->GetRendererID(), ImVec2(400,400));
+		//ImGui::Image((void*)framebuffer->GetColorAttachmentRendererID(), ImVec2(400, 400));
 		ImGui::End();
 
 	

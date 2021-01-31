@@ -46,7 +46,7 @@ namespace CrashEngine {
 		if (m_Mesh->material)
 		{
 			const ImGuiTreeNodeFlags treeNodeFlags = ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_AllowItemOverlap | ImGuiTreeNodeFlags_FramePadding;
-			bool material = ImGui::TreeNodeEx(m_Mesh->material->name->c_str(), treeNodeFlags);
+			bool material = ImGui::TreeNodeEx(m_Mesh->material->name.c_str(), treeNodeFlags);
 
 			if (material)
 			{

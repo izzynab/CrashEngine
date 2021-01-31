@@ -18,6 +18,8 @@ namespace CrashEngine
 
 		virtual void CreateTextures();
 		virtual void CreateTexture(uint32_t id);
+		virtual void CreateMSAATexture();
+		virtual void InitializeMultipleTextures(const int amount);
 
 		virtual void Resize(uint32_t width, uint32_t height) override;
 		virtual void SetTexture(int texTarget, uint32_t textureID, int mipMapLevel,uint32_t id = 0 ) override;
@@ -25,13 +27,14 @@ namespace CrashEngine
 		virtual void SetNewTexture(uint32_t width, uint32_t height) override;
 
 		virtual uint32_t GetColorAttachmentRendererID() const override { return m_textures[0]; }
-		virtual uint32_t GetDepthAttachmentRendererID() const override { return m_textures[1]; }
+		virtual uint32_t GetColorAttachmentRendererID(uint32_t id) override { return m_textures[id]; }
 
 		virtual const FramebufferSpecification& GetSpecification() const override { return m_Specification; }
+
 	private:
 		uint32_t m_RendererID = 0;
 		std::vector<uint32_t> m_textures;
-		//uint32_t m_ColorAttachment = 0, m_DepthAttachment = 0;
+		uint32_t m_DepthAttachment = 0;
 		FramebufferSpecification m_Specification;
 	};
 
@@ -49,6 +52,7 @@ namespace CrashEngine
 		virtual void AttachToFramebuffer() override;
 
 		virtual void SetStorage(int format, int width, int height) override; 
+		virtual void SetMSAAStorage(int samples, int width, int height) override;
 
 	private:
 		uint32_t m_RendererID = 0;

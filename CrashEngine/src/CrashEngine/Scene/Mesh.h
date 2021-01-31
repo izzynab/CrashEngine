@@ -50,7 +50,8 @@ namespace CrashEngine {
 	public:
 		std::vector<ChildMesh> meshes;
 		std::string directory;
-		Material* material;
+		std::string path;
+		std::shared_ptr<Material> material;
 
 	public:
 		Mesh() = default;

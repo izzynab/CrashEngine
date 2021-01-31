@@ -9,6 +9,7 @@
 
 #include "CrashEngine/Scene/Components.h"
 #include "CrashEngine/Scene/Mesh.h"
+#include "CrashEngine/Scene/PointLight.h"
 #include <cstring>
 
 //#include "CrashEngine/Renderer/Model.h"
@@ -247,10 +248,7 @@ namespace CrashEngine {
 
 		if (entity.HasComponent<Mesh>())
 		{
-			auto& component = entity.GetComponent<Mesh>();
 			MaterialPanel->OnImGuiRender();
-
-			//CE_CORE_WARN("new material panel should open {0}", component.material->name->c_str());
 		}
 
 		ImGui::SameLine();
@@ -292,9 +290,20 @@ namespace CrashEngine {
 				ImGui::Text("File Path:");
 			
 				ImGui::NextColumn();
-				ImGui::Text(component.directory.c_str());
+				ImGui::Text(component.path.c_str());
 				ImGui::EndColumns();		
 	
+			});
+
+
+		DrawComponent<PointLight>("Point Light", entity, [](auto& component)
+			{
+				ImGui::NewLine();
+				ImGui::ColorPicker3("Light color", &component.color.x);
+
+				ImGui::NewLine();
+				ImGui::SliderFloat("Intensity", &component.intensity, 0.f, 60.f);
+
 			});
 
 	}

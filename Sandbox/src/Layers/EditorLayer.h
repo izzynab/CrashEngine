@@ -34,13 +34,11 @@ namespace CrashEngine {
 
 	private:
 		std::shared_ptr<Scene> m_ActiveScene;
-		Entity m_Entity;
 
 		std::shared_ptr<ImGuiLayer> imguilayer;
 		std::shared_ptr <SceneHierarchyPanel> HierarchyPanel;
 		std::shared_ptr <SceneEnvironmentPanel> EnvironmentPanel;
 
-		std::shared_ptr<VertexArray> m_SquareVA;
 		std::shared_ptr<UniformBuffer> m_MatrixUB;
 		std::shared_ptr<CameraController> cameraController;
 
@@ -53,8 +51,9 @@ namespace CrashEngine {
 		std::shared_ptr<Cube> cube;
 		std::shared_ptr<Quad> quad;
 
+		std::shared_ptr<Framebuffer> MSAAframebuffer;
+		std::shared_ptr<Renderbuffer> MSAArenderbuffer;
 		std::shared_ptr<Framebuffer> framebuffer;
-
 
 		std::shared_ptr<SkyLight> skyLight;
 		std::shared_ptr<DirectionalLight> directionalLight;

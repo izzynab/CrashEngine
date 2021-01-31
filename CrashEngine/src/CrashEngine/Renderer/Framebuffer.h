@@ -1,4 +1,5 @@
 #pragma once
+#include <memory>
 
 namespace CrashEngine{
 
@@ -21,6 +22,8 @@ namespace CrashEngine{
 
 		virtual void CreateTextures() = 0;
 		virtual void CreateTexture(uint32_t id) = 0;
+		virtual void CreateMSAATexture() = 0;
+		virtual void InitializeMultipleTextures(const int amount) = 0;
 
 		virtual void Resize(uint32_t width, uint32_t height) = 0;
 		virtual void SetTexture(int texTarget, uint32_t textureID, int mipMapLevel, uint32_t id = 0) = 0;
@@ -28,7 +31,7 @@ namespace CrashEngine{
 		virtual void SetNewTexture(uint32_t width, uint32_t height) = 0;
 
 		virtual uint32_t GetColorAttachmentRendererID() const = 0;
-		virtual uint32_t GetDepthAttachmentRendererID() const = 0;
+		virtual uint32_t GetColorAttachmentRendererID(uint32_t id) = 0;
 
 		virtual const FramebufferSpecification& GetSpecification() const = 0;
 
@@ -47,6 +50,7 @@ namespace CrashEngine{
 		virtual void AttachToFramebuffer() = 0;
 
 		virtual void SetStorage(int format, int width, int height) = 0;
+		virtual void SetMSAAStorage(int samples, int width, int height) = 0;
 
 		static std::shared_ptr<Renderbuffer> Create();
 	};

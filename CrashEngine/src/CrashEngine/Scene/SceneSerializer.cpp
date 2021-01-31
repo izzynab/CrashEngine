@@ -3,10 +3,12 @@
 
 #include "Entity.h"
 #include "Components.h"
+#include "Mesh.h"
+#include "DirectionalLight.h"
+#include "SkyLight.h"
 
 #include <fstream>
 #include "yaml-cpp/yaml.h"
-
 
 
 namespace YAML {
@@ -20,7 +22,6 @@ namespace YAML {
 			node.push_back(rhs.x);
 			node.push_back(rhs.y);
 			node.push_back(rhs.z);
-			node.SetStyle(EmitterStyle::Flow);
 			return node;
 		}
 
@@ -46,7 +47,6 @@ namespace YAML {
 			node.push_back(rhs.y);
 			node.push_back(rhs.z);
 			node.push_back(rhs.w);
-			node.SetStyle(EmitterStyle::Flow);
 			return node;
 		}
 
@@ -80,14 +80,128 @@ namespace CrashEngine {
 		return out;
 	}
 
-	SceneSerializer::SceneSerializer(const std::shared_ptr<Scene>& scene)
-		: m_Scene(scene)
+	SceneSerializer::SceneSerializer(const std::shared_ptr<Scene>& scene, std::shared_ptr<SkyLight>& skyLight, std::shared_ptr<DirectionalLight>& directionalLight)
+		: m_Scene(scene), m_skyLight(skyLight), m_directionalLight(directionalLight)
 	{
 	}
 
 	static void SerializeEntity(YAML::Emitter& out, Entity entity)
 	{
-		
+		out << YAML::BeginMap; // Entity
+		out << YAML::Key << "Entity" << YAML::Value << "12837192831273"; // TODO: Entity ID goes here
+
+		if (entity.HasComponent<TagComponent>())
+		{
+			out << YAML::Key << "TagComponent";
+			out << YAML::BeginMap; // TagComponent
+
+			auto& tag = entity.GetComponent<TagComponent>().Tag;
+			out << YAML::Key << "Tag" << YAML::Value << tag;
+
+			out << YAML::EndMap; // TagComponent
+		}
+
+		if (entity.HasComponent<TransformComponent>())
+		{
+			out << YAML::Key << "TransformComponent";
+			out << YAML::BeginMap; // TransformComponent
+
+			auto& tc = entity.GetComponent<TransformComponent>();
+			out << YAML::Key << "Translation" << YAML::Value << tc.Translation;
+			out << YAML::Key << "Rotation" << YAML::Value << tc.Rotation;
+			out << YAML::Key << "Scale" << YAML::Value << tc.Scale;
+
+			out << YAML::EndMap; // TransformComponent
+		}
+
+		if (entity.HasComponent<Mesh>())
+		{
+			out << YAML::Key << "Mesh";
+			out << YAML::BeginMap; // Mesh
+
+			auto& tc = entity.GetComponent<Mesh>();
+			out << YAML::Key << "Directory" << YAML::Value << tc.path;
+
+
+			out << YAML::Key << "Material";
+			out << YAML::BeginMap; // Material
+
+			//auto& tc = entity.GetComponent<Mesh>();
+			out << YAML::Key << "Name" << YAML::Value << tc.material->name;
+
+			out << YAML::Key << "Albedo";
+			out << YAML::BeginMap;
+			out << YAML::Key << "path" << YAML::Value << tc.material->albedo->m_Path;
+			out << YAML::Key << "albedo use" << YAML::Value << tc.material->albedoTextureUse;
+			out << YAML::Key << "albedo color" << YAML::Value << tc.material->albedoColor;
+			out << YAML::Key << "albedo load" << YAML::Value << tc.material->albedaLoad;
+			out << YAML::EndMap;
+
+			out << YAML::Key << "Metallic";
+			out << YAML::BeginMap;
+			out << YAML::Key << "path" << YAML::Value << tc.material->metallic->m_Path;
+			out << YAML::Key << "metallic use" << YAML::Value << tc.material->metallicTextureUse;
+			out << YAML::Key << "metallic color" << YAML::Value << tc.material->metallicValue;
+			out << YAML::Key << "metallic load" << YAML::Value << tc.material->metallicLoad;
+			out << YAML::EndMap;
+
+			out << YAML::Key << "Roughness";
+			out << YAML::BeginMap;
+			out << YAML::Key << "path" << YAML::Value << tc.material->roughness->m_Path;
+			out << YAML::Key << "roughness use" << YAML::Value << tc.material->roughnessTextureUse;
+			out << YAML::Key << "roughness color" << YAML::Value << tc.material->roughnessValue;
+			out << YAML::Key << "roughness load" << YAML::Value << tc.material->roughnessLoad;
+			out << YAML::EndMap;
+
+			out << YAML::Key << "Normal";
+			out << YAML::BeginMap;
+			out << YAML::Key << "path" << YAML::Value << tc.material->normal->m_Path;
+			out << YAML::EndMap;
+
+			out << YAML::Key << "Ao";
+			out << YAML::BeginMap;
+			out << YAML::Key << "path" << YAML::Value << tc.material->ao->m_Path;
+			out << YAML::EndMap;
+
+			out << YAML::EndMap; // Material
+
+
+
+			out << YAML::EndMap; // Mesh
+		}
+
+
+		out << YAML::EndMap; // Entity
+	}
+
+	static void SeriazlizeEnvironment(YAML::Emitter& out, std::shared_ptr<DirectionalLight> &m_directionalLight, std::shared_ptr<SkyLight> &m_skyLight, std::shared_ptr<Scene>& m_Scene)
+	{
+		out << YAML::Key << "Directional light" << YAML::Value;
+		out << YAML::BeginMap; // Directional light
+
+		out << YAML::Key << "rotation" << YAML::Value << m_directionalLight->rotation;
+		out << YAML::Key << "position" << YAML::Value << m_directionalLight->position;
+		out << YAML::Key << "color" << YAML::Value << m_directionalLight->color;
+		out << YAML::Key << "intensity" << YAML::Value << m_directionalLight->intensity;
+
+		out << YAML::EndMap; // Directional light
+
+
+		out << YAML::Key << "Sky light" << YAML::Value;
+		out << YAML::BeginMap; // Sky light
+
+		out << YAML::Key << "directory" << YAML::Value << m_skyLight->directory;
+
+		out << YAML::EndMap; // Sky light
+
+		out << YAML::Key << "Bloom" << YAML::Value;
+		out << YAML::BeginMap; // blur
+
+		out << YAML::Key << "blur" << YAML::Value << m_Scene->blur;
+
+		out << YAML::EndMap; // blur
+
+
 	}
 
 	void SceneSerializer::Serialize(const std::string& filepath)
@@ -104,7 +218,11 @@ namespace CrashEngine {
 
 				SerializeEntity(out, entity);
 			});
+
 		out << YAML::EndSeq;
+
+		SeriazlizeEnvironment(out, m_directionalLight, m_skyLight,m_Scene);
+
 		out << YAML::EndMap;
 
 		std::ofstream fout(filepath);
@@ -113,19 +231,116 @@ namespace CrashEngine {
 
 	void SceneSerializer::SerializeRuntime(const std::string& filepath)
 	{
-	
+		// Not implemented
+		CE_CORE_ASSERT(false);
 	}
 
 	bool SceneSerializer::Deserialize(const std::string& filepath)
 	{
-		
+		std::ifstream stream(filepath);
+		std::stringstream strStream;
+		strStream << stream.rdbuf();
+
+		YAML::Node data = YAML::Load(strStream.str());
+		if (!data["Scene"])
+			return false;
+
+		std::string sceneName = data["Scene"].as<std::string>();
+		CE_CORE_TRACE("Deserializing scene '{0}'", sceneName);
+
+		auto entities = data["Entities"];
+		if (entities)
+		{
+			for (auto entity : entities)
+			{
+				uint64_t uuid = entity["Entity"].as<uint64_t>(); // TODO
+
+				std::string name;
+				auto tagComponent = entity["TagComponent"];
+				if (tagComponent)
+					name = tagComponent["Tag"].as<std::string>();
+
+				Entity deserializedEntity;
+
+				auto mesh = entity["Mesh"];
+				if (mesh)
+				{
+					std::string path = mesh["Directory"].as<std::string>();
+
+					auto material = mesh["Material"];
+
+					std::string matname = material["Name"].as<std::string>();
+					std::shared_ptr<Material> mat = std::make_shared<Material>(matname);
+
+					auto albedo = material["Albedo"];
+					mat->albedo->m_Path = albedo["path"].as<std::string>();
+					mat->albedoTextureUse = albedo["albedo use"].as<bool>();
+					mat->albedoColor = albedo["albedo color"].as<glm::vec4>();
+					mat->albedaLoad = albedo["albedo load"].as<bool>();
+
+					auto metallic = material["Metallic"];
+					mat->metallic->m_Path = metallic["path"].as<std::string>();
+					mat->metallicTextureUse = metallic["metallic use"].as<bool>();
+					mat->metallicValue = metallic["metallic color"].as<float>();
+					mat->metallicLoad = metallic["metallic load"].as<bool>();
+
+					auto roughness = material["Roughness"];
+					mat->roughness->m_Path = roughness["path"].as<std::string>();
+					mat->roughnessTextureUse = roughness["roughness use"].as<bool>();
+					mat->roughnessValue = roughness["roughness color"].as<float>();
+					mat->roughnessLoad = roughness["roughness load"].as<bool>();
+
+					auto normal = material["Normal"];
+					mat->normal->m_Path = normal["path"].as<std::string>();
+
+					auto ao = material["Ao"];
+					mat->ao->m_Path = ao["path"].as<std::string>();
+
+					mat->UpdateTexturesFromValues();
+
+					deserializedEntity = m_Scene->CreateMesh(path, mat, name);
+
+				}
+				else
+				{
+					deserializedEntity = m_Scene->CreateMesh(name);
+				}
+			
+				auto transformComponent = entity["TransformComponent"];
+				if (transformComponent)
+				{
+					// Entities always have transforms
+					auto& tc = deserializedEntity.GetComponent<TransformComponent>();
+					tc.Translation = transformComponent["Translation"].as<glm::vec3>();
+					tc.Rotation = transformComponent["Rotation"].as<glm::vec3>();
+					tc.Scale = transformComponent["Scale"].as<glm::vec3>();
+				}
+
+			}
+		}
+
+		auto directlight = data["Directional light"];
+
+		m_directionalLight->rotation = directlight["rotation"].as<glm::vec3>();
+		m_directionalLight->position = directlight["position"].as<glm::vec3>();
+		m_directionalLight->color = directlight["color"].as<glm::vec3>();
+		m_directionalLight->intensity = directlight["intensity"].as<float>();
+
+		auto skyLight = data["Sky light"];
+
+		m_skyLight->directory = skyLight["directory"].as<std::string>();
+		m_skyLight->LoadHDR(m_skyLight->directory);
+
+		auto bloom = data["Bloom"];
+		m_Scene->blur = bloom["blur"].as<bool>();
+
 		return true;
 	}
 
 	bool SceneSerializer::DeserializeRuntime(const std::string& filepath)
 	{
 		// Not implemented
+		CE_CORE_ASSERT(false);
 		return false;
 	}
-
 }

@@ -6,9 +6,12 @@
 namespace CrashEngine {
 
 	Mesh::Mesh(std::string const& path)
+        :path(path)
 	{
         LoadMesh(path);
-        material = new Material("default_material");
+        //material = new Material("default_material");
+        material.reset(new Material("default_material"));
+        
 	}
 
 	void Mesh::LoadMesh(std::string const& path)

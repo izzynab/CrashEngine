@@ -11,8 +11,8 @@
 
 
 namespace CrashEngine {
-	SceneEnvironmentPanel::SceneEnvironmentPanel(const std::shared_ptr<SkyLight>& skyLight, const std::shared_ptr<DirectionalLight>& directionalLight)
-		:m_SkyLight(skyLight),m_DirectionalLight(directionalLight)
+	SceneEnvironmentPanel::SceneEnvironmentPanel(const std::shared_ptr<SkyLight>& skyLight, const std::shared_ptr<DirectionalLight>& directionalLight, const std::shared_ptr<Scene>& m_ActiveScene)
+		:m_SkyLight(skyLight),m_DirectionalLight(directionalLight), m_Scene(m_ActiveScene)
 	{
 	}
 
@@ -135,7 +135,17 @@ namespace CrashEngine {
 
 			ImGui::TreePop();
 		}
+
+		bool bloom = ImGui::TreeNodeEx("Bloom", treeNodeFlags);
+		if (bloom)
+		{
+			ImGui::Checkbox("Blur", &m_Scene->blur);
+			ImGui::SliderFloat("Exposure", &m_Scene->exposure, 0.f, 3.f);
+			ImGui::TreePop();
+		}
+
 		ImGui::End();
+
 	}
 
 	

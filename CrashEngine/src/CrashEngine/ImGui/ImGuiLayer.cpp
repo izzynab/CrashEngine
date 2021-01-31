@@ -7,6 +7,7 @@
 #include "examples/imgui_impl_glfw.h"
 #include "examples/imgui_impl_opengl3.h"
 
+#include "CrashEngine/Scene/SceneSerializer.h"
 
 // TEMPORARY
 #include <GLFW/glfw3.h>
@@ -183,11 +184,11 @@ namespace CrashEngine {
 
 			CurrentWindowView = ImVec2(ImGui::GetWindowWidth(), ImGui::GetWindowHeight() - 40);
 
-			ImGui::Image((void*)renderFramebuffer->GetColorAttachmentRendererID(), CurrentWindowView, ImVec2(0, 1), ImVec2(1, 0));
+			ImGui::Image((void*)renderFramebuffer->GetColorAttachmentRendererID(0), CurrentWindowView, ImVec2(0, 1), ImVec2(1, 0));
 
 			if (OldWindowSize.x != CurrentWindowView.x || OldWindowSize.y != CurrentWindowView.y)
 			{
-				renderFramebuffer->SetNewTexture(CurrentWindowView.x, CurrentWindowView.y);
+				renderFramebuffer->Resize(CurrentWindowView.x, CurrentWindowView.y);
 				OldWindowSize = CurrentWindowView;
 
 			}
@@ -212,23 +213,6 @@ namespace CrashEngine {
 	{
 		if (ImGui::BeginMainMenuBar())
 		{
-			if (ImGui::BeginMenu("File"))
-			{
-				
-				ImGui::MenuItem("Hello, it's my menu", NULL, false, false);
-				if (ImGui::MenuItem("New")) { CE_INFO("New in menu"); }
-				if (ImGui::MenuItem("Open")) {}
-				
-				if (ImGui::MenuItem("Save")) {}
-				if (ImGui::MenuItem("Save As..")) {}
-
-				ImGui::Separator();	
-
-				if (ImGui::MenuItem("Quit")) {}
-
-
-				ImGui::EndMenu();
-			}
 
 			if (ImGui::BeginMenu("Tools"))
 			{

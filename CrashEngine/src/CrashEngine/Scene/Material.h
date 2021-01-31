@@ -10,7 +10,9 @@ namespace CrashEngine {
 	public:
 		Material(std::string name);
 
-		std::shared_ptr<std::string> name;
+		void UpdateTexturesFromValues();
+
+		std::string name;
 
 		std::shared_ptr<Texture2D> albedo;
 		std::shared_ptr<Texture2D> normal;
