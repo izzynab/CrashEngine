@@ -1857,5 +1857,6 @@
     <None Include="src\CrashEngine\Renderer\Shaders\Text.frag" />
     <None Include="src\CrashEngine\Renderer\Shaders\blur.frag" />
     <None Include="src\CrashEngine\Renderer\Shaders\mixbloom.frag" />
+    <None Include="src\CrashEngine\Renderer\Shaders\brightness.frag" />
   </ItemGroup>
 </Project>

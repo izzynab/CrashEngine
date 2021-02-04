@@ -750,6 +750,7 @@
     <None Include="src\CrashEngine\Renderer\Shaders\Basic.vert" />
     <None Include="src\CrashEngine\Renderer\Shaders\blur.frag" />
     <None Include="src\CrashEngine\Renderer\Shaders\brdf.frag" />
+    <None Include="src\CrashEngine\Renderer\Shaders\brightness.frag" />
     <None Include="src\CrashEngine\Renderer\Shaders\cubemap.vert" />
     <None Include="src\CrashEngine\Renderer\Shaders\depthMap.frag" />
     <None Include="src\CrashEngine\Renderer\Shaders\depthMap.vert" />

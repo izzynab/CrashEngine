@@ -34,6 +34,7 @@ namespace CrashEngine{
 		virtual uint32_t GetColorAttachmentRendererID(uint32_t id) = 0;
 
 		virtual const FramebufferSpecification& GetSpecification() const = 0;
+		virtual inline uint32_t GetRenderID() = 0;
 
 		static std::shared_ptr<Framebuffer> Create(const FramebufferSpecification& spec,bool createTetures = true);
 
@@ -50,7 +51,7 @@ namespace CrashEngine{
 		virtual void AttachToFramebuffer() = 0;
 
 		virtual void SetStorage(int format, int width, int height) = 0;
-		virtual void SetMSAAStorage(int samples, int width, int height) = 0;
+		//virtual void SetMSAAStorage(int samples, int width, int height) = 0;
 
 		static std::shared_ptr<Renderbuffer> Create();
 	};

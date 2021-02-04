@@ -167,6 +167,7 @@ namespace CrashEngine {
 		BloomMixShader->SetUniformInt("exposure", exposure);
 		BloomMixShader->SetUniformInt("blur", blur);
 		framebuffer->Bind();
+		RenderCommand::Clear();
 		quad->RenderQuad();
 		framebuffer->Unbind();
 	}

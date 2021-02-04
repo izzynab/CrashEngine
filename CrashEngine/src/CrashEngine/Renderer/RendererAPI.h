@@ -3,6 +3,7 @@
 #include <glm/glm.hpp>
 
 #include "VertexArray.h"
+#include "Framebuffer.h"
 
 namespace CrashEngine {
 
@@ -30,6 +31,7 @@ namespace CrashEngine {
 		virtual void BindCubemap(const unsigned int& texture, unsigned int textureNr) = 0;
 
 		virtual void SetViewport(float Width, float Height) = 0;
+		virtual void BlitFramebuffers(std::shared_ptr<Framebuffer>& readFreambuffer, std::shared_ptr<Framebuffer>& drawFramebuffer) = 0;
 
 		inline static API GetAPI() { return s_API; }
 	private:

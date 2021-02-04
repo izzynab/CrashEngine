@@ -57,6 +57,10 @@ namespace CrashEngine {
 			s_RendererAPI->SetViewport(Width, Height);
 		}
 
+		inline static void BlitFramebuffers(std::shared_ptr<Framebuffer> & readFreambuffer, std::shared_ptr<Framebuffer> & drawFramebuffer)
+		{
+			s_RendererAPI->BlitFramebuffers(readFreambuffer, drawFramebuffer);
+		}
 	private:
 		static RendererAPI* s_RendererAPI;
 	};

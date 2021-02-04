@@ -30,6 +30,7 @@ namespace CrashEngine
 		virtual uint32_t GetColorAttachmentRendererID(uint32_t id) override { return m_textures[id]; }
 
 		virtual const FramebufferSpecification& GetSpecification() const override { return m_Specification; }
+		virtual inline uint32_t GetRenderID() override { return m_RendererID; }
 
 	private:
 		uint32_t m_RendererID = 0;
@@ -52,7 +53,7 @@ namespace CrashEngine
 		virtual void AttachToFramebuffer() override;
 
 		virtual void SetStorage(int format, int width, int height) override; 
-		virtual void SetMSAAStorage(int samples, int width, int height) override;
+		//virtual void SetMSAAStorage(int samples, int width, int height) override;
 
 	private:
 		uint32_t m_RendererID = 0;

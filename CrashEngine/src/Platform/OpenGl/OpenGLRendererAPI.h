@@ -1,6 +1,7 @@
 #pragma once
 
 #include "CrashEngine/Renderer/RendererAPI.h"
+#include "CrashEngine/Renderer/Framebuffer.h"
 
 namespace CrashEngine {
 
@@ -23,6 +24,8 @@ namespace CrashEngine {
 		virtual void BindCubemap(const unsigned int& texture, unsigned int textureNr) override;
 
 		virtual void SetViewport(float Width, float Height) override;
+		virtual void BlitFramebuffers(std::shared_ptr<Framebuffer>& readFreambuffer, std::shared_ptr<Framebuffer>& drawFramebuffer) override;
+
 	};
 
 

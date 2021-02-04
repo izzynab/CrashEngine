@@ -75,12 +75,24 @@ namespace CrashEngine {
 	void OpenGLFramebuffer::CreateMSAATexture()
 	{
 		m_textures.push_back(0);
-		glCreateTextures(GL_TEXTURE_2D, 1, &m_textures[0]);
-		glBindTexture(GL_TEXTURE_2D, m_textures[0]);
-		glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, 4, GL_RGB, m_Specification.Width, m_Specification.Height, GL_TRUE);
-		glBindTexture(GL_TEXTURE_2D, 0);
+		glCreateTextures(GL_TEXTURE_2D_MULTISAMPLE, 1, &m_textures[0]);
+		glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, m_textures[0]);
+		glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, 4, GL_RGBA, m_Specification.Width, m_Specification.Height, GL_TRUE);
+		glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, 0);
 
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D_MULTISAMPLE, m_textures[0], 0);
+		
+		glCreateTextures(GL_TEXTURE_2D_MULTISAMPLE, 1, &m_DepthAttachment);
+		glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, m_DepthAttachment);
+		glTexStorage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, 4, GL_DEPTH24_STENCIL8, m_Specification.Width, m_Specification.Height,GL_TRUE);
+		//glTexStorage2D(GL_TEXTURE_2D_MULTISAMPLE, 1, GL_DEPTH24_STENCIL8, m_Specification.Width, m_Specification.Height);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D_MULTISAMPLE, m_DepthAttachment, 0);
+
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + 1, GL_TEXTURE_2D_MULTISAMPLE, m_textures[1], 0);
+
+
+
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 
 	void OpenGLFramebuffer::InitializeMultipleTextures(const int amount)
@@ -147,12 +159,12 @@ namespace CrashEngine {
 	{
 		//glCreateRenderbuffers(1, &m_RendererID);
 		glGenRenderbuffers(1, &m_RendererID);
-		glBindFramebuffer(GL_RENDERBUFFER, m_RendererID);
+		glBindRenderbuffer(GL_RENDERBUFFER, m_RendererID);
 	}
 
 	void OpenGLRenderbuffer::Bind()
 	{
-		glBindFramebuffer(GL_RENDERBUFFER, m_RendererID);
+		glBindRenderbuffer(GL_RENDERBUFFER, m_RendererID);
 	}
 
 	void OpenGLRenderbuffer::Unbind()
@@ -170,9 +182,9 @@ namespace CrashEngine {
 		glRenderbufferStorage(GL_RENDERBUFFER, format, width, height);
 	}
 
-	void OpenGLRenderbuffer::SetMSAAStorage(int samples, int width, int height)
+	/*void OpenGLRenderbuffer::SetMSAAStorage(int samples, int width, int height)
 	{
 		glRenderbufferStorageMultisample(GL_RENDERBUFFER, samples, GL_DEPTH24_STENCIL8, width, height);
-	}
+	}*/
 
 }

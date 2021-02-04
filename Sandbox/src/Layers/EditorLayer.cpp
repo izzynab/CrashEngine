@@ -26,11 +26,8 @@ namespace CrashEngine {
 
 		MSAAframebuffer = Framebuffer::Create(spec,false);
 		MSAAframebuffer->CreateMSAATexture();
-
-		MSAArenderbuffer = Renderbuffer::Create();
-		MSAArenderbuffer->SetMSAAStorage(4, spec.Width, spec.Height);
-		MSAArenderbuffer->Unbind();
-		MSAArenderbuffer->AttachToFramebuffer();
+		MSAAframebuffer->CreateTexture(1);
+		MSAAframebuffer->InitializeMultipleTextures(2);
 
 		framebuffer = Framebuffer::Create(spec);
 		framebuffer->Bind();
@@ -109,10 +106,10 @@ namespace CrashEngine {
 		//----------------shadows----------------
 
 
-		framebuffer->Bind();
+		MSAAframebuffer->Bind();
 		RenderCommand::SetViewport(imguilayer->CurrentWindowView.x, imguilayer->CurrentWindowView.y);
-		framebuffer->Resize(imguilayer->CurrentWindowView.x, imguilayer->CurrentWindowView.y);
-		RenderCommand::SetClearColor({ 1.f, 0.f, 0.0f, 1.0f });
+		MSAAframebuffer->Resize(imguilayer->CurrentWindowView.x, imguilayer->CurrentWindowView.y);
+		RenderCommand::SetClearColor({ 1.f, 1.f, 0.0f, 1.0f });
 		RenderCommand::Clear();
 
 		glm::mat4 view = cameraController->GetCamera().GetViewMatrix();
@@ -134,10 +131,13 @@ namespace CrashEngine {
 
 		skyLight->RenderSky();	
 
-		framebuffer->Unbind();
+		MSAAframebuffer->Bind();
+		RenderCommand::BlitFramebuffers(MSAAframebuffer, framebuffer);
+		MSAAframebuffer->Unbind();
 
 		m_ActiveScene->BlurRender();
-		
+
+
 		Renderer::EndScene();
 
 
@@ -235,7 +235,7 @@ namespace CrashEngine {
 		ImGui::SliderFloat("Camera Speed", &cameraController->m_CameraSpeed, 1.f, 40.f);
 		//ImGui::SliderInt("Cascade map", &cascademapselected, 1, 3);
 		//ImGui::Image((void*)directionalLight->depthMap[cascademapselected-1]->GetRendererID(), ImVec2(400,400));
-		//ImGui::Image((void*)framebuffer->GetColorAttachmentRendererID(), ImVec2(400, 400));
+		ImGui::Image((void*)MSAAframebuffer->GetColorAttachmentRendererID(1), ImVec2(400, 400));
 		ImGui::End();
 
 	
