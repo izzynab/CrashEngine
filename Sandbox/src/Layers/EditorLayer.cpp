@@ -26,13 +26,8 @@ namespace CrashEngine {
 
 		MSAAframebuffer = Framebuffer::Create(spec,false);
 		MSAAframebuffer->CreateMSAATexture();
-		MSAAframebuffer->CreateTexture(1);
-		MSAAframebuffer->InitializeMultipleTextures(2);
 
 		framebuffer = Framebuffer::Create(spec);
-		framebuffer->Bind();
-		framebuffer->CreateTexture(1);
-		framebuffer->InitializeMultipleTextures(2);
 
 
 		imguilayer.reset(new ImGuiLayer);
@@ -72,7 +67,7 @@ namespace CrashEngine {
 
 		m_ActiveScene->SetDefaultShader(pbrTextureShader);
 		m_ActiveScene->SetDepthShader(directionalLight->depthMapShader);
-		m_ActiveScene->SetFramebuffer(framebuffer);
+		m_ActiveScene->SetFramebuffers(MSAAframebuffer,framebuffer);
 
 		HierarchyPanel.reset(new SceneHierarchyPanel(m_ActiveScene));
 		EnvironmentPanel.reset(new SceneEnvironmentPanel(skyLight, directionalLight, m_ActiveScene));
@@ -109,7 +104,7 @@ namespace CrashEngine {
 		MSAAframebuffer->Bind();
 		RenderCommand::SetViewport(imguilayer->CurrentWindowView.x, imguilayer->CurrentWindowView.y);
 		MSAAframebuffer->Resize(imguilayer->CurrentWindowView.x, imguilayer->CurrentWindowView.y);
-		RenderCommand::SetClearColor({ 1.f, 1.f, 0.0f, 1.0f });
+		RenderCommand::SetClearColor({ 1.f, 0.f, 0.0f, 0.0f });
 		RenderCommand::Clear();
 
 		glm::mat4 view = cameraController->GetCamera().GetViewMatrix();
@@ -130,10 +125,6 @@ namespace CrashEngine {
 		m_ActiveScene->OnUpdate(ts);
 
 		skyLight->RenderSky();	
-
-		MSAAframebuffer->Bind();
-		RenderCommand::BlitFramebuffers(MSAAframebuffer, framebuffer);
-		MSAAframebuffer->Unbind();
 
 		m_ActiveScene->BlurRender();
 
@@ -166,7 +157,7 @@ namespace CrashEngine {
 
 					m_ActiveScene->SetDefaultShader(pbrTextureShader);
 					m_ActiveScene->SetDepthShader(directionalLight->depthMapShader);
-					m_ActiveScene->SetFramebuffer(framebuffer);
+					m_ActiveScene->SetFramebuffers(MSAAframebuffer, framebuffer);
 
 					HierarchyPanel.reset(new SceneHierarchyPanel(m_ActiveScene));
 					EnvironmentPanel.reset(new SceneEnvironmentPanel(skyLight, directionalLight, m_ActiveScene));
@@ -189,7 +180,7 @@ namespace CrashEngine {
 
 						m_ActiveScene->SetDefaultShader(pbrTextureShader);
 						m_ActiveScene->SetDepthShader(directionalLight->depthMapShader);
-						m_ActiveScene->SetFramebuffer(framebuffer);
+						m_ActiveScene->SetFramebuffers(MSAAframebuffer, framebuffer);
 
 						HierarchyPanel.reset(new SceneHierarchyPanel(m_ActiveScene));
 						EnvironmentPanel.reset(new SceneEnvironmentPanel(skyLight, directionalLight, m_ActiveScene));
@@ -235,7 +226,7 @@ namespace CrashEngine {
 		ImGui::SliderFloat("Camera Speed", &cameraController->m_CameraSpeed, 1.f, 40.f);
 		//ImGui::SliderInt("Cascade map", &cascademapselected, 1, 3);
 		//ImGui::Image((void*)directionalLight->depthMap[cascademapselected-1]->GetRendererID(), ImVec2(400,400));
-		ImGui::Image((void*)MSAAframebuffer->GetColorAttachmentRendererID(1), ImVec2(400, 400));
+		ImGui::Image((void*)framebuffer->GetColorAttachmentRendererID(0), ImVec2(400, 400));
 		ImGui::End();
 
 	

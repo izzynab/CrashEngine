@@ -88,9 +88,6 @@ namespace CrashEngine {
 		//glTexStorage2D(GL_TEXTURE_2D_MULTISAMPLE, 1, GL_DEPTH24_STENCIL8, m_Specification.Width, m_Specification.Height);
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D_MULTISAMPLE, m_DepthAttachment, 0);
 
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + 1, GL_TEXTURE_2D_MULTISAMPLE, m_textures[1], 0);
-
-
 
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}

@@ -26,8 +26,14 @@ namespace CrashEngine {
 		blurFramebuffer[0] = Framebuffer::Create(spec);
 		blurFramebuffer[1] = Framebuffer::Create(spec);
 
+		bloom = Framebuffer::Create(spec);
+		draw_framebuffer = Framebuffer::Create(spec);
+
 		blurShader = Shader::Create("Basic.vert", "blur.frag");
 		BloomMixShader = Shader::Create("Basic.vert", "mixbloom.frag");
+		brightShader = Shader::Create("Basic.vert", "brightness.frag");
+		brightShader->Bind();
+		brightShader->SetUniformInt("frame_texture", 0);
 		BloomMixShader->Bind();
 		BloomMixShader->SetUniformInt("scene", 0);
 		BloomMixShader->SetUniformInt("bloomBlur", 1);
@@ -138,6 +144,28 @@ namespace CrashEngine {
 
 	void Scene::BlurRender()
 	{
+		float width = finalFramebuffer->GetSpecification().Width;
+		float height = finalFramebuffer->GetSpecification().Height;
+		blurFramebuffer[0]->Resize(width, height);
+		blurFramebuffer[1]->Resize(width, height);
+
+		bloom->Resize(width, height);
+		draw_framebuffer->Resize(width, height);
+
+
+		framebuffer->Bind();
+		RenderCommand::BlitFramebuffers(framebuffer, draw_framebuffer);
+		framebuffer->Unbind();
+
+
+		bloom->Bind();
+		RenderCommand::Clear();
+		brightShader->Bind();
+		RenderCommand::BindTexture(draw_framebuffer->GetColorAttachmentRendererID(), 0);
+		quad->RenderQuad();
+		brightShader->Unbind();
+		bloom->Unbind();
+
 		// 2. blur bright fragments with two-pass Gaussian Blur 
 		bool horizontal = true, first_iteration = true;
 		unsigned int amount = 10;
@@ -145,12 +173,12 @@ namespace CrashEngine {
 		for (unsigned int i = 0; i < amount; i++)
 		{
 			blurFramebuffer[horizontal]->Bind();
-			blurFramebuffer[horizontal]->SetNewTexture(framebuffer->GetSpecification().Width, framebuffer->GetSpecification().Height);
+			blurFramebuffer[horizontal]->SetNewTexture(draw_framebuffer->GetSpecification().Width, draw_framebuffer->GetSpecification().Height);
 	
 			RenderCommand::Clear();
 			blurShader->SetUniformInt("horizontal", horizontal);
 
-			RenderCommand::BindTexture(first_iteration ? framebuffer->GetColorAttachmentRendererID(1) : blurFramebuffer[!horizontal]->GetColorAttachmentRendererID(), 0);
+			RenderCommand::BindTexture(first_iteration ? bloom->GetColorAttachmentRendererID() : blurFramebuffer[!horizontal]->GetColorAttachmentRendererID(), 0);
 			quad->RenderQuad();
 			horizontal = !horizontal;
 			if (first_iteration)
@@ -160,16 +188,20 @@ namespace CrashEngine {
 
 
 		// 3. now render floating point color buffer to 2D quad and tonemap HDR colors to default framebuffer's (clamped) color range
+		//RenderCommand::Clear();
+
+		finalFramebuffer->Bind();
 		RenderCommand::Clear();
 		BloomMixShader->Bind();
-		RenderCommand::BindTexture(framebuffer->GetColorAttachmentRendererID(), 0);
+		RenderCommand::BindTexture(draw_framebuffer->GetColorAttachmentRendererID(), 0);
 		RenderCommand::BindTexture(blurFramebuffer[1]->GetColorAttachmentRendererID(), 1);
 		BloomMixShader->SetUniformInt("exposure", exposure);
 		BloomMixShader->SetUniformInt("blur", blur);
-		framebuffer->Bind();
-		RenderCommand::Clear();
+
 		quad->RenderQuad();
-		framebuffer->Unbind();
+
+		finalFramebuffer->Unbind();
+		
 	}
 
 	void Scene::OnViewportResize(uint32_t width, uint32_t height)
