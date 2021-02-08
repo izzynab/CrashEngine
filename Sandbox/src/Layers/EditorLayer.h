@@ -62,6 +62,8 @@ namespace CrashEngine {
 		float Width;
 
 		int cascademapselected = 1;
+		int msaa = 4;
+		bool metrics = false;
 	};
 
 }

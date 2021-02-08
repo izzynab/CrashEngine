@@ -12,10 +12,10 @@ Entities:
       Material:
         Name: name
         Albedo:
-          path: ""
-          albedo use: false
+          path: C:\EngineDev\CrashEngine\Models\rock\RockBoulderLarge034_COL_4K_SPECULAR.jpg
+          albedo use: true
           albedo color: [0.811965823, 0.266615629, 0, 0]
-          albedo load: false
+          albedo load: true
         Metallic:
           path: ""
           metallic use: false
@@ -126,6 +126,6 @@ Directional light:
   color: [0.564668775, 0.564663112, 0.564663112]
   intensity: 76.6060028
 Sky light:
-  directory: C:\EngineDev\CrashEngine\Textures\hdr/14-Hamarikyu_Bridge_B_3k.hdr
+  directory: " "
 Bloom:
   blur: true

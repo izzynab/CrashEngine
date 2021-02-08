@@ -72,19 +72,19 @@ namespace CrashEngine {
 
 	}
 
-	void OpenGLFramebuffer::CreateMSAATexture()
+	void OpenGLFramebuffer::CreateMSAATexture(int msaa_value)
 	{
 		m_textures.push_back(0);
 		glCreateTextures(GL_TEXTURE_2D_MULTISAMPLE, 1, &m_textures[0]);
 		glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, m_textures[0]);
-		glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, 4, GL_RGBA, m_Specification.Width, m_Specification.Height, GL_TRUE);
+		glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, msaa_value, GL_RGBA, m_Specification.Width, m_Specification.Height, GL_TRUE);
 		glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, 0);
 
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D_MULTISAMPLE, m_textures[0], 0);
 		
 		glCreateTextures(GL_TEXTURE_2D_MULTISAMPLE, 1, &m_DepthAttachment);
 		glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, m_DepthAttachment);
-		glTexStorage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, 4, GL_DEPTH24_STENCIL8, m_Specification.Width, m_Specification.Height,GL_TRUE);
+		glTexStorage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, msaa_value, GL_DEPTH24_STENCIL8, m_Specification.Width, m_Specification.Height,GL_TRUE);
 		//glTexStorage2D(GL_TEXTURE_2D_MULTISAMPLE, 1, GL_DEPTH24_STENCIL8, m_Specification.Width, m_Specification.Height);
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D_MULTISAMPLE, m_DepthAttachment, 0);
 

@@ -100,6 +100,7 @@ namespace CrashEngine {
 				std::optional<std::string> filepath = FileDialogs::OpenFile("");
 				if (filepath)
 				{
+					//m_SkyLight->directory = filepath.value();
 					m_SkyLight->LoadHDR(filepath.value());
 				}
 			}
@@ -110,6 +111,7 @@ namespace CrashEngine {
 
 			if (ImGui::Button("Delete skybox"))
 			{
+				//m_SkyLight->directory = " ";
 				m_SkyLight->LoadHDR(" ");
 			}
 

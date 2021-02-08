@@ -328,8 +328,8 @@ namespace CrashEngine {
 
 		auto skyLight = data["Sky light"];
 
-		m_skyLight->directory = skyLight["directory"].as<std::string>();
-		m_skyLight->LoadHDR(m_skyLight->directory);
+		std::string dir = skyLight["directory"].as<std::string>();
+		m_skyLight->LoadHDR(dir);
 
 		auto bloom = data["Bloom"];
 		m_Scene->blur = bloom["blur"].as<bool>();

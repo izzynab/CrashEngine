@@ -15,22 +15,22 @@ namespace CrashEngine {
 		cube.reset(new Cube());
 		quad.reset(new Quad());
 
+		imguilayer.reset(new ImGuiLayer);
+
 		Height = Application::Get().GetWindow().GetHeight();
 		Width = Application::Get().GetWindow().GetWidth();
 
 		cameraController.reset(new CameraController(glm::vec3(0.0f, 0.0f, 3.0f), Width, Height));
 
 		FramebufferSpecification spec;
-		spec.Height = 1080;
-		spec.Width = 2560;
+		spec.Height = Height;
+		spec.Width = Width;
 
 		MSAAframebuffer = Framebuffer::Create(spec,false);
 		MSAAframebuffer->CreateMSAATexture();
 
 		framebuffer = Framebuffer::Create(spec);
 
-
-		imguilayer.reset(new ImGuiLayer);
 
 		glm::mat4 projection = cameraController->GetCamera().GetProjectionMatrix();
 
@@ -100,10 +100,12 @@ namespace CrashEngine {
 		//directionalLight->DrawCSM();
 		//----------------shadows----------------
 
+		Height = imguilayer->CurrentWindowView.y;
+		Width = imguilayer->CurrentWindowView.x;
 
 		MSAAframebuffer->Bind();
-		RenderCommand::SetViewport(imguilayer->CurrentWindowView.x, imguilayer->CurrentWindowView.y);
-		MSAAframebuffer->Resize(imguilayer->CurrentWindowView.x, imguilayer->CurrentWindowView.y);
+		RenderCommand::SetViewport(Width, Height);
+		MSAAframebuffer->Resize(Width, Height);
 		RenderCommand::SetClearColor({ 1.f, 0.f, 0.0f, 0.0f });
 		RenderCommand::Clear();
 
@@ -154,6 +156,7 @@ namespace CrashEngine {
 					directionalLight->pbrTextureShader = pbrTextureShader;
 
 					skyLight.reset(new SkyLight);
+					m_MatrixUB->linkShader(skyLight->GetSkyShader()->GetID(), "Matrices");
 
 					m_ActiveScene->SetDefaultShader(pbrTextureShader);
 					m_ActiveScene->SetDepthShader(directionalLight->depthMapShader);
@@ -177,6 +180,7 @@ namespace CrashEngine {
 						directionalLight->pbrTextureShader = pbrTextureShader;
 
 						skyLight.reset(new SkyLight);
+						m_MatrixUB->linkShader(skyLight->GetSkyShader()->GetID(), "Matrices");
 
 						m_ActiveScene->SetDefaultShader(pbrTextureShader);
 						m_ActiveScene->SetDepthShader(directionalLight->depthMapShader);
@@ -223,14 +227,29 @@ namespace CrashEngine {
 		EnvironmentPanel->OnImGuiRender();
 	
 		ImGui::Begin("Debug");
-		ImGui::SliderFloat("Camera Speed", &cameraController->m_CameraSpeed, 1.f, 40.f);
+		ImGui::SliderFloat("Camera Speed", &cameraController->m_CameraSpeed, 1.f, 100.f);
+		ImGui::SliderInt("msaa value", &msaa, 1,16);
+		if(ImGui::Button("msaa", ImVec2(100, 100)))
+		{
+			FramebufferSpecification spec;
+			spec.Height = Height;
+			spec.Width = Width;
+
+			MSAAframebuffer = Framebuffer::Create(spec, false);
+			MSAAframebuffer->CreateMSAATexture(msaa);
+			m_ActiveScene->SetFramebuffers(MSAAframebuffer, framebuffer);
+		}
+
+		ImGui::Checkbox("metrics", &metrics);
+		if (metrics)
+		{
+			imguilayer->WindowMetrics();
+		}
 		//ImGui::SliderInt("Cascade map", &cascademapselected, 1, 3);
 		//ImGui::Image((void*)directionalLight->depthMap[cascademapselected-1]->GetRendererID(), ImVec2(400,400));
-		ImGui::Image((void*)framebuffer->GetColorAttachmentRendererID(0), ImVec2(400, 400));
+		//ImGui::Image((void*)framebuffer->GetColorAttachmentRendererID(0), ImVec2(400, 400));
 		ImGui::End();
 
-	
-		//RenderCommand::SetViewport(imguilayer->CurrentWindowView.x, imguilayer->CurrentWindowView.y);
 
 		glm::mat4 projection = glm::perspective(glm::radians(cameraController->GetCamera().fov), (float)imguilayer->CurrentWindowView.x / (float)imguilayer->CurrentWindowView.y, 0.1f, 400.0f);
 		m_MatrixUB->setData("projection", glm::value_ptr(projection));

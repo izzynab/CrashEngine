@@ -33,13 +33,13 @@ namespace CrashEngine {
 
 		FramebufferSpecification spec;
 		spec.Height = 1080;
-		spec.Width = 2560;
+		spec.Width = 1080;
 
 		Framebuffer = Framebuffer::Create(spec);
 		Framebuffer->Bind();
 
 		Renderbuffer = Renderbuffer::Create();
-		Renderbuffer->SetStorage(CE_DEPTH_COMPONENT24, 2560, 1080);
+		Renderbuffer->SetStorage(CE_DEPTH_COMPONENT24, 1080, 1080);
 		Renderbuffer->AttachToFramebuffer();
 
 		// set default settings
@@ -66,6 +66,13 @@ namespace CrashEngine {
 
 	void SkyLight::LoadHDR(std::string path)
 	{
+		FramebufferSpecification spec;
+		spec.Height = 1080;
+		spec.Width = 1080;
+
+		Framebuffer = Framebuffer::Create(spec);
+		Framebuffer->Bind();
+
 		directory = path;
 		HDR = TextureHDR::Create(path);
 

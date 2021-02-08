@@ -18,7 +18,7 @@ namespace CrashEngine
 
 		virtual void CreateTextures();
 		virtual void CreateTexture(uint32_t id);
-		virtual void CreateMSAATexture();
+		virtual void CreateMSAATexture(int msaa_value );
 		virtual void InitializeMultipleTextures(const int amount);
 
 		virtual void Resize(uint32_t width, uint32_t height) override;
