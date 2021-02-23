@@ -10,14 +10,9 @@ uniform bool blur;
 
 void main()
 {             
-    const float gamma = 2.2;
-    vec3 hdrColor = texture(scene, TexCoords).rgb;      
+    vec3 Color = texture(scene, TexCoords).rgb;      
     vec3 bloomColor = texture(bloomBlur, TexCoords).rgb;
-    if(blur)hdrColor += bloomColor; // additive blending
-    // tone mapping
-    vec3 result = vec3(1.0) - exp(-hdrColor * exposure);
-    // also gamma correct while we're at it       
-    result = pow(hdrColor, vec3(1.0 / gamma));
+    if(blur)Color += bloomColor; // additive blending
 
-    FragColor = vec4(result, 1);
+    FragColor = vec4(Color, 1);
 }

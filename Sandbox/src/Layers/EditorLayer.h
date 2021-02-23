@@ -14,6 +14,8 @@
 #include "CrashEngine/Scene/Components.h"
 #include "CrashEngine/Scene/Mesh.h"
 
+#include "CrashEngine/PostProcess/PostProcess.h"
+
 #include "Panels/SceneHierarchyPanel.h"
 #include "Panels/SceneEnvironmentPanel.h"
 #include "Panels/MaterialPanel.h"
@@ -42,28 +44,45 @@ namespace CrashEngine {
 		std::shared_ptr<UniformBuffer> m_MatrixUB;
 		std::shared_ptr<CameraController> cameraController;
 
-		Shader* basicShader;
-		Shader* pbrTextureShader;
-
 		glm::mat4 model;
 
 		std::shared_ptr<Sphere> sphere;
 		std::shared_ptr<Cube> cube;
 		std::shared_ptr<Quad> quad;
 
-		std::shared_ptr<Framebuffer> MSAAframebuffer;
-		std::shared_ptr<Renderbuffer> MSAArenderbuffer;
-		std::shared_ptr<Framebuffer> framebuffer;
-
 		std::shared_ptr<SkyLight> skyLight;
 		std::shared_ptr<DirectionalLight> directionalLight;
+		std::shared_ptr<PostProcess> postProcess;
+
+		/*GBuffer shader gives buffers to deffered render*/
+		Shader* GBufferShader;
+
+		/*Shader draws pbr scene from gbuffer images*/
+		Shader* deferredShader;
+
+		/*Shader draws pbr scene from textures of models*/
+		Shader* forwardShader;
+
+		/*Framebuffer witch more samples which needs to be later downscaled(blitted to another framebuffer)*/
+		std::shared_ptr<MSAAFramebuffer> MSAAframebuffer;
+
+		/*Last framebuffer which is shown in ImGui Dockspace Image*/
+		std::shared_ptr<Framebuffer> framebuffer;
+
+		/*Framebuffer which stores GBuffer images*/
+		std::shared_ptr<Framebuffer> deferredframebuffer;
+
+		/*Framebuffer which uses textures directly from models*/
+		std::shared_ptr<Framebuffer> forwardFramebuffer;
+
 
 		float Height;
 		float Width;
 
-		int cascademapselected = 1;
+		int deferred = 0;
 		int msaa = 4;
 		bool metrics = false;
+		bool forward = true;
 	};
 
 }

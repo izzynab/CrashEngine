@@ -14,6 +14,7 @@ namespace CrashEngine {
 
 		std::shared_ptr<Texture2D> CreateTexture(float Width, float Height, Shader* shader);
 		std::shared_ptr<Texture2D> CreateTexture(float Width, float Height, glm::vec3 color);
+
 	private:
 		std::shared_ptr<Framebuffer> framebuffer;
 		std::shared_ptr<Renderbuffer> renderbuffer;

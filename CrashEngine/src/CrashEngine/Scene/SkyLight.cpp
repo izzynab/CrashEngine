@@ -150,5 +150,6 @@ namespace CrashEngine {
 		backgroundShader->Bind();
 		RenderCommand::BindCubemap(Cubemap->GetRendererID(), 0);
 		cube->RenderCube();
+		backgroundShader->Unbind();
 	}
 }

@@ -149,5 +149,6 @@ namespace CrashEngine {
     {
         QuadVA->Bind();
         Renderer::SubmitDebug(QuadVA,6);
+        QuadVA->Unbind();
     }
 }

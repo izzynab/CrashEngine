@@ -6,7 +6,7 @@
 
 namespace CrashEngine
 {
-	CrashEngine::DirectionalLight::DirectionalLight()
+	DirectionalLight::DirectionalLight()
 	{
 		depthMapShader = Shader::Create("depthMap.vert", "depthMap.frag");
 

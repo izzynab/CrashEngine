@@ -1717,6 +1717,7 @@
       <Filter>vendor\glm\glm</Filter>
     </ClInclude>
     <ClInclude Include="src\CrashEngine\Scene\PointLight.h" />
+    <ClInclude Include="src\CrashEngine\PostProcess\PostProcess.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\CrashEngine\Core\Application.cpp">
@@ -1834,6 +1835,7 @@
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\CrashEngine\Scene\PointLight.cpp" />
+    <ClCompile Include="src\CrashEngine\PostProcess\PostProcess.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="vendor\assimp\include\assimp\config.h.in">
@@ -1852,11 +1854,13 @@
     <None Include="src\CrashEngine\Renderer\Shaders\irradiance.frag" />
     <None Include="src\CrashEngine\Renderer\Shaders\pbr.frag" />
     <None Include="src\CrashEngine\Renderer\Shaders\pbr.vert" />
-    <None Include="src\CrashEngine\Renderer\Shaders\pbrTexture.frag" />
     <None Include="src\CrashEngine\Renderer\Shaders\prefilter.frag" />
     <None Include="src\CrashEngine\Renderer\Shaders\Text.frag" />
     <None Include="src\CrashEngine\Renderer\Shaders\blur.frag" />
     <None Include="src\CrashEngine\Renderer\Shaders\mixbloom.frag" />
     <None Include="src\CrashEngine\Renderer\Shaders\brightness.frag" />
+    <None Include="src\CrashEngine\Renderer\Shaders\GammaHDR.frag" />
+    <None Include="src\CrashEngine\Renderer\Shaders\gbuffer.frag" />
+    <None Include="src\CrashEngine\Renderer\Shaders\deferred.frag" />
   </ItemGroup>
 </Project>

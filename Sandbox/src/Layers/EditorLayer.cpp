@@ -22,33 +22,62 @@ namespace CrashEngine {
 
 		cameraController.reset(new CameraController(glm::vec3(0.0f, 0.0f, 3.0f), Width, Height));
 
+		//------------framebuffers--------------------
 		FramebufferSpecification spec;
 		spec.Height = Height;
 		spec.Width = Width;
 
-		MSAAframebuffer = Framebuffer::Create(spec,false);
-		MSAAframebuffer->CreateMSAATexture();
+		MSAAframebuffer = MSAAFramebuffer::Create(spec);
+		MSAAframebuffer->CreateMSAATextures();
+
+		deferredframebuffer = Framebuffer::Create(spec, false);
+		deferredframebuffer->Bind();
+		deferredframebuffer->CreateTexture(0, Color::RGB);//position
+		deferredframebuffer->CreateTexture(1, Color::RGB);//albedo
+		deferredframebuffer->CreateTexture(2, Color::RGB);//normal
+		deferredframebuffer->CreateTexture(3, Color::RGB);//metallic roughness ao
+		deferredframebuffer->InitializeMultipleTextures(4);
+
+		forwardFramebuffer = Framebuffer::Create(spec);
 
 		framebuffer = Framebuffer::Create(spec);
 
+		//------------shaders-------------------------
+		deferredShader = Shader::Create("basic.vert", "deferred.frag");
+		deferredShader->Bind();
 
-		glm::mat4 projection = cameraController->GetCamera().GetProjectionMatrix();
+		deferredShader->SetUniformInt("position", 0);
+		deferredShader->SetUniformInt("albedo", 1);
+		deferredShader->SetUniformInt("normal", 2);
+		deferredShader->SetUniformInt("MetalRoughAO", 3);
 
-		basicShader = Shader::Create("Basic.vert", "Basic.frag");
+		deferredShader->SetUniformInt("irradianceMap", 4);
+		deferredShader->SetUniformInt("prefilterMap", 5);
+		deferredShader->SetUniformInt("brdfLUT", 6);
+		deferredShader->SetUniformInt("shadowMap", 7);
 
-		pbrTextureShader = Shader::Create("pbr.vert", "pbrTexture.frag");
-		pbrTextureShader->Bind();
+		GBufferShader = Shader::Create("pbr.vert", "gbuffer.frag");
+		GBufferShader->Bind();
+		GBufferShader->SetUniformInt("albedoMap", 0);
+		GBufferShader->SetUniformInt("normalMap", 1);
+		GBufferShader->SetUniformInt("metallicMap", 2);
+		GBufferShader->SetUniformInt("roughnessMap", 3);
+		GBufferShader->SetUniformInt("aoMap", 4);
 
-		pbrTextureShader->SetUniformInt("albedoMap", 0);
-		pbrTextureShader->SetUniformInt("normalMap", 1);
-		pbrTextureShader->SetUniformInt("metallicMap", 2);
-		pbrTextureShader->SetUniformInt("roughnessMap", 3);
-		pbrTextureShader->SetUniformInt("aoMap", 4);
 
-		pbrTextureShader->SetUniformInt("irradianceMap", 5);
-		pbrTextureShader->SetUniformInt("prefilterMap", 6);
-		pbrTextureShader->SetUniformInt("brdfLUT", 7);
-		pbrTextureShader->SetUniformInt("shadowMap", 8);
+		forwardShader = Shader::Create("pbr.vert", "pbr.frag");
+		forwardShader->Bind();
+
+		forwardShader->SetUniformInt("albedoMap", 0);
+		forwardShader->SetUniformInt("normalMap", 1);
+		forwardShader->SetUniformInt("metallicMap", 2);
+		forwardShader->SetUniformInt("roughnessMap", 3);
+		forwardShader->SetUniformInt("aoMap", 4);
+
+		forwardShader->SetUniformInt("irradianceMap", 5);
+		forwardShader->SetUniformInt("prefilterMap", 6);
+		forwardShader->SetUniformInt("brdfLUT", 7);
+		forwardShader->SetUniformInt("shadowMap", 8);
 
 
 		RenderCommand::SetViewport(Width, Height);
@@ -56,18 +85,19 @@ namespace CrashEngine {
 		//-------------------------End of initialize-----------------------------------------
 		m_ActiveScene = std::make_shared<Scene>();
 
+		postProcess.reset(new PostProcess);
+
 		directionalLight.reset(new DirectionalLight);
 		directionalLight->camera = &cameraController->GetCamera();
 		directionalLight->m_ActiveScene = m_ActiveScene;
 		directionalLight->Height = Application::Get().GetWindow().GetHeight();
 		directionalLight->Width = Application::Get().GetWindow().GetWidth();
-		directionalLight->pbrTextureShader = pbrTextureShader;
+		directionalLight->pbrTextureShader = deferredShader;
 
 		skyLight.reset(new SkyLight);
 
-		m_ActiveScene->SetDefaultShader(pbrTextureShader);
+		m_ActiveScene->SetDefaultShader(GBufferShader);
 		m_ActiveScene->SetDepthShader(directionalLight->depthMapShader);
-		m_ActiveScene->SetFramebuffers(MSAAframebuffer,framebuffer);
 
 		HierarchyPanel.reset(new SceneHierarchyPanel(m_ActiveScene));
 		EnvironmentPanel.reset(new SceneEnvironmentPanel(skyLight, directionalLight, m_ActiveScene));
@@ -77,14 +107,18 @@ namespace CrashEngine {
 
 		//-------------------------End of initialize-----------------------------------------
 
+		glm::mat4 projection = cameraController->GetCamera().GetProjectionMatrix();
+
 		UniformBufferLayout uniformLayout = {
 			{ ShaderDataType::Mat4, "projection" },
 			{ ShaderDataType::Mat4, "view"},
 		};
 
 		m_MatrixUB.reset(UniformBuffer::Create(uniformLayout, 0));
-		m_MatrixUB->linkShader(pbrTextureShader->GetID(), "Matrices");
+		m_MatrixUB->linkShader(forwardShader->GetID(), "Matrices");
+		m_MatrixUB->linkShader(deferredShader->GetID(), "Matrices");
 		m_MatrixUB->linkShader(skyLight->GetSkyShader()->GetID(), "Matrices");
+		m_MatrixUB->linkShader(GBufferShader->GetID(), "Matrices");
 
 		m_MatrixUB->setData("projection", glm::value_ptr(projection));
 
@@ -103,34 +137,89 @@ namespace CrashEngine {
 		Height = imguilayer->CurrentWindowView.y;
 		Width = imguilayer->CurrentWindowView.x;
 
-		MSAAframebuffer->Bind();
-		RenderCommand::SetViewport(Width, Height);
 		MSAAframebuffer->Resize(Width, Height);
-		RenderCommand::SetClearColor({ 1.f, 0.f, 0.0f, 0.0f });
-		RenderCommand::Clear();
+		deferredframebuffer->Resize(Width, Height);
+		forwardFramebuffer->Resize(Width, Height);
+		framebuffer->Resize(Width, Height);
 
 		glm::mat4 view = cameraController->GetCamera().GetViewMatrix();
 		m_MatrixUB->setData("view", glm::value_ptr(view));
-		
-		pbrTextureShader->Bind();
-		pbrTextureShader->SetUniformVec3("camPos", cameraController->GetCamera().GetPosition());
+
+		//-----------deffered------------------------
+		MSAAframebuffer->Bind();
+		RenderCommand::SetViewport(Width, Height);
+		RenderCommand::SetClearColor({ 1.f, 0.f, 0.0f, 0.0f });
+		RenderCommand::Clear();
+
+		//GBufferShader->Bind();
+		//GBufferShader->SetUniformVec3("camPos", cameraController->GetCamera().GetPosition());
+		//m_MatrixUB->setData("view", glm::value_ptr(view));
+
+		m_ActiveScene->OnUpdate(ts);
+		MSAAframebuffer->Unbind();
+
+		MSAAframebuffer->BlitToFramebuffer(deferredframebuffer);
+
+		framebuffer->Bind();
+		RenderCommand::SetViewport(Width, Height);
+		RenderCommand::Clear();
+
+		deferredShader->Bind();
+
+		skyLight->BindIrradianceMap(4);
+		skyLight->BindPrefilterMap(5);
+		skyLight->BindbrdfTexture(6);
+
+
+		RenderCommand::BindTexture(deferredframebuffer->GetColorAttachmentRendererID(0), 0);
+		RenderCommand::BindTexture(deferredframebuffer->GetColorAttachmentRendererID(1), 1);
+		RenderCommand::BindTexture(deferredframebuffer->GetColorAttachmentRendererID(2), 2);
+		RenderCommand::BindTexture(deferredframebuffer->GetColorAttachmentRendererID(3), 3);
+
+		deferredShader->SetUniformVec3("lightRotation", directionalLight->rotation);
+		deferredShader->SetUniformVec3("lightColor", directionalLight->color * directionalLight->intensity);
+		deferredShader->SetUniformVec3("camPos", cameraController->GetCamera().GetPosition());
+		//RenderCommand::BindTexture(directionalLight->depthMap[0]->GetRendererID(), 8);
+
+		deferredShader->Bind();
+		quad->RenderQuad();
+
+		//skyLight->RenderSky();
+
+		//m_ActiveScene->BlurRender();
+
+		framebuffer->Unbind();
+		//-----------deffered------------------------
+
+
+		//-----------forward------------------------
+		forwardFramebuffer->Bind();
+		RenderCommand::SetViewport(Width, Height);
+		RenderCommand::SetClearColor({ 1.f, 1.f, 0.0f, 0.0f });
+		RenderCommand::Clear();
+
+		forwardShader->Bind();
+		forwardShader->SetUniformVec3("lightRotation", directionalLight->rotation);
+		forwardShader->SetUniformVec3("lightColor", directionalLight->color * directionalLight->intensity);
+		forwardShader->SetUniformVec3("camPos", cameraController->GetCamera().GetPosition());
 
 		skyLight->BindIrradianceMap(5);
 		skyLight->BindPrefilterMap(6);
 		skyLight->BindbrdfTexture(7);
 
-		pbrTextureShader->Bind();
-		pbrTextureShader->SetUniformVec3("lightRotation", directionalLight->rotation);
-		pbrTextureShader->SetUniformVec3("lightColor", directionalLight->color * directionalLight->intensity);
-		//RenderCommand::BindTexture(directionalLight->depthMap[0]->GetRendererID(), 8);
+	
+		m_ActiveScene->OnUpdate(ts, forwardShader);//Becouse of second renderd of scene metal surfaces are black
+		skyLight->RenderSky();
 
-		m_ActiveScene->OnUpdate(ts);
-
-		skyLight->RenderSky();	
-
-		m_ActiveScene->BlurRender();
+		forwardFramebuffer->Unbind();
 
 
+		//-----------forward------------------------
+
+
+		//------------post process---------------------
+		postProcess->Blur(forwardFramebuffer);
+		postProcess->GammaHDRCorretion(forwardFramebuffer);
 		Renderer::EndScene();
 
 
@@ -153,14 +242,13 @@ namespace CrashEngine {
 					directionalLight->m_ActiveScene = m_ActiveScene;
 					directionalLight->Height = Application::Get().GetWindow().GetHeight();
 					directionalLight->Width = Application::Get().GetWindow().GetWidth();
-					directionalLight->pbrTextureShader = pbrTextureShader;
+					directionalLight->pbrTextureShader = deferredShader;
 
 					skyLight.reset(new SkyLight);
 					m_MatrixUB->linkShader(skyLight->GetSkyShader()->GetID(), "Matrices");
 
-					m_ActiveScene->SetDefaultShader(pbrTextureShader);
+					m_ActiveScene->SetDefaultShader(GBufferShader);
 					m_ActiveScene->SetDepthShader(directionalLight->depthMapShader);
-					m_ActiveScene->SetFramebuffers(MSAAframebuffer, framebuffer);
 
 					HierarchyPanel.reset(new SceneHierarchyPanel(m_ActiveScene));
 					EnvironmentPanel.reset(new SceneEnvironmentPanel(skyLight, directionalLight, m_ActiveScene));
@@ -177,14 +265,13 @@ namespace CrashEngine {
 						directionalLight->m_ActiveScene = m_ActiveScene;
 						directionalLight->Height = Application::Get().GetWindow().GetHeight();
 						directionalLight->Width = Application::Get().GetWindow().GetWidth();
-						directionalLight->pbrTextureShader = pbrTextureShader;
+						directionalLight->pbrTextureShader = deferredShader;
 
 						skyLight.reset(new SkyLight);
 						m_MatrixUB->linkShader(skyLight->GetSkyShader()->GetID(), "Matrices");
 
-						m_ActiveScene->SetDefaultShader(pbrTextureShader);
+						m_ActiveScene->SetDefaultShader(GBufferShader);
 						m_ActiveScene->SetDepthShader(directionalLight->depthMapShader);
-						m_ActiveScene->SetFramebuffers(MSAAframebuffer, framebuffer);
 
 						HierarchyPanel.reset(new SceneHierarchyPanel(m_ActiveScene));
 						EnvironmentPanel.reset(new SceneEnvironmentPanel(skyLight, directionalLight, m_ActiveScene));
@@ -215,7 +302,7 @@ namespace CrashEngine {
 			ImGui::EndMainMenuBar();
 		}
 
-		imguilayer->Dockspace(framebuffer);
+		imguilayer->Dockspace((forward) ? forwardFramebuffer : framebuffer);
 
 		if (imguilayer->MenuEnabled) { imguilayer->Menu(); }
 
@@ -228,16 +315,16 @@ namespace CrashEngine {
 	
 		ImGui::Begin("Debug");
 		ImGui::SliderFloat("Camera Speed", &cameraController->m_CameraSpeed, 1.f, 100.f);
+		ImGui::Checkbox("forward", &forward);
 		ImGui::SliderInt("msaa value", &msaa, 1,16);
 		if(ImGui::Button("msaa", ImVec2(100, 100)))
 		{
-			FramebufferSpecification spec;
-			spec.Height = Height;
-			spec.Width = Width;
+			//FramebufferSpecification spec;
+			///spec.Height = Height;
+			//spec.Width = Width;
 
-			MSAAframebuffer = Framebuffer::Create(spec, false);
-			MSAAframebuffer->CreateMSAATexture(msaa);
-			m_ActiveScene->SetFramebuffers(MSAAframebuffer, framebuffer);
+			//MSAAframebuffer = Framebuffer::Create(spec, false);
+			//MSAAframebuffer->CreateMSAATexture(msaa);
 		}
 
 		ImGui::Checkbox("metrics", &metrics);
@@ -245,9 +332,9 @@ namespace CrashEngine {
 		{
 			imguilayer->WindowMetrics();
 		}
-		//ImGui::SliderInt("Cascade map", &cascademapselected, 1, 3);
-		//ImGui::Image((void*)directionalLight->depthMap[cascademapselected-1]->GetRendererID(), ImVec2(400,400));
-		//ImGui::Image((void*)framebuffer->GetColorAttachmentRendererID(0), ImVec2(400, 400));
+		ImGui::SliderInt("deferred", &deferred, 0, 3);
+
+		ImGui::Image((void*)deferredframebuffer->GetColorAttachmentRendererID(deferred), ImVec2(400, 400),ImVec2(1,1), ImVec2(0, 0));
 		ImGui::End();
 
 

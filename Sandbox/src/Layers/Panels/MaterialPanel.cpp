@@ -32,10 +32,6 @@ namespace CrashEngine {
 		if (m_Mesh->material->roughnessLoad)roughness_loaded = m_Mesh->material->roughness;
 		else roughness_loaded = texcreator->CreateTexture(200, 200, glm::vec3(0.2, 0.2, 0.2));
 
-
-		lastalbedoColor = m_Mesh->material->lastalbedoColor;
-		lastmetallicValue = m_Mesh->material->metallicValue;
-		lastroughnessValue = m_Mesh->material->roughnessValue;
 	}
 
 	void MaterialPanel::OnImGuiRender()
@@ -71,13 +67,15 @@ namespace CrashEngine {
 
 				if (!m_Mesh->material->albedoTextureUse)
 				{
-					ImGui::ColorPicker3("Albedo color", &m_Mesh->material->albedoColor.x);
+					//if (ImGui::ColorPicker3("Albedo color", &m_Mesh->material->albedoColor.x))
+					{
+						//m_Mesh->material->albedo = m_Mesh->material->texcreator->CreateTexture(200, 200, m_Mesh->material->albedoColor);
+					}
 
-					if(lastalbedoColor!= m_Mesh->material->albedoColor)m_Mesh->material->albedo = m_Mesh->material->texcreator->CreateTexture(200, 200, m_Mesh->material->albedoColor);
 				}
 				else
 				{
-					if(albedo_loaded)m_Mesh->material->albedo = albedo_loaded;
+					//if(albedo_loaded)m_Mesh->material->albedo = albedo_loaded;
 				}
 
 
@@ -103,8 +101,10 @@ namespace CrashEngine {
 
 				if (!m_Mesh->material->metallicTextureUse)
 				{
-					ImGui::SliderFloat("Metallic Value", &m_Mesh->material->metallicValue, 0.f, 1.f);
-					if (lastmetallicValue != m_Mesh->material->metallicValue)m_Mesh->material->metallic = m_Mesh->material->texcreator->CreateTexture(200, 200, glm::vec3(m_Mesh->material->metallicValue, m_Mesh->material->metallicValue, m_Mesh->material->metallicValue));
+					if (ImGui::SliderFloat("Metallic Value", &m_Mesh->material->metallicValue, 0.f, 1.f))
+					{
+						m_Mesh->material->metallic = m_Mesh->material->texcreator->CreateTexture(200, 200, glm::vec3(m_Mesh->material->metallicValue, m_Mesh->material->metallicValue, m_Mesh->material->metallicValue));
+					}
 				}
 				else
 				{
@@ -134,8 +134,10 @@ namespace CrashEngine {
 
 				if (!m_Mesh->material->roughnessTextureUse)
 				{
-					ImGui::SliderFloat("Roughness Value", &m_Mesh->material->roughnessValue, 0.f, 1.f);
-					if (lastroughnessValue != m_Mesh->material->roughnessValue)m_Mesh->material->roughness = m_Mesh->material->texcreator->CreateTexture(200, 200, glm::vec3(m_Mesh->material->roughnessValue, m_Mesh->material->roughnessValue, m_Mesh->material->roughnessValue));
+					if (ImGui::SliderFloat("Roughness Value", &m_Mesh->material->roughnessValue, 0.f, 1.f))
+					{
+						m_Mesh->material->roughness = m_Mesh->material->texcreator->CreateTexture(200, 200, glm::vec3(m_Mesh->material->roughnessValue, m_Mesh->material->roughnessValue, m_Mesh->material->roughnessValue));
+					}	
 				}
 				else
 				{
@@ -177,7 +179,6 @@ namespace CrashEngine {
 
 				ImGui::TreePop();
 			}
-
 
 		}
 

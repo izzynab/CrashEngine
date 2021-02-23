@@ -152,6 +152,7 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\CrashEngine\PostProcess\PostProcess.h" />
     <ClInclude Include="src\Crash.h" />
     <ClInclude Include="src\CrashEngine\Core\Application.h" />
     <ClInclude Include="src\CrashEngine\Core\Core.h" />
@@ -701,6 +702,7 @@
     <ClInclude Include="vendor\glm\glm\vector_relational.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\CrashEngine\PostProcess\PostProcess.cpp" />
     <ClCompile Include="src\CrashEngine\Core\Application.cpp" />
     <ClCompile Include="src\CrashEngine\Core\Layer.cpp" />
     <ClCompile Include="src\CrashEngine\Core\LayerStack.cpp" />
@@ -752,14 +754,16 @@
     <None Include="src\CrashEngine\Renderer\Shaders\brdf.frag" />
     <None Include="src\CrashEngine\Renderer\Shaders\brightness.frag" />
     <None Include="src\CrashEngine\Renderer\Shaders\cubemap.vert" />
+    <None Include="src\CrashEngine\Renderer\Shaders\gbuffer.frag" />
     <None Include="src\CrashEngine\Renderer\Shaders\depthMap.frag" />
     <None Include="src\CrashEngine\Renderer\Shaders\depthMap.vert" />
     <None Include="src\CrashEngine\Renderer\Shaders\equirectangularToCubemap.frag" />
+    <None Include="src\CrashEngine\Renderer\Shaders\GammaHDR.frag" />
     <None Include="src\CrashEngine\Renderer\Shaders\irradiance.frag" />
     <None Include="src\CrashEngine\Renderer\Shaders\mixbloom.frag" />
     <None Include="src\CrashEngine\Renderer\Shaders\pbr.frag" />
     <None Include="src\CrashEngine\Renderer\Shaders\pbr.vert" />
-    <None Include="src\CrashEngine\Renderer\Shaders\pbrTexture.frag" />
+    <None Include="src\CrashEngine\Renderer\Shaders\deferred.frag" />
     <None Include="src\CrashEngine\Renderer\Shaders\prefilter.frag" />
     <None Include="src\CrashEngine\Renderer\Shaders\Text.frag" />
     <None Include="src\CrashEngine\Renderer\Shaders\Text.vert" />

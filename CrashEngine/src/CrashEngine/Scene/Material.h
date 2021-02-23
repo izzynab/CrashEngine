@@ -27,7 +27,6 @@ namespace CrashEngine {
 		bool roughnessTextureUse = false;
 
 		glm::vec4 albedoColor = glm::vec4(0.2f, 0.2f, 0.2f, 0.0f);
-		glm::vec4 lastalbedoColor = glm::vec4(0.2f, 0.2f, 0.2f, 0.0f);
 		float metallicValue = 0.5f;
 		float roughnessValue = 0.5f;
 

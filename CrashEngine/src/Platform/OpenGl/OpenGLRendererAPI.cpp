@@ -71,6 +71,7 @@ namespace CrashEngine {
 	{
 		glBindFramebuffer(GL_READ_FRAMEBUFFER, readFreambuffer->GetRenderID());
 		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, drawFramebuffer->GetRenderID());
+
 		glBlitFramebuffer(0, 0, readFreambuffer->GetSpecification().Width, readFreambuffer->GetSpecification().Height, 0, 0, drawFramebuffer->GetSpecification().Width, drawFramebuffer->GetSpecification().Height, GL_COLOR_BUFFER_BIT, GL_NEAREST);
 	}
 

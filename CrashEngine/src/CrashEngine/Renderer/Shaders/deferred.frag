@@ -1,19 +1,15 @@
 #version 330 core
 layout (location = 0) out vec4 FragColor;
 
-in vec3 WorldPos;
-in vec3 Normal;
 in vec2 TexCoords;
-in vec3 aTangent;
-in vec3 aBitangent;
-in vec4 FragPosLightSpace;
+//in vec4 FragPosLightSpace;
 
 // material parameters
-uniform sampler2D albedoMap;
-uniform sampler2D normalMap;
-uniform sampler2D metallicMap;
-uniform sampler2D roughnessMap;
-uniform sampler2D aoMap;
+uniform sampler2D position;
+uniform sampler2D albedo;
+uniform sampler2D normal;
+uniform sampler2D MetalRoughAO;
+
 uniform sampler2D shadowMap;
 
 // IBL
@@ -25,31 +21,9 @@ uniform sampler2D brdfLUT;
 uniform vec3 lightRotation;
 uniform vec3 lightColor;
 
-
 uniform vec3 camPos;
 
 const float PI = 3.14159265359;
-// ----------------------------------------------------------------------------
-// Easy trick to get tangent-normals to world-space to keep PBR code simplified.
-// Don't worry if you don't get what's going on; you generally want to do normal 
-// mapping the usual way for performance anways; I do plan make a note of this 
-// technique somewhere later in the normal mapping tutorial.
-vec3 getNormalFromMap()
-{
-    vec3 tangentNormal = texture(normalMap, TexCoords).xyz * 2.0 - 1.0;
-
-    vec3 Q1  = dFdx(WorldPos);
-    vec3 Q2  = dFdy(WorldPos);
-    vec2 st1 = dFdx(TexCoords);
-    vec2 st2 = dFdy(TexCoords);
-
-    vec3 N   = normalize(Normal);
-    vec3 T  = normalize(Q1*st2.t - Q2*st1.t);
-    vec3 B  = -normalize(cross(N, T));
-    mat3 TBN = mat3(T, B, N);
-
-    return normalize(TBN * tangentNormal);
-}
 // ----------------------------------------------------------------------------
 float DistributionGGX(vec3 N, vec3 H, float roughness)
 {
@@ -107,8 +81,8 @@ float ShadowCalculation(vec4 fragPosLightSpace)
     // get depth of current fragment from light's perspective
     float currentDepth = projCoords.z;
     // calculate bias (based on depth map resolution and slope)
-    vec3 normal = getNormalFromMap();
-    vec3 lightDir = normalize(vec3(-2.0f, 4.0f, -1.0f) - WorldPos);
+    vec3 normal = texture(normal,TexCoords).rgb;
+    vec3 lightDir = normalize(vec3(-2.0f, 4.0f, -1.0f) - texture(position,TexCoords).rgb);
     float bias = max(0.05 * (1.0 - dot(normal, lightDir)), 0.005);
     // check whether current frag pos is in shadow
     // float shadow = currentDepth - bias > closestDepth  ? 1.0 : 0.0;
@@ -136,14 +110,14 @@ float ShadowCalculation(vec4 fragPosLightSpace)
 void main()
 {		
     // material properties
-    vec3 albedo = pow(texture(albedoMap, TexCoords).rgb, vec3(2.2));
-    float metallic = texture(metallicMap, TexCoords).r;
-    float roughness = texture(roughnessMap, TexCoords).r;
-    float ao = texture(aoMap, TexCoords).r;
+    vec3 albedo = pow(texture(albedo, TexCoords).rgb, vec3(2.2));
+    float metallic = texture(MetalRoughAO, TexCoords).r;
+    float roughness = texture(MetalRoughAO, TexCoords).g;
+    float ao = texture(MetalRoughAO, TexCoords).b;
        
     // input lighting data
-    vec3 N = getNormalFromMap();
-    vec3 V = normalize(camPos - WorldPos);
+    vec3 N = texture(normal,TexCoords).rgb;
+    vec3 V = normalize(camPos - texture(position,TexCoords).rgb);
     vec3 R = reflect(-V, N); 
 
     // calculate reflectance at normal incidence; if dia-electric (like plastic) use F0 
@@ -207,9 +181,9 @@ void main()
     vec3 ambient = (kD * diffuse + specular) * ao;
     
     
-    float shadow = ShadowCalculation(FragPosLightSpace);   
-    if(shadow == 1) Lo = vec3(0);
+    //float shadow = ShadowCalculation(FragPosLightSpace);   
+    //if(shadow == 1) Lo = vec3(0);
     vec3 color = ambient + Lo;
-  
+    //vec3 color = ambient ;
     FragColor = vec4(color , 1.0);
 }

@@ -28,26 +28,20 @@ namespace CrashEngine {
 
 		void DestroyEntity(Entity entity);
 
-		void OnUpdate(Timestep ts);
+		void OnUpdate(Timestep ts, Shader* shader = nullptr);
 		void OnViewportResize(uint32_t width, uint32_t height);
 
 		void DepthRender();
-		void BlurRender();
 
 		inline void SetDefaultShader(Shader* shader) { defaultShader = shader; }
 		inline void SetDepthShader(Shader* shader) { depthShader = shader; }
-		inline void SetFramebuffers(std::shared_ptr<Framebuffer>& MSAAFramebuffer, std::shared_ptr<Framebuffer> &FinalFramebuffer) { framebuffer = MSAAFramebuffer, finalFramebuffer = FinalFramebuffer; }
-	private:
+		
 		template<typename T>
 		void OnComponentAdded(Entity entity, T& component);
 
 	public://public for test
 		entt::registry m_Registry;
-		std::shared_ptr<Framebuffer> framebuffer;
-		std::shared_ptr<Framebuffer> finalFramebuffer;
 
-		bool blur = true;
-		float exposure = 1.f;
 	private:
 		uint32_t m_ViewportWidth = 0, m_ViewportHeight = 0;
 
@@ -58,13 +52,7 @@ namespace CrashEngine {
 		Shader *defaultShader;
 		Shader* depthShader;
 
-		Shader* blurShader;
-		Shader* BloomMixShader;
-		Shader* brightShader;
-		std::shared_ptr<Framebuffer> blurFramebuffer[2];
-		std::shared_ptr<Framebuffer> bloom;
-		std::shared_ptr<Framebuffer> draw_framebuffer;
-		std::shared_ptr<Quad> quad;
+		
 
 
 	};
