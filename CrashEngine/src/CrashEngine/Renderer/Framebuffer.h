@@ -25,6 +25,8 @@ namespace CrashEngine{
 		virtual void Bind() = 0;
 		virtual void Unbind() = 0;
 
+		virtual void BlitDepthToFramebuffer(std::shared_ptr<Framebuffer> framebuffer) = 0;
+
 		virtual void CreateTextures() = 0;
 		virtual void CreateTexture(uint32_t id, Color color = Color::RGBA) = 0;
 		virtual void InitializeMultipleTextures(const int amount) = 0;

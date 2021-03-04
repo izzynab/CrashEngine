@@ -7,14 +7,13 @@ namespace CrashEngine {
 
 	static const uint32_t s_MaxFramebufferSize = 8192;
 
-	OpenGLFramebuffer::OpenGLFramebuffer(const FramebufferSpecification& spec, bool createTextures)
+	OpenGLFramebuffer::OpenGLFramebuffer(const FramebufferSpecification& spec, bool createTextures )
 		: m_Specification(spec)
 	{
 		Invalidate();
 		if (createTextures)	CreateTextures();
 		else
 		{
-
 			glCreateTextures(GL_TEXTURE_2D, 1, &m_DepthAttachment);
 			glBindTexture(GL_TEXTURE_2D, m_DepthAttachment);
 			glTexStorage2D(GL_TEXTURE_2D, 1, GL_DEPTH24_STENCIL8, m_Specification.Width, m_Specification.Height);
@@ -51,6 +50,18 @@ namespace CrashEngine {
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 
+	void OpenGLFramebuffer::BlitDepthToFramebuffer(std::shared_ptr<Framebuffer> framebuffer)
+	{
+		Bind();
+		glBindFramebuffer(GL_READ_FRAMEBUFFER, m_RendererID);
+		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, framebuffer->GetRenderID());
+	
+		glReadBuffer(GL_DEPTH_ATTACHMENT);
+		glDrawBuffer(GL_DEPTH_ATTACHMENT);
+		glBlitFramebuffer(0, 0, m_Specification.Width, m_Specification.Height, 0, 0, framebuffer->GetSpecification().Width, framebuffer->GetSpecification().Height, GL_DEPTH_BUFFER_BIT, GL_NEAREST);
+		Unbind();
+	}
+
 	void OpenGLFramebuffer::CreateTextures()
 	{
 		CreateTexture(0,Color::RGBA);
@@ -67,11 +78,11 @@ namespace CrashEngine {
 
 	void OpenGLFramebuffer::CreateTexture(uint32_t id, Color color)
 	{
-		m_textures.push_back(0);
+		m_textures.push_back(id);
 		glCreateTextures(GL_TEXTURE_2D, 1, &m_textures[id]);
 		glBindTexture(GL_TEXTURE_2D, m_textures[id]);
 
-		switch (color)
+		/*switch (color)
 		{
 		case Color::RG:
 			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, m_Specification.Width, m_Specification.Height, 0, GL_RG, GL_UNSIGNED_BYTE, nullptr);
@@ -79,7 +90,8 @@ namespace CrashEngine {
 			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, m_Specification.Width, m_Specification.Height, 0, GL_RGB, GL_UNSIGNED_BYTE, nullptr);
 		case Color::RGBA:
 			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, m_Specification.Width, m_Specification.Height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
-		}
+		}*/
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, m_Specification.Width, m_Specification.Height, 0, GL_RGBA, GL_FLOAT, nullptr);
 
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -126,8 +138,9 @@ namespace CrashEngine {
 	void OpenGLFramebuffer::SetDepthTexture(int texTarget, uint32_t textureID)
 	{
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, texTarget, textureID,0);
-		glDrawBuffer(GL_NONE);
-		glReadBuffer(GL_NONE);
+		//glDrawBuffer(GL_NONE);
+		//glReadBuffer(GL_NONE);
+		m_DepthAttachment = textureID;
 	}
 
 	void OpenGLFramebuffer::SetNewTexture(uint32_t width, uint32_t height)
@@ -135,7 +148,7 @@ namespace CrashEngine {
 		for (int i = 0; i < m_textures.size(); i++)
 		{
 			glBindTexture(GL_TEXTURE_2D, m_textures[i]);
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, width, height, 0, GL_RGBA, GL_FLOAT, nullptr);
 		}
 	}
 
@@ -218,8 +231,8 @@ namespace CrashEngine {
 	{
 		for (int i = 0; i < m_textures.size(); i++)
 		{
-			glBindTexture(GL_TEXTURE_2D, m_textures[i]);
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+			glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, m_textures[i]);
+			glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, msaa, GL_RGBA16F, m_Specification.Width, m_Specification.Height, GL_TRUE);
 		}
 	}
 
@@ -247,7 +260,7 @@ namespace CrashEngine {
 		m_textures.push_back(id);
 		glCreateTextures(GL_TEXTURE_2D_MULTISAMPLE, 1, &m_textures[id]);
 		glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, m_textures[id]);
-		switch (color)
+		/*switch (color)
 		{
 		case Color::RG:
 			glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, msaa, GL_RG, m_Specification.Width, m_Specification.Height, GL_TRUE);
@@ -255,7 +268,9 @@ namespace CrashEngine {
 			glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, msaa, GL_RGB, m_Specification.Width, m_Specification.Height, GL_TRUE);
 		case Color::RGBA:
 			glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, msaa, GL_RGBA, m_Specification.Width, m_Specification.Height, GL_TRUE);
-		}
+		}*/
+		glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, msaa, GL_RGBA16F, m_Specification.Width, m_Specification.Height, GL_TRUE);
+		
 		
 		glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, 0);
 

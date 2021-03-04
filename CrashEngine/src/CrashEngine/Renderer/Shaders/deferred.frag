@@ -24,6 +24,7 @@ uniform vec3 lightColor;
 uniform vec3 camPos;
 
 const float PI = 3.14159265359;
+
 // ----------------------------------------------------------------------------
 float DistributionGGX(vec3 N, vec3 H, float roughness)
 {
@@ -180,10 +181,10 @@ void main()
 
     vec3 ambient = (kD * diffuse + specular) * ao;
     
-    
     //float shadow = ShadowCalculation(FragPosLightSpace);   
     //if(shadow == 1) Lo = vec3(0);
     vec3 color = ambient + Lo;
     //vec3 color = ambient ;
     FragColor = vec4(color , 1.0);
+
 }

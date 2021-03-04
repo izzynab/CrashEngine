@@ -38,14 +38,8 @@ vec3 getNormalFromMap()
 
 void main()
 {    
-    //float near = 0.1; 
-   // float far  = 100.0; 
-
-    //float z = gl_FragCoord.z * 2.0 - 1.0; // back to NDC 
-    //float depth = (2.0 * near * far) / (far + near - z * (far - near)) / far; // divide by far for demonstration
-    //gPosition = vec4(vec3(depth),1);
-
     gPosition = vec4(WorldPos,1);
+
     gAlbedo = vec4(texture(albedoMap, TexCoords).rgb,1);
 
     gNormal = vec4(getNormalFromMap(),1);

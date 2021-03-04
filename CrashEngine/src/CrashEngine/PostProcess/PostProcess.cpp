@@ -35,6 +35,12 @@ namespace CrashEngine {
 		BloomMixShader->Bind();
 		BloomMixShader->SetUniformInt("scene", 0);
 		BloomMixShader->SetUniformInt("bloomBlur", 1);
+
+		//----------------FXAA-------------------------
+		FXAAShader = Shader::Create("Basic.vert", "fxaa.frag");
+
+		FXAAShader->Bind();
+		FXAAShader->SetUniformInt("colorTexture", 0);
 	}
 
 	void PostProcess::Blur(std::shared_ptr<Framebuffer>& framebuffer)
@@ -109,5 +115,22 @@ namespace CrashEngine {
 
 		framebuffer->Unbind();
 
+	}
+
+	void PostProcess::ApplyFXAA(std::shared_ptr<Framebuffer>& framebuffer)
+	{
+		draw_framebuffer->Resize(framebuffer->GetSpecification().Width, framebuffer->GetSpecification().Height);
+		RenderCommand::BlitFramebuffers(framebuffer, draw_framebuffer);
+
+		framebuffer->Bind();
+		RenderCommand::Clear();
+		FXAAShader->Bind();
+		glm::vec2 vector = glm::vec2(1 / float(framebuffer->GetSpecification().Width), 1 / float(framebuffer->GetSpecification().Height));
+		FXAAShader->SetUniformVec2("inverseScreenSize", vector);
+		CE_CORE_INFO("{0},{1}", vector.x, vector.y);
+		RenderCommand::BindTexture(draw_framebuffer->GetColorAttachmentRendererID(), 0);
+		quad->RenderQuad();
+
+		framebuffer->Unbind();
 	}
 }

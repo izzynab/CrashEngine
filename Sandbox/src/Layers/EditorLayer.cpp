@@ -32,10 +32,10 @@ namespace CrashEngine {
 
 		deferredframebuffer = Framebuffer::Create(spec, false);
 		deferredframebuffer->Bind();
-		deferredframebuffer->CreateTexture(0, Color::RGB);//position
-		deferredframebuffer->CreateTexture(1, Color::RGB);//albedo
-		deferredframebuffer->CreateTexture(2, Color::RGB);//normal
-		deferredframebuffer->CreateTexture(3, Color::RGB);//metallic roughness ao
+		deferredframebuffer->CreateTexture(0, Color::RGBA);//position
+		deferredframebuffer->CreateTexture(1, Color::RGBA);//albedo
+		deferredframebuffer->CreateTexture(2, Color::RGBA);//normal
+		deferredframebuffer->CreateTexture(3, Color::RGBA);//metallic roughness ao
 		deferredframebuffer->InitializeMultipleTextures(4);
 
 		forwardFramebuffer = Framebuffer::Create(spec);
@@ -146,19 +146,16 @@ namespace CrashEngine {
 		m_MatrixUB->setData("view", glm::value_ptr(view));
 
 		//-----------deffered------------------------
-		MSAAframebuffer->Bind();
+
+		deferredframebuffer->Bind();
 		RenderCommand::SetViewport(Width, Height);
 		RenderCommand::SetClearColor({ 1.f, 0.f, 0.0f, 0.0f });
 		RenderCommand::Clear();
 
-		//GBufferShader->Bind();
-		//GBufferShader->SetUniformVec3("camPos", cameraController->GetCamera().GetPosition());
-		//m_MatrixUB->setData("view", glm::value_ptr(view));
-
 		m_ActiveScene->OnUpdate(ts);
-		MSAAframebuffer->Unbind();
+		deferredframebuffer->Unbind();
 
-		MSAAframebuffer->BlitToFramebuffer(deferredframebuffer);
+		//MSAAframebuffer->BlitToFramebuffer(deferredframebuffer);
 
 		framebuffer->Bind();
 		RenderCommand::SetViewport(Width, Height);
@@ -166,15 +163,14 @@ namespace CrashEngine {
 
 		deferredShader->Bind();
 
-		skyLight->BindIrradianceMap(4);
-		skyLight->BindPrefilterMap(5);
-		skyLight->BindbrdfTexture(6);
-
-
 		RenderCommand::BindTexture(deferredframebuffer->GetColorAttachmentRendererID(0), 0);
 		RenderCommand::BindTexture(deferredframebuffer->GetColorAttachmentRendererID(1), 1);
 		RenderCommand::BindTexture(deferredframebuffer->GetColorAttachmentRendererID(2), 2);
 		RenderCommand::BindTexture(deferredframebuffer->GetColorAttachmentRendererID(3), 3);
+
+		skyLight->BindIrradianceMap(4);
+		skyLight->BindPrefilterMap(5);
+		skyLight->BindbrdfTexture(6);
 
 		deferredShader->SetUniformVec3("lightRotation", directionalLight->rotation);
 		deferredShader->SetUniformVec3("lightColor", directionalLight->color * directionalLight->intensity);
@@ -184,9 +180,10 @@ namespace CrashEngine {
 		deferredShader->Bind();
 		quad->RenderQuad();
 
-		//skyLight->RenderSky();
+		deferredframebuffer->BlitDepthToFramebuffer(framebuffer);
 
-		//m_ActiveScene->BlurRender();
+		framebuffer->Bind();
+		skyLight->RenderSky();
 
 		framebuffer->Unbind();
 		//-----------deffered------------------------
@@ -208,18 +205,20 @@ namespace CrashEngine {
 		skyLight->BindbrdfTexture(7);
 
 	
-		m_ActiveScene->OnUpdate(ts, forwardShader);//Becouse of second renderd of scene metal surfaces are black
+		m_ActiveScene->OnUpdate(ts, forwardShader);
 		skyLight->RenderSky();
 
 		forwardFramebuffer->Unbind();
-
-
 		//-----------forward------------------------
 
 
-		//------------post process---------------------
+		//------------post process---------------------		
+		postProcess->ApplyFXAA(forwardFramebuffer);
 		postProcess->Blur(forwardFramebuffer);
 		postProcess->GammaHDRCorretion(forwardFramebuffer);
+
+		postProcess->Blur(framebuffer);
+		postProcess->GammaHDRCorretion(framebuffer);
 		Renderer::EndScene();
 
 
@@ -318,23 +317,26 @@ namespace CrashEngine {
 		ImGui::Checkbox("forward", &forward);
 		ImGui::SliderInt("msaa value", &msaa, 1,16);
 		if(ImGui::Button("msaa", ImVec2(100, 100)))
-		{
-			//FramebufferSpecification spec;
-			///spec.Height = Height;
-			//spec.Width = Width;
+		{		
+			FramebufferSpecification spec;
+			spec.Height = Height;
+			spec.Width = Width;
 
-			//MSAAframebuffer = Framebuffer::Create(spec, false);
-			//MSAAframebuffer->CreateMSAATexture(msaa);
+			MSAAframebuffer = MSAAFramebuffer::Create(spec);
+			MSAAframebuffer->CreateMSAATextures(msaa);
 		}
 
 		ImGui::Checkbox("metrics", &metrics);
 		if (metrics)
 		{
 			imguilayer->WindowMetrics();
+
 		}
 		ImGui::SliderInt("deferred", &deferred, 0, 3);
 
 		ImGui::Image((void*)deferredframebuffer->GetColorAttachmentRendererID(deferred), ImVec2(400, 400),ImVec2(1,1), ImVec2(0, 0));
+
+
 		ImGui::End();
 
 

@@ -54,7 +54,7 @@ namespace CrashEngine {
 				{
 					std::optional<std::string> filepath = FileDialogs::OpenFile("");
 					if (filepath)
-					{
+					{	
 						albedo_loaded = Texture2D::Create(filepath.value());
 						m_Mesh->material->albedo = albedo_loaded;
 						m_Mesh->material->albedaLoad = true;
@@ -67,15 +67,15 @@ namespace CrashEngine {
 
 				if (!m_Mesh->material->albedoTextureUse)
 				{
-					//if (ImGui::ColorPicker3("Albedo color", &m_Mesh->material->albedoColor.x))
+					if (ImGui::ColorPicker3("Albedo color", &m_Mesh->material->albedoColor.x))
 					{
-						//m_Mesh->material->albedo = m_Mesh->material->texcreator->CreateTexture(200, 200, m_Mesh->material->albedoColor);
+						m_Mesh->material->albedo = m_Mesh->material->texcreator->CreateTexture(200, 200, m_Mesh->material->albedoColor);
+						
 					}
-
 				}
 				else
 				{
-					//if(albedo_loaded)m_Mesh->material->albedo = albedo_loaded;
+					if(albedo_loaded)m_Mesh->material->albedo = albedo_loaded;
 				}
 
 
@@ -101,10 +101,13 @@ namespace CrashEngine {
 
 				if (!m_Mesh->material->metallicTextureUse)
 				{
+					//ImGui::SliderFloat("Metallic Value", &m_Mesh->material->metallicValue, 0.f, 1.f);
 					if (ImGui::SliderFloat("Metallic Value", &m_Mesh->material->metallicValue, 0.f, 1.f))
 					{
 						m_Mesh->material->metallic = m_Mesh->material->texcreator->CreateTexture(200, 200, glm::vec3(m_Mesh->material->metallicValue, m_Mesh->material->metallicValue, m_Mesh->material->metallicValue));
+						//CE_CORE_INFO("{0}", m_Mesh->material->metallicValue);
 					}
+					
 				}
 				else
 				{

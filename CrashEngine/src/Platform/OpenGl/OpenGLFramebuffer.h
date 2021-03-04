@@ -16,6 +16,8 @@ namespace CrashEngine
 		virtual void Bind() override;
 		virtual void Unbind() override;
 
+		virtual void BlitDepthToFramebuffer(std::shared_ptr<Framebuffer> framebuffer);
+
 		virtual void CreateTextures();
 		virtual void CreateTexture(uint32_t id, Color color = Color::RGBA);
 		virtual void InitializeMultipleTextures(const int amount);
@@ -31,6 +33,7 @@ namespace CrashEngine
 
 		virtual const FramebufferSpecification& GetSpecification() const override { return m_Specification; }
 		virtual inline uint32_t GetRenderID() override { return m_RendererID; }
+
 
 	private:
 		uint32_t m_RendererID = 0;

@@ -12,6 +12,11 @@ namespace CrashEngine {
 		PostProcess();
 
 	public:
+		/*FXAA  must be before any other post process*/
+		/*May be good looking post process when approximate 4 near pixels colors to one pixel*/
+		/*Some kind of sobe filter???*/
+		void ApplyFXAA(std::shared_ptr<Framebuffer>& framebuffer);
+
 		/*Function blurs image*/
 		void Blur(std::shared_ptr<Framebuffer> &framebuffer);
 
@@ -27,6 +32,7 @@ namespace CrashEngine {
 		Shader* BloomMixShader;
 		Shader* brightShader;
 		Shader* HDRGammaCorrection;
+		Shader* FXAAShader;
 
 		std::shared_ptr<Framebuffer> blurFramebuffer[2];
 		std::shared_ptr<Framebuffer> bloom;

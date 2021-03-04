@@ -1862,5 +1862,6 @@
     <None Include="src\CrashEngine\Renderer\Shaders\GammaHDR.frag" />
     <None Include="src\CrashEngine\Renderer\Shaders\gbuffer.frag" />
     <None Include="src\CrashEngine\Renderer\Shaders\deferred.frag" />
+    <None Include="src\CrashEngine\Renderer\Shaders\fxaa.frag" />
   </ItemGroup>
 </Project>

@@ -82,7 +82,7 @@ namespace CrashEngine {
 		int deferred = 0;
 		int msaa = 4;
 		bool metrics = false;
-		bool forward = true;
+		bool forward = false;
 	};
 
 }

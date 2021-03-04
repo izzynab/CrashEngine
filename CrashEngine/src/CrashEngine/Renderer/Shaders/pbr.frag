@@ -28,6 +28,7 @@ uniform vec3 lightColor;
 uniform vec3 camPos;
 
 const float PI = 3.14159265359;
+
 vec3 getNormalFromMap()
 {
     vec3 tangentNormal = texture(normalMap, TexCoords).xyz * 2.0 - 1.0;
@@ -200,7 +201,7 @@ void main()
     vec3 specular = prefilteredColor * (F * brdf.x + brdf.y);
 
     vec3 ambient = (kD * diffuse + specular) * ao;
-    
+
     vec3 color = ambient + Lo;
     //FragColor = vec4(color , 1.0);
     FragColor = vec4(color , 1.0);
