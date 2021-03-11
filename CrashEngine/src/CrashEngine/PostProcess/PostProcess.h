@@ -23,6 +23,8 @@ namespace CrashEngine {
 		/*Gamma Correction and tone mapping on image*/
 		void GammaHDRCorretion(std::shared_ptr<Framebuffer>& framebuffer);
 
+
+
 	public:
 		bool blur = true;
 		float exposure = 1.f; 

@@ -9,6 +9,7 @@ uniform sampler2D position;
 uniform sampler2D albedo;
 uniform sampler2D normal;
 uniform sampler2D MetalRoughAO;
+uniform sampler2D ssao;
 
 uniform sampler2D shadowMap;
 
@@ -22,6 +23,12 @@ uniform vec3 lightRotation;
 uniform vec3 lightColor;
 
 uniform vec3 camPos;
+
+layout (std140) uniform Matrices
+{
+    mat4 projection;
+    mat4 view;
+};
 
 const float PI = 3.14159265359;
 
@@ -114,12 +121,13 @@ void main()
     vec3 albedo = pow(texture(albedo, TexCoords).rgb, vec3(2.2));
     float metallic = texture(MetalRoughAO, TexCoords).r;
     float roughness = texture(MetalRoughAO, TexCoords).g;
-    float ao = texture(MetalRoughAO, TexCoords).b;
+    float ao = texture(MetalRoughAO, TexCoords).b * texture(ssao, TexCoords).r;
        
     // input lighting data
     vec3 N = texture(normal,TexCoords).rgb;
-    vec3 V = normalize(camPos - texture(position,TexCoords).rgb);
-    vec3 R = reflect(-V, N); 
+    vec3 V = normalize(-texture(position,TexCoords).rgb);//when world space should be campos- texture...
+    vec3 viewR = reflect(-V, N); 
+    vec3 R = inverse(mat3(view)) * viewR;
 
     // calculate reflectance at normal incidence; if dia-electric (like plastic) use F0 
     // of 0.04 and if it's a metal, use the albedo color as F0 (metallic workflow)    
@@ -133,7 +141,7 @@ void main()
     for(int i = 0; i < 1; ++i) 
     {
         // calculate per-light radiance
-        vec3 L = normalize(lightRotation);
+        vec3 L = normalize(lightRotation-texture(position,TexCoords).rgb);
         vec3 H = normalize(V + L);
 
         // Cook-Torrance BRDF

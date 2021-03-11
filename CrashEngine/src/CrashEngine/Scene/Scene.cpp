@@ -16,6 +16,7 @@ namespace CrashEngine {
 
 	Scene::Scene()
 	{
+		postProcess.reset(new PostProcess());
 	}
 
 	Scene::~Scene()

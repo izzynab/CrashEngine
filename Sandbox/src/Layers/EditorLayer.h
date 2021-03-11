@@ -52,7 +52,8 @@ namespace CrashEngine {
 
 		std::shared_ptr<SkyLight> skyLight;
 		std::shared_ptr<DirectionalLight> directionalLight;
-		std::shared_ptr<PostProcess> postProcess;
+
+		//std::shared_ptr<PostProcess> postProcess;
 
 		/*GBuffer shader gives buffers to deffered render*/
 		Shader* GBufferShader;
@@ -63,8 +64,11 @@ namespace CrashEngine {
 		/*Shader draws pbr scene from textures of models*/
 		Shader* forwardShader;
 
-		/*Framebuffer witch more samples which needs to be later downscaled(blitted to another framebuffer)*/
-		std::shared_ptr<MSAAFramebuffer> MSAAframebuffer;
+		/*Shader draws ssao texture*/
+		Shader* ssaoShader;
+
+		/*Shader blures ssao texture*/
+		Shader* ssaoBlurShader;
 
 		/*Last framebuffer which is shown in ImGui Dockspace Image*/
 		std::shared_ptr<Framebuffer> framebuffer;
@@ -75,12 +79,21 @@ namespace CrashEngine {
 		/*Framebuffer which uses textures directly from models*/
 		std::shared_ptr<Framebuffer> forwardFramebuffer;
 
+		/*Framebuffer for capture ssao texture*/
+		std::shared_ptr<Framebuffer> ssaoFramebuffer;
+
+		/*Framebuffer for capture ssao texture*/
+		std::shared_ptr<Framebuffer> ssaoBlurFramebuffer;
+
+		std::vector<glm::vec3> ssaoKernel;
+
+		std::shared_ptr<Texture2D> noiseTexture;
+
 
 		float Height;
 		float Width;
 
 		int deferred = 0;
-		int msaa = 4;
 		bool metrics = false;
 		bool forward = false;
 	};

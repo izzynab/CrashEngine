@@ -141,7 +141,14 @@ namespace CrashEngine {
 		bool bloom = ImGui::TreeNodeEx("Bloom", treeNodeFlags);
 		if (bloom)
 		{
-			//ImGui::Checkbox("Blur", &m_Scene->blur);
+			ImGui::Checkbox("Blur", &m_Scene->postProcess->blur);
+			ImGui::TreePop();
+		}
+
+		bool ssao = ImGui::TreeNodeEx("SSAO", treeNodeFlags);
+		if (ssao)
+		{
+			//ImGui::Checkbox("SSAO", &m_Scene->blur);
 			//ImGui::SliderFloat("Exposure", &m_Scene->exposure, 0.f, 3.f);
 			ImGui::TreePop();
 		}

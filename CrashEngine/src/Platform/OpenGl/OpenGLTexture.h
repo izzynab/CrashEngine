@@ -9,15 +9,16 @@ namespace CrashEngine {
 	class OpenGLTexture2D : public Texture2D
 	{
 	public:
+		OpenGLTexture2D(TextureSpecification spec);
 		OpenGLTexture2D(uint32_t width, uint32_t height);
 		OpenGLTexture2D(const std::string& path);
 		virtual ~OpenGLTexture2D();
 
-		virtual uint32_t GetWidth() const override { return m_Width; }
-		virtual uint32_t GetHeight() const override { return m_Height; }
+		virtual uint32_t GetWidth() const override { return specification.Width; }
+		virtual uint32_t GetHeight() const override { return specification.Height; }
 		virtual uint32_t GetRendererID() const override { return m_RendererID; }
 
-		virtual void SetData(void* data, uint32_t size) override;
+		virtual void SetData(void* data) override;
 
 		virtual void CreateMipmap() override;
 
@@ -28,9 +29,9 @@ namespace CrashEngine {
 			return m_RendererID == ((OpenGLTexture2D&)other).m_RendererID;
 		}
 	private:
-		uint32_t m_Width, m_Height;
+		TextureSpecification specification;
+
 		uint32_t m_RendererID;
-		GLenum m_InternalFormat, m_DataFormat;
 	};
 
 	class OpenGLDepthTexture : public DepthTexture
@@ -43,7 +44,7 @@ namespace CrashEngine {
 		virtual uint32_t GetHeight() const override { return m_Height; }
 		virtual uint32_t GetRendererID() const override { return m_RendererID; }
 
-		virtual void SetData(void* data, uint32_t size) {};
+		virtual void SetData(void* data) {};
 
 		virtual void CreateMipmap();
 
@@ -68,7 +69,7 @@ namespace CrashEngine {
 		virtual uint32_t GetHeight() const override { return m_Height; }
 		virtual uint32_t GetRendererID() const override { return m_RendererID; }
 
-		virtual void SetData(void* data, uint32_t size) override;
+		virtual void SetData(void* data) override;
 
 		virtual void CreateMipmap() override;
 
@@ -95,7 +96,7 @@ namespace CrashEngine {
 		virtual uint32_t GetHeight() const override { return m_Height; }
 		virtual uint32_t GetRendererID() const override { return m_RendererID; }
 
-		virtual void SetData(void* data, uint32_t size) override;
+		virtual void SetData(void* data) override;
 
 		virtual void CreateMipmap() override;
 

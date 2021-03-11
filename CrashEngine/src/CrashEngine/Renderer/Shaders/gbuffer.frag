@@ -38,14 +38,13 @@ vec3 getNormalFromMap()
 
 void main()
 {    
-    gPosition = vec4(WorldPos,1);
+    gPosition = vec4(WorldPos,1.f);
 
-    gAlbedo = vec4(texture(albedoMap, TexCoords).rgb,1);
+    gAlbedo = vec4(texture(albedoMap, TexCoords).rgb,1.f);
 
-    gNormal = vec4(getNormalFromMap(),1);
+    gNormal = vec4(getNormalFromMap(),1.f);
 
     gMetalRoughAO.r = texture(metallicMap, TexCoords).r;
     gMetalRoughAO.g = texture(roughnessMap, TexCoords).r;
     gMetalRoughAO.b = texture(aoMap, TexCoords).r;
-    gMetalRoughAO.a = 1;
 }

@@ -45,6 +45,7 @@ namespace CrashEngine {
 
 	void PostProcess::Blur(std::shared_ptr<Framebuffer>& framebuffer)
 	{
+		if (!blur) return;
 		float width = framebuffer->GetSpecification().Width;
 		float height = framebuffer->GetSpecification().Height;
 		blurFramebuffer[0]->Resize(width, height);
@@ -127,7 +128,6 @@ namespace CrashEngine {
 		FXAAShader->Bind();
 		glm::vec2 vector = glm::vec2(1 / float(framebuffer->GetSpecification().Width), 1 / float(framebuffer->GetSpecification().Height));
 		FXAAShader->SetUniformVec2("inverseScreenSize", vector);
-		CE_CORE_INFO("{0},{1}", vector.x, vector.y);
 		RenderCommand::BindTexture(draw_framebuffer->GetColorAttachmentRendererID(), 0);
 		quad->RenderQuad();
 

@@ -5,6 +5,7 @@
 #include "CrashEngine/Renderer/Framebuffer.h"
 #include "CrashEngine/Renderer/BasicShapes.h"
 #include "CrashEngine/Scene/Material.h"
+#include "CrashEngine/PostProcess/PostProcess.h"
 
 #include <glm/glm.hpp>
 
@@ -39,6 +40,9 @@ namespace CrashEngine {
 		template<typename T>
 		void OnComponentAdded(Entity entity, T& component);
 
+	public:
+		std::shared_ptr<PostProcess> postProcess;
+
 	public://public for test
 		entt::registry m_Registry;
 
@@ -49,7 +53,7 @@ namespace CrashEngine {
 		friend class SceneSerializer;
 		friend class SceneHierarchyPanel;
 
-		Shader *defaultShader;
+		Shader* defaultShader;
 		Shader* depthShader;
 
 		

@@ -6,16 +6,31 @@
 
 namespace CrashEngine {
 
-	OpenGLTexture2D::OpenGLTexture2D(uint32_t width, uint32_t height)
-		: m_Width(width), m_Height(height)
+	OpenGLTexture2D::OpenGLTexture2D(TextureSpecification spec)
 	{
-		m_InternalFormat = GL_RGB16F;
-		m_DataFormat = GL_RGB;
+		specification = spec;
 
 		glGenTextures(1, &m_RendererID);
 		// pre-allocate enough memory for the LUT texture.
 		glBindTexture(GL_TEXTURE_2D, m_RendererID);
-		glTexImage2D(GL_TEXTURE_2D, 0, m_InternalFormat, width, height, 0, m_DataFormat, GL_FLOAT, 0);
+		glTexImage2D(GL_TEXTURE_2D, 0, specification.DataFormat, specification.Width, specification.Height, 0, specification.DataFormat, specification.type, 0);
+		// be sure to set wrapping mode to GL_CLAMP_TO_EDGE
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, specification.WrapParam);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, specification.WrapParam);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, specification.FilterParam);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, specification.FilterParam);
+
+	}
+
+	OpenGLTexture2D::OpenGLTexture2D(uint32_t width, uint32_t height)
+	{
+		specification.internalFormat = InternalFormat::RGB16F;
+		specification.DataFormat = DataFormat::RGB;
+
+		glGenTextures(1, &m_RendererID);
+		// pre-allocate enough memory for the LUT texture.
+		glBindTexture(GL_TEXTURE_2D, m_RendererID);
+		glTexImage2D(GL_TEXTURE_2D, 0, specification.internalFormat, width, height, 0, specification.DataFormat, GL_FLOAT, 0);
 		// be sure to set wrapping mode to GL_CLAMP_TO_EDGE
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
@@ -36,29 +51,26 @@ namespace CrashEngine {
 			data = stbi_load(m_Path.c_str(), &width, &height, &channels, 0);
 		}
 		CE_CORE_ASSERT(data, "Failed to load image!");
-		m_Width = width;
-		m_Height = height;
+		specification.Width = width;
+		specification.Height = height;
 
-		GLenum internalFormat = 0, dataFormat = 0;
 		if (channels == 4)
 		{
-			internalFormat = GL_RGBA8;
-			dataFormat = GL_RGBA;
+			specification.internalFormat = InternalFormat::RGBA8;
+			specification.DataFormat = DataFormat::RGBA;
 		}
 		else if (channels == 3)
 		{
-			internalFormat = GL_RGB8;
-			dataFormat = GL_RGB;
+			specification.internalFormat = InternalFormat::RGB8;
+			specification.DataFormat = DataFormat::RGB;
 		}
 
-		m_InternalFormat = internalFormat;
-		m_DataFormat = dataFormat;
 
 		CE_CORE_ASSERT(internalFormat & dataFormat, "Format not supported!");
 
 		glGenTextures(1, &m_RendererID);
 		glBindTexture(GL_TEXTURE_2D, m_RendererID);
-		glTexImage2D(GL_TEXTURE_2D, 0, dataFormat, m_Width, m_Height, 0, dataFormat, GL_UNSIGNED_BYTE, data);
+		glTexImage2D(GL_TEXTURE_2D, 0, specification.DataFormat, specification.Width, specification.Height, 0, specification.DataFormat, specification.type, data);
 		glGenerateMipmap(GL_TEXTURE_2D);
 
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
@@ -75,11 +87,11 @@ namespace CrashEngine {
 		glDeleteTextures(1, &m_RendererID);
 	}
 
-	void OpenGLTexture2D::SetData(void* data, uint32_t size)
+	void OpenGLTexture2D::SetData(void* data)
 	{
-		uint32_t bpp = m_DataFormat == GL_RGBA ? 4 : 3;
+		//uint32_t bpp = m_DataFormat == GL_RGBA ? 4 : 3;
 		//CE_CORE_ASSERT(size == m_Width * m_Height * bpp, "Data must be entire texture!");
-		glTextureSubImage2D(m_RendererID, 0, 0, 0, m_Width, m_Height, m_DataFormat, GL_UNSIGNED_BYTE, data);
+		glTextureSubImage2D(m_RendererID, 0, 0, 0, specification.Width, specification.Height, specification.DataFormat, GL_UNSIGNED_BYTE, data);
 	}
 
 	void OpenGLTexture2D::CreateMipmap()
@@ -165,7 +177,7 @@ namespace CrashEngine {
 		glDeleteTextures(1, &m_RendererID);
 	}
 
-	void OpenGLTextureHDR::SetData(void* data, uint32_t size)
+	void OpenGLTextureHDR::SetData(void* data)
 	{
 		uint32_t bpp = m_DataFormat == GL_RGBA ? 4 : 3;
 		CE_CORE_ASSERT(size == m_Width * m_Height * bpp, "Data must be entire texture!");
@@ -218,7 +230,7 @@ namespace CrashEngine {
 		//glDeleteTextures(1, &m_RendererID);
 	}
 
-	void OpenGLCubemapTexture::SetData(void* data, uint32_t size)
+	void OpenGLCubemapTexture::SetData(void* data)
 	{
 		//uint32_t bpp = m_DataFormat == GL_RGBA ? 4 : 3;
 		//CE_CORE_ASSERT(size == m_Width * m_Height * bpp, "Data must be entire texture!");

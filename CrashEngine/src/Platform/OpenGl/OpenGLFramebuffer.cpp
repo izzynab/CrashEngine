@@ -338,9 +338,5 @@ namespace CrashEngine {
 		glRenderbufferStorage(GL_RENDERBUFFER, format, width, height);
 	}
 
-	/*void OpenGLRenderbuffer::SetMSAAStorage(int samples, int width, int height)
-	{
-		glRenderbufferStorageMultisample(GL_RENDERBUFFER, samples, GL_DEPTH24_STENCIL8, width, height);
-	}*/
 
 }

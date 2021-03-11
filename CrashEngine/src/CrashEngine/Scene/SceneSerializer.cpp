@@ -197,7 +197,7 @@ namespace CrashEngine {
 		out << YAML::Key << "Bloom" << YAML::Value;
 		out << YAML::BeginMap; // blur
 
-		//out << YAML::Key << "blur" << YAML::Value << m_Scene->blur;
+		out << YAML::Key << "blur" << YAML::Value << m_Scene->postProcess->blur;
 
 		out << YAML::EndMap; // blur
 
@@ -332,7 +332,7 @@ namespace CrashEngine {
 		m_skyLight->LoadHDR(dir);
 
 		auto bloom = data["Bloom"];
-		//m_Scene->blur = bloom["blur"].as<bool>();
+		m_Scene->postProcess->blur = bloom["blur"].as<bool>();
 
 		return true;
 	}

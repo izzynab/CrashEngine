@@ -5,7 +5,7 @@ in vec2 TexCoords;
 
 uniform sampler2D scene;
 uniform sampler2D bloomBlur;
-uniform float exposure;
+
 uniform bool blur;
 
 void main()

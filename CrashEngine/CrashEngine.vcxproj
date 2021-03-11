@@ -766,6 +766,8 @@
     <None Include="src\CrashEngine\Renderer\Shaders\pbr.vert" />
     <None Include="src\CrashEngine\Renderer\Shaders\deferred.frag" />
     <None Include="src\CrashEngine\Renderer\Shaders\prefilter.frag" />
+    <None Include="src\CrashEngine\Renderer\Shaders\ssao.frag" />
+    <None Include="src\CrashEngine\Renderer\Shaders\ssaoBlur.frag" />
     <None Include="src\CrashEngine\Renderer\Shaders\Text.frag" />
     <None Include="src\CrashEngine\Renderer\Shaders\Text.vert" />
     <None Include="vendor\assimp\include\assimp\config.h.in" />
