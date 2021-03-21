@@ -17,6 +17,7 @@ namespace CrashEngine {
 	Scene::Scene()
 	{
 		postProcess.reset(new PostProcess());
+		ssao.reset(new SSAO());
 	}
 
 	Scene::~Scene()

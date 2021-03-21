@@ -6,6 +6,7 @@
 #include "CrashEngine/Renderer/BasicShapes.h"
 #include "CrashEngine/Scene/Material.h"
 #include "CrashEngine/PostProcess/PostProcess.h"
+#include "CrashEngine/Scene/SSAO.h"
 
 #include <glm/glm.hpp>
 
@@ -42,6 +43,7 @@ namespace CrashEngine {
 
 	public:
 		std::shared_ptr<PostProcess> postProcess;
+		std::shared_ptr<SSAO> ssao;
 
 	public://public for test
 		entt::registry m_Registry;

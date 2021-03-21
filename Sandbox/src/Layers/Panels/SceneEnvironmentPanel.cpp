@@ -123,11 +123,8 @@ namespace CrashEngine {
 		bool directional = ImGui::TreeNodeEx("Directional Light", treeNodeFlags);
 		if (directional)
 		{
-			DrawVec3Control("Position", m_DirectionalLight->position);
-
-			glm::vec3 rotation = glm::degrees(m_DirectionalLight->rotation);
-			DrawVec3Control("Rotation", rotation);
-			m_DirectionalLight->rotation = glm::radians(rotation);
+			ImGui::SliderAngle("Sun Azimuth", &m_DirectionalLight->rotation.x,0,180);
+			ImGui::SliderAngle("Sun Zenith", &m_DirectionalLight->rotation.y,0,180);
 
 			ImGui::NewLine();
 			ImGui::ColorPicker3("Light color", &m_DirectionalLight->color.x);
@@ -148,8 +145,10 @@ namespace CrashEngine {
 		bool ssao = ImGui::TreeNodeEx("SSAO", treeNodeFlags);
 		if (ssao)
 		{
-			//ImGui::Checkbox("SSAO", &m_Scene->blur);
-			//ImGui::SliderFloat("Exposure", &m_Scene->exposure, 0.f, 3.f);
+			ImGui::Checkbox("SSAO", &m_Scene->ssao->ssao);
+			ImGui::SliderFloat("radius", &m_Scene->ssao->radius, 0.f, 3.f);
+			ImGui::SliderFloat("bias", &m_Scene->ssao->bias, 0.f, 0.5f); ;
+			ImGui::SliderFloat("power", &m_Scene->ssao->power, 1.f, 6.5f); ;
 			ImGui::TreePop();
 		}
 

@@ -180,7 +180,6 @@ namespace CrashEngine {
 		out << YAML::BeginMap; // Directional light
 
 		out << YAML::Key << "rotation" << YAML::Value << m_directionalLight->rotation;
-		out << YAML::Key << "position" << YAML::Value << m_directionalLight->position;
 		out << YAML::Key << "color" << YAML::Value << m_directionalLight->color;
 		out << YAML::Key << "intensity" << YAML::Value << m_directionalLight->intensity;
 
@@ -198,6 +197,15 @@ namespace CrashEngine {
 		out << YAML::BeginMap; // blur
 
 		out << YAML::Key << "blur" << YAML::Value << m_Scene->postProcess->blur;
+
+		out << YAML::EndMap; // blur
+
+		out << YAML::Key << "SSAO" << YAML::Value;
+		out << YAML::BeginMap; // SSAO
+
+		out << YAML::Key << "radius" << YAML::Value << m_Scene->ssao->radius;
+		out << YAML::Key << "bias" << YAML::Value << m_Scene->ssao->bias;
+		out << YAML::Key << "power" << YAML::Value << m_Scene->ssao->power;
 
 		out << YAML::EndMap; // blur
 
@@ -322,7 +330,6 @@ namespace CrashEngine {
 		auto directlight = data["Directional light"];
 
 		m_directionalLight->rotation = directlight["rotation"].as<glm::vec3>();
-		m_directionalLight->position = directlight["position"].as<glm::vec3>();
 		m_directionalLight->color = directlight["color"].as<glm::vec3>();
 		m_directionalLight->intensity = directlight["intensity"].as<float>();
 
@@ -333,6 +340,11 @@ namespace CrashEngine {
 
 		auto bloom = data["Bloom"];
 		m_Scene->postProcess->blur = bloom["blur"].as<bool>();
+
+		auto ssao = data["SSAO"];
+		m_Scene->ssao->radius = ssao["radius"].as<float>();
+		m_Scene->ssao->bias = ssao["bias"].as<float>();
+		m_Scene->ssao->power = ssao["power"].as<float>();
 
 		return true;
 	}

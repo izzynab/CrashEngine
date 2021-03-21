@@ -195,6 +195,7 @@
     <ClInclude Include="src\CrashEngine\Scene\SceneCamera.h" />
     <ClInclude Include="src\CrashEngine\Scene\SceneSerializer.h" />
     <ClInclude Include="src\CrashEngine\Scene\SkyLight.h" />
+    <ClInclude Include="src\CrashEngine\Scene\SSAO.h" />
     <ClInclude Include="src\CrashEngine\Test\Scenetest.h" />
     <ClInclude Include="src\CrashEngine\Utils\PlatformUtils.h" />
     <ClInclude Include="src\Platform\OpenGl\OpenGLBuffer.h" />
@@ -730,6 +731,7 @@
     <ClCompile Include="src\CrashEngine\Scene\SceneCamera.cpp" />
     <ClCompile Include="src\CrashEngine\Scene\SceneSerializer.cpp" />
     <ClCompile Include="src\CrashEngine\Scene\SkyLight.cpp" />
+    <ClCompile Include="src\CrashEngine\Scene\SSAO.cpp" />
     <ClCompile Include="src\CrashEngine\Test\Scenetest.cpp" />
     <ClCompile Include="src\Platform\OpenGl\OpenGLBuffer.cpp" />
     <ClCompile Include="src\Platform\OpenGl\OpenGLContext.cpp" />

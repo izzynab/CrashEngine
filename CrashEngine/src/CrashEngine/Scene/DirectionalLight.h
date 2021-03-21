@@ -25,8 +25,7 @@ namespace CrashEngine {
 		glm::mat4 lightOrthoProj;
 
 	public:
-		glm::vec3 rotation = glm::vec3(1.f, 1.f, 0.f);
-		glm::vec3 position = glm::vec3(-2.0f, 4.0f, -1.0f);
+		glm::vec3 rotation = glm::vec3(60.f, 90.f, 0.f);
 		glm::vec3 color = glm::vec3(1,1,1);
 		float intensity = 50.f;
 

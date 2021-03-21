@@ -35,13 +35,7 @@ namespace CrashEngine {
 		deferredframebuffer->CreateTexture(3, Color::RGBA);//metallic roughness ao
 		deferredframebuffer->InitializeMultipleTextures(4);
 
-		forwardFramebuffer = Framebuffer::Create(spec);
-
 		framebuffer = Framebuffer::Create(spec);
-
-		ssaoFramebuffer = Framebuffer::Create(spec);
-
-		ssaoBlurFramebuffer = Framebuffer::Create(spec);
 
 		//------------shaders-------------------------
 		deferredShader = Shader::Create("basic.vert", "deferred.frag");
@@ -81,22 +75,11 @@ namespace CrashEngine {
 		forwardShader->SetUniformInt("brdfLUT", 7);
 		forwardShader->SetUniformInt("shadowMap", 8);
 
-		ssaoShader = Shader::Create("basic.vert", "ssao.frag");
-		ssaoShader->Bind();
-		ssaoShader->SetUniformInt("gPosition", 0);
-		ssaoShader->SetUniformInt("gNormal", 1);
-		ssaoShader->SetUniformInt("texNoise", 2);
-
-		ssaoBlurShader = Shader::Create("basic.vert", "ssaoBlur.frag");
-		ssaoBlurShader->Bind();
-		ssaoBlurShader->SetUniformInt("scene", 0);
-
 		RenderCommand::SetViewport(Width, Height);
 
 		//-------------------------End of initialize-----------------------------------------
 		m_ActiveScene = std::make_shared<Scene>();
 
-		//postProcess.reset(new PostProcess);
 
 		directionalLight.reset(new DirectionalLight);
 		directionalLight->camera = &cameraController->GetCamera();
@@ -114,7 +97,7 @@ namespace CrashEngine {
 		EnvironmentPanel.reset(new SceneEnvironmentPanel(skyLight, directionalLight, m_ActiveScene));
 
 		SceneSerializer serializer(m_ActiveScene, skyLight, directionalLight);
-		serializer.Deserialize("C:/EngineDev/CrashEngine/Models/Scenes/test5.crash");
+		serializer.Deserialize("C:/EngineDev/CrashEngine/Models/Scenes/test1.crash");
 
 		//-------------------------End of initialize-----------------------------------------
 
@@ -129,44 +112,11 @@ namespace CrashEngine {
 		m_MatrixUB->linkShader(deferredShader->GetID(), "Matrices");
 		m_MatrixUB->linkShader(skyLight->GetSkyShader()->GetID(), "Matrices");
 		m_MatrixUB->linkShader(GBufferShader->GetID(), "Matrices");
-		m_MatrixUB->linkShader(ssaoShader->GetID(), "Matrices");
+		m_MatrixUB->linkShader(m_ActiveScene->ssao->ssaoShader->GetID(), "Matrices");
 
 		m_MatrixUB->setData("projection", glm::value_ptr(projection));
 		
-		//sample kernel
-		std::uniform_real_distribution<float> randomFloats(0.0, 1.0); // generates random floats between 0.0 and 1.0
-		std::default_random_engine generator;
-		for (unsigned int i = 0; i < 64; ++i)
-		{
-			glm::vec3 sample(randomFloats(generator) * 2.0 - 1.0, randomFloats(generator) * 2.0 - 1.0, randomFloats(generator));
-			sample = glm::normalize(sample);
-			sample *= randomFloats(generator);
-			float scale = float(i) / 64.0;
-			
-			// scale samples s.t. they're more aligned to center of kernel
-			scale = 0.1f + scale * scale * (1.0f - 0.1f);
-			sample *= scale;
-			ssaoKernel.push_back(sample);
-		}
-
-		// generate noise texture
-		std::vector<glm::vec3> ssaoNoise;
-		for (unsigned int i = 0; i < 16; i++)
-		{
-			glm::vec3 noise(randomFloats(generator) * 2.0 - 1.0, randomFloats(generator) * 2.0 - 1.0, 0.0f); // rotate around z-axis (in tangent space)
-			ssaoNoise.push_back(noise);
-		}
-
-		TextureSpecification texspec;
-		texspec.Width = 4;
-		texspec.Height = 4;
-		texspec.DataFormat = DataFormat::RGB;
-		texspec.FilterParam = FilterParam::NEAREST;
-		texspec.internalFormat = InternalFormat::RGBA16F;
-		texspec.type = Type::FLOAT;
-		texspec.WrapParam = WrapParam::REPEAT;
-		noiseTexture = Texture2D::Create(texspec);
-		noiseTexture->SetData(&ssaoNoise[0]);
+		
 	}
 
 	void Editor::OnUpdate(Timestep ts)
@@ -182,10 +132,8 @@ namespace CrashEngine {
 		Width = imguilayer->CurrentWindowView.x;
 
 		deferredframebuffer->Resize(Width, Height);
-		forwardFramebuffer->Resize(Width, Height);
 		framebuffer->Resize(Width, Height);
-		ssaoFramebuffer->Resize(Width, Height);
-		ssaoBlurFramebuffer->Resize(Width, Height);
+		
 
 		glm::mat4 view = cameraController->GetCamera().GetViewMatrix();
 		m_MatrixUB->setData("view", glm::value_ptr(view));
@@ -201,23 +149,7 @@ namespace CrashEngine {
 		deferredframebuffer->Unbind();
 
 		//-------ssao-------
-		ssaoFramebuffer->Bind();
-		RenderCommand::Clear();
-		ssaoShader->Bind();
-		RenderCommand::BindTexture(deferredframebuffer->GetColorAttachmentRendererID(0), 0);//position
-		RenderCommand::BindTexture(deferredframebuffer->GetColorAttachmentRendererID(2), 1);//normal
-		RenderCommand::BindTexture(noiseTexture->GetRendererID(), 2);//noise
-		for (unsigned int i = 0; i < 64; ++i)
-			ssaoShader->SetUniformVec3("samples[" + std::to_string(i) + "]", ssaoKernel[i]);
-		quad->RenderQuad();
-		ssaoFramebuffer->Unbind();
-
-		ssaoBlurFramebuffer->Bind();
-		RenderCommand::Clear();
-		ssaoBlurShader->Bind();
-		RenderCommand::BindTexture(ssaoFramebuffer->GetColorAttachmentRendererID(0), 0);
-		quad->RenderQuad();
-		ssaoBlurFramebuffer->Unbind();
+		m_ActiveScene->ssao->Render(Width, Height, deferredframebuffer->GetColorAttachmentRendererID(0), deferredframebuffer->GetColorAttachmentRendererID(2));
 		//-------ssao-------
 
 		framebuffer->Bind();
@@ -230,13 +162,16 @@ namespace CrashEngine {
 		RenderCommand::BindTexture(deferredframebuffer->GetColorAttachmentRendererID(1), 1);
 		RenderCommand::BindTexture(deferredframebuffer->GetColorAttachmentRendererID(2), 2);
 		RenderCommand::BindTexture(deferredframebuffer->GetColorAttachmentRendererID(3), 3);
-		RenderCommand::BindTexture(ssaoBlurFramebuffer->GetColorAttachmentRendererID(), 8);
+		RenderCommand::BindTexture(m_ActiveScene->ssao->GetTextureRendererID(), 8);
 
 		skyLight->BindIrradianceMap(4);
 		skyLight->BindPrefilterMap(5);
 		skyLight->BindbrdfTexture(6);
 
-		glm::vec3 rotation = view * glm::vec4(directionalLight->position,1);
+		glm::vec3 rotation = glm::mat3(view) * glm::vec3(
+			glm::cos(directionalLight->rotation.x) * glm::sin(directionalLight->rotation.y),
+			glm::sin(directionalLight->rotation.x) * glm::sin(directionalLight->rotation.y),
+			glm::cos(directionalLight->rotation.y));
 		deferredShader->SetUniformVec3("lightRotation", rotation);
 		deferredShader->SetUniformVec3("lightColor", directionalLight->color * directionalLight->intensity);
 		deferredShader->SetUniformVec3("camPos", cameraController->GetCamera().GetPosition());
@@ -254,35 +189,8 @@ namespace CrashEngine {
 		//-----------deffered------------------------
 
 
-		//-----------forward------------------------
-		forwardFramebuffer->Bind();
-		RenderCommand::SetViewport(Width, Height);
-		RenderCommand::SetClearColor({ 1.f, 1.f, 0.0f, 0.0f });
-		RenderCommand::Clear();
-
-		forwardShader->Bind();
-		forwardShader->SetUniformVec3("lightRotation", directionalLight->rotation);
-		forwardShader->SetUniformVec3("lightColor", directionalLight->color * directionalLight->intensity);
-		forwardShader->SetUniformVec3("camPos", cameraController->GetCamera().GetPosition());
-
-		skyLight->BindIrradianceMap(5);
-		skyLight->BindPrefilterMap(6);
-		skyLight->BindbrdfTexture(7);
-
-	
-		m_ActiveScene->OnUpdate(ts, forwardShader);
-		skyLight->RenderSky();
-
-		forwardFramebuffer->Unbind();
-		//-----------forward------------------------
-
-
-		//------------post process---------------------		
-		m_ActiveScene->postProcess->ApplyFXAA(forwardFramebuffer);
-		m_ActiveScene->postProcess->Blur(forwardFramebuffer);
-		m_ActiveScene->postProcess->GammaHDRCorretion(forwardFramebuffer);
-
-		m_ActiveScene->postProcess->ApplyFXAA(forwardFramebuffer);
+		//-----------Post Proscess-------------------
+		m_ActiveScene->postProcess->ApplyFXAA(framebuffer);
 		m_ActiveScene->postProcess->Blur(framebuffer);
 		m_ActiveScene->postProcess->GammaHDRCorretion(framebuffer);
 		Renderer::EndScene();
@@ -367,7 +275,7 @@ namespace CrashEngine {
 			ImGui::EndMainMenuBar();
 		}
 
-		imguilayer->Dockspace((forward) ? ssaoBlurFramebuffer : framebuffer);
+		imguilayer->Dockspace(framebuffer);
 
 		if (imguilayer->MenuEnabled) { imguilayer->Menu(); }
 
@@ -390,7 +298,7 @@ namespace CrashEngine {
 		}
 		ImGui::SliderInt("deferred", &deferred, 0, 4);
 
-		if(deferred == 4)ImGui::Image((void*)ssaoBlurFramebuffer->GetColorAttachmentRendererID(), ImVec2(400, 400), ImVec2(0, 1), ImVec2(1, 0));
+		if(deferred == 4)ImGui::Image((void*)m_ActiveScene->ssao->GetTextureRendererID(), ImVec2(400, 400), ImVec2(0, 1), ImVec2(1, 0));
 		else ImGui::Image((void*)deferredframebuffer->GetColorAttachmentRendererID(deferred), ImVec2(400, 400), ImVec2(0, 1), ImVec2(1, 0));
 		
 

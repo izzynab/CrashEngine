@@ -12,12 +12,13 @@ uniform sampler2D gLinearDepth;
 uniform vec3 samples[64];
 
 // parameters (you'd probably want to use them as uniforms to more easily tweak the effect)
-int kernelSize = 64;
-float radius = 0.5;
-float bias = 0.025;
+uniform int kernelSize;
+uniform float radius;
+uniform float bias;
+uniform float power;
 
 // tile noise texture over screen based on screen dimensions divided by noise size
-const vec2 noiseScale = vec2(1920.0/4.0, 1080.0/4.0); 
+uniform vec2 noiseScale; 
 
 layout (std140) uniform Matrices
 {
@@ -60,6 +61,6 @@ void main()
         occlusion += (sampleDepth >= samplePos.z + bias ? 1.0 : 0.0) * rangeCheck;           
     }
     occlusion = 1.0 - (occlusion / kernelSize);
-    
+    occlusion = pow(occlusion,power);
     FragColor = vec4(occlusion,occlusion,occlusion,1.f);
 }

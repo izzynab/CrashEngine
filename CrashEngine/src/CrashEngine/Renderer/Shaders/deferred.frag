@@ -125,7 +125,7 @@ void main()
        
     // input lighting data
     vec3 N = texture(normal,TexCoords).rgb;
-    vec3 V = normalize(-texture(position,TexCoords).rgb);//when world space should be campos- texture...
+    vec3 V = normalize(-texture(position,TexCoords).rgb);
     vec3 viewR = reflect(-V, N); 
     vec3 R = inverse(mat3(view)) * viewR;
 
@@ -141,7 +141,7 @@ void main()
     for(int i = 0; i < 1; ++i) 
     {
         // calculate per-light radiance
-        vec3 L = normalize(lightRotation-texture(position,TexCoords).rgb);
+        vec3 L = normalize(lightRotation);//how to make light rotation insted of light position???
         vec3 H = normalize(V + L);
 
         // Cook-Torrance BRDF

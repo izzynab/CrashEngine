@@ -64,31 +64,11 @@ namespace CrashEngine {
 		/*Shader draws pbr scene from textures of models*/
 		Shader* forwardShader;
 
-		/*Shader draws ssao texture*/
-		Shader* ssaoShader;
-
-		/*Shader blures ssao texture*/
-		Shader* ssaoBlurShader;
-
 		/*Last framebuffer which is shown in ImGui Dockspace Image*/
 		std::shared_ptr<Framebuffer> framebuffer;
 
 		/*Framebuffer which stores GBuffer images*/
 		std::shared_ptr<Framebuffer> deferredframebuffer;
-
-		/*Framebuffer which uses textures directly from models*/
-		std::shared_ptr<Framebuffer> forwardFramebuffer;
-
-		/*Framebuffer for capture ssao texture*/
-		std::shared_ptr<Framebuffer> ssaoFramebuffer;
-
-		/*Framebuffer for capture ssao texture*/
-		std::shared_ptr<Framebuffer> ssaoBlurFramebuffer;
-
-		std::vector<glm::vec3> ssaoKernel;
-
-		std::shared_ptr<Texture2D> noiseTexture;
-
 
 		float Height;
 		float Width;

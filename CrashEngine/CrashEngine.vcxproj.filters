@@ -1718,6 +1718,7 @@
     </ClInclude>
     <ClInclude Include="src\CrashEngine\Scene\PointLight.h" />
     <ClInclude Include="src\CrashEngine\PostProcess\PostProcess.h" />
+    <ClInclude Include="src\CrashEngine\Scene\SSAO.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\CrashEngine\Core\Application.cpp">
@@ -1836,6 +1837,7 @@
     </ClCompile>
     <ClCompile Include="src\CrashEngine\Scene\PointLight.cpp" />
     <ClCompile Include="src\CrashEngine\PostProcess\PostProcess.cpp" />
+    <ClCompile Include="src\CrashEngine\Scene\SSAO.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="vendor\assimp\include\assimp\config.h.in">
