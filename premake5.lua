@@ -23,7 +23,7 @@ IncludeDir["stb"]		= "%{wks.location}/CrashEngine/vendor/stb_image"
 IncludeDir["assimp"]	= "%{wks.location}/CrashEngine/vendor/assimp/include"
 IncludeDir["entt"]		= "%{wks.location}/CrashEngine/vendor/entt/include"
 IncludeDir["yaml_cpp"] = "%{wks.location}/CrashEngine/vendor/yaml-cpp/include"
-
+IncludeDir["ImGuizmo"] = "%{wks.location}/CrashEngine/vendor/ImGuizmo"
 
 
 group "Dependencies"
@@ -32,6 +32,7 @@ group "Dependencies"
 	include "CrashEngine/vendor/imgui"
 	include "CrashEngine/vendor/assimp"
 	include "CrashEngine/vendor/yaml-cpp"
+	
 group ""
 
 

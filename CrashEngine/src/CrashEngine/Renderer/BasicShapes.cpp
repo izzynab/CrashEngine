@@ -122,7 +122,7 @@ namespace CrashEngine {
 
     void Cube::RenderCube()
     {
-        cubeVA->Bind();
+        //cubeVA->Bind();
         Renderer::SubmitDebug(cubeVA,36);
     }
 

@@ -27,7 +27,7 @@ namespace CrashEngine {
 
 		void RenderCube();
 
-	private:
+	protected:
 		unsigned int cubeVAO = 0;
 		unsigned int indexCount = 0;
 

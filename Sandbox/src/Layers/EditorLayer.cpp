@@ -5,6 +5,10 @@
 #include <math.h>
 #include <cfloat>
 
+#include "ImGuizmo.h"
+#include "CrashEngine/Math/Math.h"
+
+
 namespace CrashEngine {
 
 	Editor::Editor()
@@ -14,6 +18,8 @@ namespace CrashEngine {
 		sphere.reset(new Sphere());
 		cube.reset(new Cube());
 		quad.reset(new Quad());
+
+		debugLine.reset(new DebugLine());
 
 		imguilayer.reset(new ImGuiLayer);
 
@@ -49,8 +55,10 @@ namespace CrashEngine {
 		deferredShader->SetUniformInt("irradianceMap", 4);
 		deferredShader->SetUniformInt("prefilterMap", 5);
 		deferredShader->SetUniformInt("brdfLUT", 6);
-		deferredShader->SetUniformInt("shadowMap", 7);
-		deferredShader->SetUniformInt("ssao", 8);
+		deferredShader->SetUniformInt("ssao", 7);
+		deferredShader->SetUniformInt("shadowMap[0]", 8);
+		deferredShader->SetUniformInt("shadowMap[1]", 9);
+		deferredShader->SetUniformInt("shadowMap[2]", 10);
 
 		GBufferShader = Shader::Create("pbr.vert", "gbuffer.frag");
 		GBufferShader->Bind();
@@ -91,13 +99,12 @@ namespace CrashEngine {
 		skyLight.reset(new SkyLight);
 
 		m_ActiveScene->SetDefaultShader(GBufferShader);
-		m_ActiveScene->SetDepthShader(directionalLight->depthMapShader);
 
 		HierarchyPanel.reset(new SceneHierarchyPanel(m_ActiveScene));
 		EnvironmentPanel.reset(new SceneEnvironmentPanel(skyLight, directionalLight, m_ActiveScene));
 
 		SceneSerializer serializer(m_ActiveScene, skyLight, directionalLight);
-		serializer.Deserialize("C:/EngineDev/CrashEngine/Models/Scenes/test1.crash");
+		serializer.Deserialize("C:/EngineDev/CrashEngine/Models/Scenes/sun.crash");
 
 		//-------------------------End of initialize-----------------------------------------
 
@@ -113,6 +120,7 @@ namespace CrashEngine {
 		m_MatrixUB->linkShader(skyLight->GetSkyShader()->GetID(), "Matrices");
 		m_MatrixUB->linkShader(GBufferShader->GetID(), "Matrices");
 		m_MatrixUB->linkShader(m_ActiveScene->ssao->ssaoShader->GetID(), "Matrices");
+		m_MatrixUB->linkShader(debugLine->shader->GetID(), "Matrices");
 
 		m_MatrixUB->setData("projection", glm::value_ptr(projection));
 		
@@ -121,11 +129,27 @@ namespace CrashEngine {
 
 	void Editor::OnUpdate(Timestep ts)
 	{
+		/*auto sview = m_ActiveScene->m_Registry.view<TransformComponent, Mesh, TagComponent>();
+
+		for (auto entity : sview)
+		{
+			if (sview.get<TagComponent>(entity).Tag == "Cube1")
+			{
+				auto& mod = sview.get<Mesh>(entity);
+				auto& transform = sview.get<TransformComponent>(entity).Translation = glm::vec3(
+					glm::cos(directionalLight->rotation.x) * glm::sin(directionalLight->rotation.y),
+					glm::sin(directionalLight->rotation.x) * glm::sin(directionalLight->rotation.y),
+					glm::cos(directionalLight->rotation.y));
+			}
+		}*/
+
+
+
 		Renderer::BeginScene();
 		cameraController->OnUpdate(ts);
 
 		//----------------shadows----------------
-		//directionalLight->DrawCSM();
+		directionalLight->DrawCSM();
 		//----------------shadows----------------
 
 		Height = imguilayer->CurrentWindowView.y;
@@ -162,7 +186,7 @@ namespace CrashEngine {
 		RenderCommand::BindTexture(deferredframebuffer->GetColorAttachmentRendererID(1), 1);
 		RenderCommand::BindTexture(deferredframebuffer->GetColorAttachmentRendererID(2), 2);
 		RenderCommand::BindTexture(deferredframebuffer->GetColorAttachmentRendererID(3), 3);
-		RenderCommand::BindTexture(m_ActiveScene->ssao->GetTextureRendererID(), 8);
+		RenderCommand::BindTexture(m_ActiveScene->ssao->GetTextureRendererID(), 7);
 
 		skyLight->BindIrradianceMap(4);
 		skyLight->BindPrefilterMap(5);
@@ -172,10 +196,12 @@ namespace CrashEngine {
 			glm::cos(directionalLight->rotation.x) * glm::sin(directionalLight->rotation.y),
 			glm::sin(directionalLight->rotation.x) * glm::sin(directionalLight->rotation.y),
 			glm::cos(directionalLight->rotation.y));
+
 		deferredShader->SetUniformVec3("lightRotation", rotation);
 		deferredShader->SetUniformVec3("lightColor", directionalLight->color * directionalLight->intensity);
 		deferredShader->SetUniformVec3("camPos", cameraController->GetCamera().GetPosition());
-		//RenderCommand::BindTexture(directionalLight->depthMap[0]->GetRendererID(), 7);
+		for (int i = 0; i < 3; i++)
+			RenderCommand::BindTexture(directionalLight->depthMap[i]->GetRendererID(), 8+i);
 
 		deferredShader->Bind();
 		quad->RenderQuad();
@@ -188,6 +214,10 @@ namespace CrashEngine {
 		framebuffer->Unbind();
 		//-----------deffered------------------------
 
+		//-----------Debug lines---------------------
+		framebuffer->Bind();
+		//debugLine->DrawDebugLine(glm::vec3(10, 0, 0), glm::vec3(1, 10, 1), glm::vec3(1, 0, 0), 3);
+		framebuffer->Unbind();
 
 		//-----------Post Proscess-------------------
 		m_ActiveScene->postProcess->ApplyFXAA(framebuffer);
@@ -221,7 +251,7 @@ namespace CrashEngine {
 					m_MatrixUB->linkShader(skyLight->GetSkyShader()->GetID(), "Matrices");
 
 					m_ActiveScene->SetDefaultShader(GBufferShader);
-					m_ActiveScene->SetDepthShader(directionalLight->depthMapShader);
+
 
 					HierarchyPanel.reset(new SceneHierarchyPanel(m_ActiveScene));
 					EnvironmentPanel.reset(new SceneEnvironmentPanel(skyLight, directionalLight, m_ActiveScene));
@@ -244,7 +274,6 @@ namespace CrashEngine {
 						m_MatrixUB->linkShader(skyLight->GetSkyShader()->GetID(), "Matrices");
 
 						m_ActiveScene->SetDefaultShader(GBufferShader);
-						m_ActiveScene->SetDepthShader(directionalLight->depthMapShader);
 
 						HierarchyPanel.reset(new SceneHierarchyPanel(m_ActiveScene));
 						EnvironmentPanel.reset(new SceneEnvironmentPanel(skyLight, directionalLight, m_ActiveScene));
@@ -275,45 +304,137 @@ namespace CrashEngine {
 			ImGui::EndMainMenuBar();
 		}
 
+
 		imguilayer->Dockspace(framebuffer);
 
+		//Gizmos
+		Entity selectedEntity = HierarchyPanel->GetSelectedEntity();
+		if (selectedEntity && gizmoType != -1)
+		{
+			ImGuizmo::SetOrthographic(false);
+			ImGuizmo::SetDrawlist();
+			ImGuizmo::AllowAxisFlip(false);
+
+			float windowWidth = (float)ImGui::GetWindowWidth();
+			float windowHeight = (float)ImGui::GetWindowHeight();
+			ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, windowWidth, windowHeight);
+
+			// Camera
+			auto& camera = cameraController->GetCamera();
+			const glm::mat4& cameraProjection = camera.GetProjectionMatrix();
+			glm::mat4 cameraView = camera.GetViewMatrix();
+
+			// Entity transform
+			auto& tc = selectedEntity.GetComponent<TransformComponent>();
+			glm::mat4 transform = tc.GetTransform();
+
+			// Snapping
+			bool snap = Input::IsKeyPressed(CE_KEY_LEFT_CONTROL);
+			float snapValue = 0.5f; // Snap to 0.5m for translation/scale
+			// Snap to 45 degrees for rotation
+			if (gizmoType == ImGuizmo::OPERATION::ROTATE)
+				snapValue = 45.0f;
+
+			float snapValues[3] = { snapValue, snapValue, snapValue };
+
+			ImGuizmo::Manipulate(glm::value_ptr(cameraView), glm::value_ptr(cameraProjection),
+				(ImGuizmo::OPERATION)gizmoType, ImGuizmo::LOCAL, glm::value_ptr(transform),
+				nullptr, snap ? snapValues : nullptr);
+
+			if (ImGuizmo::IsUsing())
+			{
+				glm::vec3 translation, rotation, scale;
+				Math::DecomposeTransform(transform, translation, rotation, scale);
+
+				glm::vec3 deltaRotation = rotation - tc.Rotation;
+				tc.Translation = translation;
+				tc.Rotation += deltaRotation;
+				tc.Scale = scale;
+			}
+		}
+
+		ImGui::End();
+		ImGui::End();
+
+
 		if (imguilayer->MenuEnabled) { imguilayer->Menu(); }
-
 		if (imguilayer->WindowMetricsEnabled) { imguilayer->WindowMetrics(); }
-
 		if (imguilayer->EditorStyleEnabled) { imguilayer->StyleEditor(); }
+
 
 		HierarchyPanel->OnImGuiRender();
 		EnvironmentPanel->OnImGuiRender();
-	
+
+
+
+
+
 		ImGui::Begin("Debug");
+		if (ImGui::Button("Show Info"))
+		{
+
+		}
 		ImGui::SliderFloat("Camera Speed", &cameraController->m_CameraSpeed, 1.f, 100.f);
 		ImGui::Checkbox("ssao", &forward);
 
+		
 		ImGui::Checkbox("metrics", &metrics);
 		if (metrics)
 		{
 			imguilayer->WindowMetrics();
 
-		}
-		ImGui::SliderInt("deferred", &deferred, 0, 4);
-
-		if(deferred == 4)ImGui::Image((void*)m_ActiveScene->ssao->GetTextureRendererID(), ImVec2(400, 400), ImVec2(0, 1), ImVec2(1, 0));
-		else ImGui::Image((void*)deferredframebuffer->GetColorAttachmentRendererID(deferred), ImVec2(400, 400), ImVec2(0, 1), ImVec2(1, 0));
+	}
 		
+
+		ImGui::SliderInt("shadow", &deferred, 0, 2);
+		ImGui::Image((void*)directionalLight->depthMap[deferred]->GetRendererID(), ImVec2(400, 400), ImVec2(0, 1), ImVec2(1, 0));
+
+		ImGui::SliderFloat("far_plane", &directionalLight->far_plane, -10, 200);
+		ImGui::SliderFloat("near_plane", &directionalLight->near_plane, -200, -10);
+		ImGui::SliderFloat("size", &directionalLight->size, 0, 200);
+
+		ImGui::Checkbox("Use colors CSM", &csm);
+
+		deferredShader->Bind();
+		deferredShader->SetUniformInt("csmColor", csm);
 
 		ImGui::End();
-
-
+		
 		glm::mat4 projection = glm::perspective(glm::radians(cameraController->GetCamera().fov), (float)imguilayer->CurrentWindowView.x / (float)imguilayer->CurrentWindowView.y, 0.1f, 400.0f);
 		m_MatrixUB->setData("projection", glm::value_ptr(projection));
-		
-
+		cameraController->GetCamera().SetProjection(projection);
 	}
 
 	void Editor::OnEvent(CrashEngine::Event& event)
 	{
 		cameraController->OnEvent(event);
+
+		//EventDispatcher dispatcher(event);
+		//dispatcher.Dispatch<KeyPressedEvent>();
+
+		if (event.GetEventType() == EventType::KeyPressed)
+		{
+			CrashEngine::KeyPressedEvent& e = (CrashEngine::KeyPressedEvent&)event;
+
+			switch (e.GetKeyCode())
+			{
+			case CE_KEY_1:
+				gizmoType = -1;
+				break;
+			case CE_KEY_2:
+				gizmoType = ImGuizmo::OPERATION::TRANSLATE;
+				break;
+			case CE_KEY_3:
+				gizmoType = ImGuizmo::OPERATION::ROTATE;
+				break;
+			case CE_KEY_4:
+				gizmoType = ImGuizmo::OPERATION::SCALE;
+				break;
+
+			}
+		}
+
+
 
 	}
 

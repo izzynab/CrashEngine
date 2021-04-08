@@ -20,7 +20,10 @@ project "CrashEngine"
 		"vendor/assimp/include/assimp/**.inl",
 		"vendor/assimp/include/assimp/**.h",
 		"vendor/assimp/include/assimp/**.in",
+		"vendor/ImGuizmo/ImGuizmo.cpp",
+		"vendor/ImGuizmo/ImGuizmo.h",
 	}
+
 
 	defines
 	{
@@ -39,6 +42,7 @@ project "CrashEngine"
 		"%{IncludeDir.assimp}",
 		"%{IncludeDir.entt}",
 		"%{IncludeDir.yaml_cpp}",
+		"%{IncludeDir.ImGuizmo}",
 	}
 
 	links 
@@ -49,8 +53,11 @@ project "CrashEngine"
 		"assimp",
 		"yaml-cpp",
 		"opengl32.lib",
+		
 	}
 	
+	filter "files:vendor/ImGuizmo/**.cpp"
+		flags { "NoPCH" }
 
 	filter "system:windows"
 		systemversion "10.0.18362.0"

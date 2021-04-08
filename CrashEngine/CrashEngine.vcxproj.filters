@@ -10,11 +10,17 @@
     <Filter Include="src\CrashEngine\Core">
       <UniqueIdentifier>{5BA20681-4731-904A-F04F-A445DCBDA0F0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\CrashEngine\Debug">
+      <UniqueIdentifier>{D948E7A1-45B5-A29C-0EA9-3AFA7AD4C404}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\CrashEngine\Events">
       <UniqueIdentifier>{A7B65AE2-93B0-8334-7C1D-1A4568B6E9A0}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\CrashEngine\ImGui">
       <UniqueIdentifier>{8DB345A2-F91F-019D-C213-99FA2E3F2305}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\CrashEngine\PostProcess">
+      <UniqueIdentifier>{D7E69F34-43F4-CD1A-CCDA-C90538E799D1}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\CrashEngine\Renderer">
       <UniqueIdentifier>{290BDEDA-1530-2D5B-3E7B-12EB2AFF2B79}</UniqueIdentifier>
@@ -39,6 +45,9 @@
     </Filter>
     <Filter Include="vendor">
       <UniqueIdentifier>{B3738122-9F15-ACF8-88D0-BF4C74113349}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vendor\ImGuizmo">
+      <UniqueIdentifier>{73BF7F4C-DF4A-ED10-E85B-700554664911}</UniqueIdentifier>
     </Filter>
     <Filter Include="vendor\assimp">
       <UniqueIdentifier>{6F57A1F8-DB17-1D2F-A452-66AC10D2610B}</UniqueIdentifier>
@@ -120,6 +129,9 @@
     <ClInclude Include="src\CrashEngine\Core\Window.h">
       <Filter>src\CrashEngine\Core</Filter>
     </ClInclude>
+    <ClInclude Include="src\CrashEngine\Debug\LinesDrawer.h">
+      <Filter>src\CrashEngine\Debug</Filter>
+    </ClInclude>
     <ClInclude Include="src\CrashEngine\Events\ApplicationEvent.h">
       <Filter>src\CrashEngine\Events</Filter>
     </ClInclude>
@@ -134,6 +146,9 @@
     </ClInclude>
     <ClInclude Include="src\CrashEngine\ImGui\ImGuiLayer.h">
       <Filter>src\CrashEngine\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="src\CrashEngine\PostProcess\PostProcess.h">
+      <Filter>src\CrashEngine\PostProcess</Filter>
     </ClInclude>
     <ClInclude Include="src\CrashEngine\Renderer\BasicShapes.h">
       <Filter>src\CrashEngine\Renderer</Filter>
@@ -189,6 +204,12 @@
     <ClInclude Include="src\CrashEngine\Scene\Mesh.h">
       <Filter>src\CrashEngine\Scene</Filter>
     </ClInclude>
+    <ClInclude Include="src\CrashEngine\Scene\PointLight.h">
+      <Filter>src\CrashEngine\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="src\CrashEngine\Scene\SSAO.h">
+      <Filter>src\CrashEngine\Scene</Filter>
+    </ClInclude>
     <ClInclude Include="src\CrashEngine\Scene\Scene.h">
       <Filter>src\CrashEngine\Scene</Filter>
     </ClInclude>
@@ -236,6 +257,9 @@
     </ClInclude>
     <ClInclude Include="src\cepch.h">
       <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\ImGuizmo\ImGuizmo.h">
+      <Filter>vendor\ImGuizmo</Filter>
     </ClInclude>
     <ClInclude Include="vendor\assimp\include\assimp\BaseImporter.h">
       <Filter>vendor\assimp\include\assimp</Filter>
@@ -1716,9 +1740,8 @@
     <ClInclude Include="vendor\glm\glm\vector_relational.hpp">
       <Filter>vendor\glm\glm</Filter>
     </ClInclude>
-    <ClInclude Include="src\CrashEngine\Scene\PointLight.h" />
-    <ClInclude Include="src\CrashEngine\PostProcess\PostProcess.h" />
-    <ClInclude Include="src\CrashEngine\Scene\SSAO.h" />
+    <ClInclude Include="src\CrashEngine\Math\Math.h" />
+    <ClInclude Include="src\CrashEngine\Debug\Debugger.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\CrashEngine\Core\Application.cpp">
@@ -1733,11 +1756,17 @@
     <ClCompile Include="src\CrashEngine\Core\Log.cpp">
       <Filter>src\CrashEngine\Core</Filter>
     </ClCompile>
+    <ClCompile Include="src\CrashEngine\Debug\LinesDrawer.cpp">
+      <Filter>src\CrashEngine\Debug</Filter>
+    </ClCompile>
     <ClCompile Include="src\CrashEngine\ImGui\ImGuiBuild.cpp">
       <Filter>src\CrashEngine\ImGui</Filter>
     </ClCompile>
     <ClCompile Include="src\CrashEngine\ImGui\ImGuiLayer.cpp">
       <Filter>src\CrashEngine\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CrashEngine\PostProcess\PostProcess.cpp">
+      <Filter>src\CrashEngine\PostProcess</Filter>
     </ClCompile>
     <ClCompile Include="src\CrashEngine\Renderer\BasicShapes.cpp">
       <Filter>src\CrashEngine\Renderer</Filter>
@@ -1785,6 +1814,12 @@
       <Filter>src\CrashEngine\Scene</Filter>
     </ClCompile>
     <ClCompile Include="src\CrashEngine\Scene\Mesh.cpp">
+      <Filter>src\CrashEngine\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CrashEngine\Scene\PointLight.cpp">
+      <Filter>src\CrashEngine\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CrashEngine\Scene\SSAO.cpp">
       <Filter>src\CrashEngine\Scene</Filter>
     </ClCompile>
     <ClCompile Include="src\CrashEngine\Scene\Scene.cpp">
@@ -1835,37 +1870,41 @@
     <ClCompile Include="src\cepch.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\CrashEngine\Scene\PointLight.cpp" />
-    <ClCompile Include="src\CrashEngine\PostProcess\PostProcess.cpp" />
-    <ClCompile Include="src\CrashEngine\Scene\SSAO.cpp" />
+    <ClCompile Include="vendor\ImGuizmo\ImGuizmo.cpp">
+      <Filter>vendor\ImGuizmo</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CrashEngine\Math\Math.cpp" />
+    <ClCompile Include="src\CrashEngine\Debug\Debugger.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="vendor\assimp\include\assimp\config.h.in">
       <Filter>vendor\assimp\include\assimp</Filter>
     </None>
-    <None Include="src\CrashEngine\Renderer\Shaders\Text.vert" />
     <None Include="src\CrashEngine\Renderer\Shaders\background.frag" />
     <None Include="src\CrashEngine\Renderer\Shaders\background.vert" />
     <None Include="src\CrashEngine\Renderer\Shaders\Basic.frag" />
     <None Include="src\CrashEngine\Renderer\Shaders\Basic.vert" />
+    <None Include="src\CrashEngine\Renderer\Shaders\blur.frag" />
     <None Include="src\CrashEngine\Renderer\Shaders\brdf.frag" />
+    <None Include="src\CrashEngine\Renderer\Shaders\brightness.frag" />
     <None Include="src\CrashEngine\Renderer\Shaders\cubemap.vert" />
+    <None Include="src\CrashEngine\Renderer\Shaders\deferred.frag" />
     <None Include="src\CrashEngine\Renderer\Shaders\depthMap.frag" />
     <None Include="src\CrashEngine\Renderer\Shaders\depthMap.vert" />
     <None Include="src\CrashEngine\Renderer\Shaders\equirectangularToCubemap.frag" />
+    <None Include="src\CrashEngine\Renderer\Shaders\fxaa.frag" />
+    <None Include="src\CrashEngine\Renderer\Shaders\GammaHDR.frag" />
+    <None Include="src\CrashEngine\Renderer\Shaders\gbuffer.frag" />
     <None Include="src\CrashEngine\Renderer\Shaders\irradiance.frag" />
+    <None Include="src\CrashEngine\Renderer\Shaders\lines.frag" />
+    <None Include="src\CrashEngine\Renderer\Shaders\lines.vert" />
+    <None Include="src\CrashEngine\Renderer\Shaders\mixbloom.frag" />
     <None Include="src\CrashEngine\Renderer\Shaders\pbr.frag" />
     <None Include="src\CrashEngine\Renderer\Shaders\pbr.vert" />
     <None Include="src\CrashEngine\Renderer\Shaders\prefilter.frag" />
-    <None Include="src\CrashEngine\Renderer\Shaders\Text.frag" />
-    <None Include="src\CrashEngine\Renderer\Shaders\blur.frag" />
-    <None Include="src\CrashEngine\Renderer\Shaders\mixbloom.frag" />
-    <None Include="src\CrashEngine\Renderer\Shaders\brightness.frag" />
-    <None Include="src\CrashEngine\Renderer\Shaders\GammaHDR.frag" />
-    <None Include="src\CrashEngine\Renderer\Shaders\gbuffer.frag" />
-    <None Include="src\CrashEngine\Renderer\Shaders\deferred.frag" />
-    <None Include="src\CrashEngine\Renderer\Shaders\fxaa.frag" />
     <None Include="src\CrashEngine\Renderer\Shaders\ssao.frag" />
     <None Include="src\CrashEngine\Renderer\Shaders\ssaoBlur.frag" />
+    <None Include="src\CrashEngine\Renderer\Shaders\Text.frag" />
+    <None Include="src\CrashEngine\Renderer\Shaders\Text.vert" />
   </ItemGroup>
 </Project>

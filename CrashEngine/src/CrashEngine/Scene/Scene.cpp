@@ -114,7 +114,7 @@ namespace CrashEngine {
 		
 	}
 
-	void Scene::DepthRender()
+	void Scene::DepthRender(Shader* shader)
 	{
 		auto view = m_Registry.view<TransformComponent, Mesh>();
 
@@ -124,9 +124,10 @@ namespace CrashEngine {
 			auto& transform = view.get<TransformComponent>(entity);
 
 			glm::mat4 model = transform.GetTransform();
-			depthShader->SetUniformMat4("model", model);
+			shader->Bind();
+			shader->SetUniformMat4("model", model);
 
-			mod.Draw(depthShader,false);//todo: depth render couses errors 
+			mod.Draw(shader,false);//todo: depth render couses errors 
 		}
 
 

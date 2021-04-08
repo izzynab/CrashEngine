@@ -2,7 +2,6 @@
 layout (location = 0) out vec4 FragColor;
 
 in vec2 TexCoords;
-//in vec4 FragPosLightSpace;
 
 // material parameters
 uniform sampler2D position;
@@ -10,8 +9,6 @@ uniform sampler2D albedo;
 uniform sampler2D normal;
 uniform sampler2D MetalRoughAO;
 uniform sampler2D ssao;
-
-uniform sampler2D shadowMap;
 
 // IBL
 uniform samplerCube irradianceMap;
@@ -23,6 +20,16 @@ uniform vec3 lightRotation;
 uniform vec3 lightColor;
 
 uniform vec3 camPos;
+
+const int Cascades = 3;
+
+uniform sampler2D shadowMap[Cascades];
+
+uniform mat4 lightSpaceMatrix[Cascades];
+uniform float cascadeEndClipSpace[Cascades];
+
+uniform int csmColor;
+
 
 layout (std140) uniform Matrices
 {
@@ -78,30 +85,30 @@ vec3 fresnelSchlickRoughness(float cosTheta, vec3 F0, float roughness)
     return F0 + (max(vec3(1.0 - roughness), F0) - F0) * pow(1.0 - cosTheta, 5.0);
 }   
 // ----------------------------------------------------------------------------
-float ShadowCalculation(vec4 fragPosLightSpace)
+float ShadowCalculation(vec4 fragPosLightSpace,int cascade)
 {
-     // perform perspective divide
+    // perform perspective divide
     vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
     // transform to [0,1] range
     projCoords = projCoords * 0.5 + 0.5;
     // get closest depth value from light's perspective (using [0,1] range fragPosLight as coords)
-    float closestDepth = texture(shadowMap, projCoords.xy).r; 
+    float closestDepth = texture(shadowMap[cascade], projCoords.xy).r; 
     // get depth of current fragment from light's perspective
     float currentDepth = projCoords.z;
     // calculate bias (based on depth map resolution and slope)
     vec3 normal = texture(normal,TexCoords).rgb;
-    vec3 lightDir = normalize(vec3(-2.0f, 4.0f, -1.0f) - texture(position,TexCoords).rgb);
+    vec3 lightDir = normalize(lightRotation);
     float bias = max(0.05 * (1.0 - dot(normal, lightDir)), 0.005);
     // check whether current frag pos is in shadow
     // float shadow = currentDepth - bias > closestDepth  ? 1.0 : 0.0;
     // PCF
     float shadow = 0.0;
-    vec2 texelSize = 1.0 / textureSize(shadowMap, 0);
+    vec2 texelSize = 1.0 / textureSize(shadowMap[cascade], 0);
     for(int x = -1; x <= 1; ++x)
     {
         for(int y = -1; y <= 1; ++y)
         {
-            float pcfDepth = texture(shadowMap, projCoords.xy + vec2(x, y) * texelSize).r; 
+            float pcfDepth = texture(shadowMap[cascade], projCoords.xy + vec2(x, y) * texelSize).r; 
             shadow += currentDepth - bias > pcfDepth  ? 1.0 : 0.0;        
         }    
     }
@@ -141,7 +148,7 @@ void main()
     for(int i = 0; i < 1; ++i) 
     {
         // calculate per-light radiance
-        vec3 L = normalize(lightRotation);//how to make light rotation insted of light position???
+        vec3 L = normalize(lightRotation);
         vec3 H = normalize(V + L);
 
         // Cook-Torrance BRDF
@@ -188,11 +195,37 @@ void main()
     vec3 specular = prefilteredColor * (F * brdf.x + brdf.y);
 
     vec3 ambient = (kD * diffuse + specular) * ao;
-    
-    //float shadow = ShadowCalculation(FragPosLightSpace);   
-    //if(shadow == 1) Lo = vec3(0);
+        
+
+
+    for (int i = 0 ; i < Cascades ; i++) 
+    {
+        if (texture(normal,TexCoords).a <= cascadeEndClipSpace[i]) 
+        {
+            vec4 FragPosLightSpace = lightSpaceMatrix[i] * inverse(view) * vec4(texture(position,TexCoords).rgb, 1.0);
+            float shadow = ShadowCalculation(FragPosLightSpace, i);   
+            if(shadow == 1) Lo = vec3(0);
+        }
+    }
+
     vec3 color = ambient + Lo;
-    //vec3 color = ambient ;
     FragColor = vec4(color , 1.0);
+
+    for (int i = 0 ; i < Cascades ; i++) 
+    {
+        if (texture(normal,TexCoords).a <= cascadeEndClipSpace[i]) 
+        {
+        if(csmColor == 1)
+        {
+         if (i == 0) 
+                 FragColor *= vec4(0.1, 0.0, 0.0, 0.0);
+            else if (i == 1)
+                FragColor *= vec4(0.0, 0.1, 0.0, 0.0);
+            else if (i == 2)
+                FragColor *= vec4(0.0, 0.0, 0.1, 0.0);
+        }
+            break;
+        }
+   }
 
 }

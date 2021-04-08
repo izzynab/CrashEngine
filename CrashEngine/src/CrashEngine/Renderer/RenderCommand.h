@@ -42,6 +42,11 @@ namespace CrashEngine {
 			s_RendererAPI->DrawTriangles(vertexArray, trianglesNumber);
 		}
 
+		inline static void DrawLine(const std::shared_ptr<VertexArray>& vertexArray,float width)
+		{
+			s_RendererAPI->DrawLine(vertexArray, width);
+		}
+
 		inline static void BindTexture(const uint32_t& texture,uint32_t textureNr)
 		{
 			return s_RendererAPI->BindTexture(texture, textureNr);

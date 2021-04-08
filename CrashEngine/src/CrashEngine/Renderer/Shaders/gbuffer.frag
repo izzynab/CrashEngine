@@ -7,6 +7,7 @@ layout (location = 3) out vec4 gMetalRoughAO;
 in vec2 TexCoords;
 in vec3 WorldPos;
 in vec3 Normal;        
+in float ClipSpacePosZ;
 
 uniform sampler2D albedoMap;
 uniform sampler2D normalMap;
@@ -42,7 +43,7 @@ void main()
 
     gAlbedo = vec4(texture(albedoMap, TexCoords).rgb,1.f);
 
-    gNormal = vec4(getNormalFromMap(),1.f);
+    gNormal = vec4(getNormalFromMap(),ClipSpacePosZ);
 
     gMetalRoughAO.r = texture(metallicMap, TexCoords).r;
     gMetalRoughAO.g = texture(roughnessMap, TexCoords).r;

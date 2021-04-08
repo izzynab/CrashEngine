@@ -9,6 +9,8 @@
 
 #include "CrashEngine/Scene/SceneSerializer.h"
 
+#include "ImGuizmo.h"
+
 // TEMPORARY
 #include <GLFW/glfw3.h>
 #include <glad/glad.h>
@@ -18,6 +20,7 @@ namespace CrashEngine {
 	ImGuiLayer::ImGuiLayer()
 		: Layer("ImGuiLayer")
 	{
+		
 	}
 
 	ImGuiLayer::~ImGuiLayer()
@@ -172,10 +175,7 @@ namespace CrashEngine {
 			ImGui::PopStyleVar(2);
 
 
-		// DockSpace
-		ImGuiIO& io = ImGui::GetIO();
-		if (io.ConfigFlags & ImGuiConfigFlags_DockingEnable)
-		{
+		
 			ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
 			ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
 
@@ -194,19 +194,6 @@ namespace CrashEngine {
 			}
 			
 			
-			ImGui::End();
-		}
-		else
-		{
-			ImGuiIO& io = ImGui::GetIO();
-			ImGui::Text("ERROR: Docking is not enabled! See Demo > Configuration.");
-			ImGui::Text("Set io.ConfigFlags |= ImGuiConfigFlags_DockingEnable in your code, or ");
-			ImGui::SameLine(0.0f, 0.0f);
-			if (ImGui::SmallButton("click here"))
-				io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
-		}
-
-		ImGui::End();
 	}
 
 	void ImGuiLayer::MainMenu()

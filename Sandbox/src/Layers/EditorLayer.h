@@ -20,6 +20,8 @@
 #include "Panels/SceneEnvironmentPanel.h"
 #include "Panels/MaterialPanel.h"
 
+#include "CrashEngine/Debug/LinesDrawer.h"
+
 
 namespace CrashEngine {
 
@@ -50,6 +52,8 @@ namespace CrashEngine {
 		std::shared_ptr<Cube> cube;
 		std::shared_ptr<Quad> quad;
 
+		std::shared_ptr<DebugLine> debugLine;
+
 		std::shared_ptr<SkyLight> skyLight;
 		std::shared_ptr<DirectionalLight> directionalLight;
 
@@ -73,9 +77,12 @@ namespace CrashEngine {
 		float Height;
 		float Width;
 
+		int gizmoType = 7;
+
 		int deferred = 0;
 		bool metrics = false;
 		bool forward = false;
+		bool csm = false;
 	};
 
 }

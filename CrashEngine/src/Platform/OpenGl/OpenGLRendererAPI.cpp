@@ -50,6 +50,12 @@ namespace CrashEngine {
 		glDrawArrays(GL_TRIANGLES, 0, trianglesNumber);
 	}
 
+	void OpenGLRendererAPI::DrawLine(const std::shared_ptr<VertexArray>& vertexArray,float width)
+	{
+		glLineWidth(width);
+		glDrawArrays(GL_LINES, 0, 2);
+	}
+
 	void OpenGLRendererAPI::BindTexture(const unsigned int& texture, unsigned int textureNr)
 	{
 		glActiveTexture(0x84C0 + textureNr);

@@ -14,6 +14,8 @@ namespace CrashEngine {
 
 		void SetContext(const std::shared_ptr<Scene>& scene);
 
+		Entity GetSelectedEntity() const { return m_SelectionContext; }
+
 		void OnImGuiRender();
 	private:
 		void DrawEntityNode(Entity entity);

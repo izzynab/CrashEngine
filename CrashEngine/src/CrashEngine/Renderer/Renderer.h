@@ -20,6 +20,7 @@ namespace CrashEngine {
 
 		static void Submit(const std::shared_ptr<VertexArray>& vertexArray, bool strip = false);
 		static void SubmitDebug(const std::shared_ptr<VertexArray>& vertexArray, unsigned int trianglesNumber);
+		static void SubmitLine(const std::shared_ptr<VertexArray>& vertexArray,float width);
 
 		//static void DrawModel(Model* model, Shader* shader);
 
