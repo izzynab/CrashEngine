@@ -50,10 +50,17 @@ namespace CrashEngine {
 		glDrawArrays(GL_TRIANGLES, 0, trianglesNumber);
 	}
 
-	void OpenGLRendererAPI::DrawLine(const std::shared_ptr<VertexArray>& vertexArray,float width)
+	void OpenGLRendererAPI::DrawLine(const std::shared_ptr<VertexArray>& vertexArray,int count, float width)
 	{
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		
 		glLineWidth(width);
-		glDrawArrays(GL_LINES, 0, 2);
+		glEnable(GL_LINE_SMOOTH);
+		glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
+
+		glDrawArrays(GL_LINES, 0, count);
+		glDisable(GL_BLEND);
 	}
 
 	void OpenGLRendererAPI::BindTexture(const unsigned int& texture, unsigned int textureNr)
@@ -79,6 +86,7 @@ namespace CrashEngine {
 		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, drawFramebuffer->GetRenderID());
 
 		glBlitFramebuffer(0, 0, readFreambuffer->GetSpecification().Width, readFreambuffer->GetSpecification().Height, 0, 0, drawFramebuffer->GetSpecification().Width, drawFramebuffer->GetSpecification().Height, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+		//glBlitFramebuffer(0, 0, readFreambuffer->GetSpecification().Width, readFreambuffer->GetSpecification().Height, 0, 0, drawFramebuffer->GetSpecification().Width, drawFramebuffer->GetSpecification().Height, GL_DEPTH_BUFFER_BIT, GL_NEAREST);
 	}
 
 }

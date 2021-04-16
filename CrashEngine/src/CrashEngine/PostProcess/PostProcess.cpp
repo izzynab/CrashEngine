@@ -55,6 +55,7 @@ namespace CrashEngine {
 		draw_framebuffer->Resize(width, height);
 
 		RenderCommand::BlitFramebuffers(framebuffer, draw_framebuffer);
+		framebuffer->BlitDepthToFramebuffer(draw_framebuffer);
 
 
 		bloom->Bind();
@@ -100,12 +101,14 @@ namespace CrashEngine {
 		quad->RenderQuad();
 
 		framebuffer->Unbind();
+		draw_framebuffer->BlitDepthToFramebuffer(framebuffer);
 	}
 
 	void PostProcess::GammaHDRCorretion(std::shared_ptr<Framebuffer>& framebuffer)
 	{
 		draw_framebuffer->Resize(framebuffer->GetSpecification().Width, framebuffer->GetSpecification().Height);
 		RenderCommand::BlitFramebuffers(framebuffer, draw_framebuffer);
+		framebuffer->BlitDepthToFramebuffer(draw_framebuffer);
 
 		framebuffer->Bind();
 		RenderCommand::Clear();
@@ -116,12 +119,15 @@ namespace CrashEngine {
 
 		framebuffer->Unbind();
 
+		draw_framebuffer->BlitDepthToFramebuffer(framebuffer);
+
 	}
 
 	void PostProcess::ApplyFXAA(std::shared_ptr<Framebuffer>& framebuffer)
 	{
 		draw_framebuffer->Resize(framebuffer->GetSpecification().Width, framebuffer->GetSpecification().Height);
 		RenderCommand::BlitFramebuffers(framebuffer, draw_framebuffer);
+		framebuffer->BlitDepthToFramebuffer(draw_framebuffer);
 
 		framebuffer->Bind();
 		RenderCommand::Clear();
@@ -132,5 +138,6 @@ namespace CrashEngine {
 		quad->RenderQuad();
 
 		framebuffer->Unbind();
+		draw_framebuffer->BlitDepthToFramebuffer(framebuffer);
 	}
 }

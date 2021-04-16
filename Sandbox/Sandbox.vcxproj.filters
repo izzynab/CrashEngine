@@ -21,7 +21,6 @@
     <ClInclude Include="src\Layers\Panels\SceneHierarchyPanel.h">
       <Filter>Layers\Panels</Filter>
     </ClInclude>
-    <ClInclude Include="src\Layers\DebugLayer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Layers\EditorLayer.cpp">
@@ -37,6 +36,5 @@
       <Filter>Layers\Panels</Filter>
     </ClCompile>
     <ClCompile Include="src\SandboxApp.cpp" />
-    <ClCompile Include="src\Layers\DebugLayer.cpp" />
   </ItemGroup>
 </Project>

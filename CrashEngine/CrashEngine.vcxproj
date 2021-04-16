@@ -149,7 +149,6 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="src\CrashEngine\Debug\Debugger.h" />
     <ClInclude Include="src\CrashEngine\Math\Math.h" />
     <ClInclude Include="src\Crash.h" />
     <ClInclude Include="src\CrashEngine\Core\Application.h" />
@@ -704,7 +703,6 @@
     <ClInclude Include="vendor\glm\glm\vector_relational.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\CrashEngine\Debug\Debugger.cpp" />
     <ClCompile Include="src\CrashEngine\Math\Math.cpp" />
     <ClCompile Include="src\CrashEngine\Core\Application.cpp" />
     <ClCompile Include="src\CrashEngine\Core\Layer.cpp" />
