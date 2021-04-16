@@ -23,10 +23,10 @@ namespace CrashEngine {
 		RenderCommand::DrawTriangles(vertexArray, trianglesNumber);
 	}
 
-	void Renderer::SubmitLine(const std::shared_ptr<VertexArray>& vertexArray,float width)
+	void Renderer::SubmitLine(const std::shared_ptr<VertexArray>& vertexArray, int count, float width)
 	{
 		vertexArray->Bind();
-		RenderCommand::DrawLine(vertexArray, width);
+		RenderCommand::DrawLine(vertexArray,count, width);
 	}
 
 	/*void Renderer::DrawModel(Model* model, Shader* shader)

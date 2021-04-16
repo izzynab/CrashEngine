@@ -119,11 +119,11 @@ namespace CrashEngine
 			mCascadeWorldViewProj[i] = glm::ortho(minX, maxX, minY, maxY, minZ, maxZ);
 			//if(i==0)CE_INFO("{0}, {1}, {2}, {3}, {4}, {5}", minX, maxX, minY, maxY, minZ, maxZ);
 
-			debugLine->DrawDebugLine(NearTopLeft, NearTopRight);
+			/*debugLine->DrawDebugLine(NearTopLeft, NearTopRight);
 			debugLine->DrawDebugLine(NearBottomLeft, NearBottomRight);
 
 			debugLine->DrawDebugLine(NearTopLeft, NearBottomLeft);
-			debugLine->DrawDebugLine(NearTopRight, NearBottomRight);
+			debugLine->DrawDebugLine(NearTopRight, NearBottomRight);*/
 		}
 
 
