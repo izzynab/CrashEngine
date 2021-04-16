@@ -71,8 +71,6 @@ namespace CrashEngine {
 		/*Last framebuffer which is shown in ImGui Dockspace Image*/
 		std::shared_ptr<Framebuffer> framebuffer;
 
-		//std::shared_ptr<Framebuffer> debugFramebuffer;
-
 		/*Framebuffer which stores GBuffer images*/
 		std::shared_ptr<Framebuffer> deferredframebuffer;
 
@@ -85,8 +83,6 @@ namespace CrashEngine {
 		bool metrics = false;
 		bool forward = false;
 		bool csm = false;
-
-		float lineThickness = 3.f;
 	};
 
 }

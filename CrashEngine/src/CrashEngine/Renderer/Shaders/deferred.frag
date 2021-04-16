@@ -204,7 +204,7 @@ void main()
         {
             vec4 FragPosLightSpace = lightSpaceMatrix[i] * inverse(view) * vec4(texture(position,TexCoords).rgb, 1.0);
             float shadow = ShadowCalculation(FragPosLightSpace, i);   
-            //if(shadow == 1) Lo = vec3(0);
+            if(shadow == 1) Lo = vec3(0);
         }
     }
 

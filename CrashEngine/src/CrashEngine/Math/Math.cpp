@@ -79,6 +79,4 @@ namespace CrashEngine::Math {
 		return true;
 	}
 
-	
-
 }

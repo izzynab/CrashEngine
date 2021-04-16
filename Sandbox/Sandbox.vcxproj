@@ -131,12 +131,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\Layers\DebugLayer.h" />
     <ClInclude Include="src\Layers\EditorLayer.h" />
     <ClInclude Include="src\Layers\Panels\MaterialPanel.h" />
     <ClInclude Include="src\Layers\Panels\SceneEnvironmentPanel.h" />
     <ClInclude Include="src\Layers\Panels\SceneHierarchyPanel.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Layers\DebugLayer.cpp" />
     <ClCompile Include="src\Layers\EditorLayer.cpp" />
     <ClCompile Include="src\Layers\Panels\MaterialPanel.cpp" />
     <ClCompile Include="src\Layers\Panels\SceneEnvironmentPanel.cpp" />

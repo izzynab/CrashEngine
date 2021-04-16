@@ -1741,6 +1741,7 @@
       <Filter>vendor\glm\glm</Filter>
     </ClInclude>
     <ClInclude Include="src\CrashEngine\Math\Math.h" />
+    <ClInclude Include="src\CrashEngine\Debug\Debugger.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\CrashEngine\Core\Application.cpp">
@@ -1873,6 +1874,7 @@
       <Filter>vendor\ImGuizmo</Filter>
     </ClCompile>
     <ClCompile Include="src\CrashEngine\Math\Math.cpp" />
+    <ClCompile Include="src\CrashEngine\Debug\Debugger.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="vendor\assimp\include\assimp\config.h.in">

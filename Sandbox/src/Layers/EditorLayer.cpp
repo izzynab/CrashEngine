@@ -43,8 +43,6 @@ namespace CrashEngine {
 
 		framebuffer = Framebuffer::Create(spec);
 
-		//debugFramebuffer = Framebuffer::Create(spec);
-
 		//------------shaders-------------------------
 		deferredShader = Shader::Create("basic.vert", "deferred.frag");
 		deferredShader->Bind();
@@ -126,9 +124,6 @@ namespace CrashEngine {
 
 		m_MatrixUB->setData("projection", glm::value_ptr(projection));
 		
-		debugLine->AddGrid(100);
-		debugLine->AddDebugLine(glm::vec3(0, 0, 0), glm::vec3(20, 20, 20), glm::vec3(0, 0, 0.7f), lineThickness);
-		debugLine->AddDebugLine(glm::vec3(0, 0, 0), glm::vec3(-20, 20, -20), glm::vec3(0, 0, 0.7f), lineThickness);
 		
 	}
 
@@ -147,6 +142,8 @@ namespace CrashEngine {
 					glm::cos(directionalLight->rotation.y));
 			}
 		}*/
+
+
 
 		Renderer::BeginScene();
 		cameraController->OnUpdate(ts);
@@ -217,20 +214,18 @@ namespace CrashEngine {
 		framebuffer->Unbind();
 		//-----------deffered------------------------
 
+		//-----------Debug lines---------------------
+		framebuffer->Bind();
+		//debugLine->DrawDebugLine(glm::vec3(10, 0, 0), glm::vec3(1, 10, 1), glm::vec3(1, 0, 0), 3);
+		framebuffer->Unbind();
+
 		//-----------Post Proscess-------------------
 		m_ActiveScene->postProcess->ApplyFXAA(framebuffer);
 		m_ActiveScene->postProcess->Blur(framebuffer);
 		m_ActiveScene->postProcess->GammaHDRCorretion(framebuffer);
-
-		//-----------Debug lines---------------------
-		framebuffer->Bind();
-		auto& camera = cameraController->GetCamera();
-		debugLine->OnUpdate(camera);
-		framebuffer->Unbind();
-
-
-
 		Renderer::EndScene();
+
+
 	}
 
 	void Editor::OnImGuiRender()
@@ -313,25 +308,22 @@ namespace CrashEngine {
 		imguilayer->Dockspace(framebuffer);
 
 		//Gizmos
-		auto& camera = cameraController->GetCamera();
-		const glm::mat4& cameraProjection = camera.GetProjectionMatrix();
-		glm::mat4 cameraView = camera.GetViewMatrix();
-
-		glm::mat4 identityMatrix = glm::mat4(1.f);
-
-		float windowWidth = (float)ImGui::GetWindowWidth();
-		float windowHeight = (float)ImGui::GetWindowHeight();
-		ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, windowWidth, windowHeight);
-
-		ImGuizmo::SetOrthographic(false);
-		ImGuizmo::SetDrawlist();
-		ImGuizmo::AllowAxisFlip(false);		
-		
-		//ImGuizmo::DrawGrid(glm::value_ptr(cameraView), glm::value_ptr(cameraProjection), glm::value_ptr(identityMatrix), 100.f);
-
 		Entity selectedEntity = HierarchyPanel->GetSelectedEntity();
 		if (selectedEntity && gizmoType != -1)
 		{
+			ImGuizmo::SetOrthographic(false);
+			ImGuizmo::SetDrawlist();
+			ImGuizmo::AllowAxisFlip(false);
+
+			float windowWidth = (float)ImGui::GetWindowWidth();
+			float windowHeight = (float)ImGui::GetWindowHeight();
+			ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, windowWidth, windowHeight);
+
+			// Camera
+			auto& camera = cameraController->GetCamera();
+			const glm::mat4& cameraProjection = camera.GetProjectionMatrix();
+			glm::mat4 cameraView = camera.GetViewMatrix();
+
 			// Entity transform
 			auto& tc = selectedEntity.GetComponent<TransformComponent>();
 			glm::mat4 transform = tc.GetTransform();
@@ -360,7 +352,7 @@ namespace CrashEngine {
 				tc.Scale = scale;
 			}
 		}
-		
+
 		ImGui::End();
 		ImGui::End();
 
@@ -378,7 +370,6 @@ namespace CrashEngine {
 
 
 		ImGui::Begin("Debug");
-		ImGui::SliderFloat("line Thickness", &lineThickness, 1.f, 10.f);
 		if (ImGui::Button("Show Info"))
 		{
 
