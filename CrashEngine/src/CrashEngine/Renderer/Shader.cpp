@@ -20,6 +20,18 @@ namespace CrashEngine {
 		return nullptr;
 	}
 
+	Shader* Shader::Create(const char* vertexShader, const char* fragmentShader, const char* geometryShader)
+	{
+		switch (Renderer::GetAPI())
+		{
+		case RendererAPI::API::None:    CE_CORE_ASSERT(false, "RendererAPI::None is currently not supported!"); return nullptr;
+		case RendererAPI::API::OpenGL:  return new OpenGLShader(vertexShader, fragmentShader, geometryShader);
+		}
+
+		CE_CORE_ASSERT(false, "Unknown RendererAPI!");
+		return nullptr;
+	}
+
 	Shader* Shader::Create(const char* vertexShader, const char* fragmentShader)
 	{
 		switch (Renderer::GetAPI())

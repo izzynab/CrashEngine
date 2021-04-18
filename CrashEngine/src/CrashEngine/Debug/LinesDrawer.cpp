@@ -12,18 +12,20 @@
 namespace CrashEngine {
 	DebugLine::DebugLine()
 	{
-		shader = Shader::Create("lines.vert", "lines.frag");
+		shader = Shader::Create("lines.vert", "lines.frag","lines.geom");
 	}
 
 	void DebugLine::OnUpdate(Camera& camera)
 	{
+		//TODO: try working out why lines changes width when rotating camera
 		for (int i = 0; i < lines.size(); i++)
 		{
 			glm::mat4 model = glm::mat4(1.0f);
 			shader->Bind();
 			shader->SetUniformVec3("color", lines[i].color);
 			shader->SetUniformMat4("model", model);
-			shader->SetUniformVec2("viewPort", glm::vec2(camera.ScreenWidth, camera.ScreenHeight));
+			shader->SetUniformVec2("u_viewport_size", glm::vec2(camera.ScreenWidth, camera.ScreenHeight));
+			shader->SetUniformVec2("u_aa_radius", glm::vec2(0.5, 0.5));
 			shader->SetUniformFloat("lineWidth", lines[i].width);
 
 			Renderer::SubmitLine(lines[i].VAO, 2, lines[i].width);
@@ -35,7 +37,8 @@ namespace CrashEngine {
 			shader->Bind();
 			shader->SetUniformVec3("color", linesSet[i].color);
 			shader->SetUniformMat4("model", model);
-			shader->SetUniformVec2("viewPort", glm::vec2(camera.ScreenWidth, camera.ScreenHeight));
+			shader->SetUniformVec2("u_viewport_size", glm::vec2(camera.ScreenWidth, camera.ScreenHeight));
+			shader->SetUniformVec2("u_aa_radius", glm::vec2(0.5, 0.5));
 			shader->SetUniformFloat("lineWidth", linesSet[i].width);
 
 			Renderer::SubmitLine(linesSet[i].VAO, linesSet[i].NumberOfLines*2, linesSet[i].width);

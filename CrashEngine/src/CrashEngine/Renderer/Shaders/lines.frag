@@ -1,25 +1,18 @@
 #version 330 core
-out vec4 FragColor;
+out vec4 frag_color;
 
-in vec2 lineCenter;
+uniform vec2 u_aa_radius;
 
-uniform vec3 color;
-uniform float lineWidth;
-
-uniform vec2 ViewPort;
-
-float blendFactor = 1.4f;
+in vec4 g_col;
+in float g_u;
+in float g_v;
+in float g_line_width;
+in float g_line_length;
 
 void main()
-{       
-      vec4 col = vec4(color,1);
-      float d = length(lineCenter-(gl_FragCoord.xy));
-      if (d>lineWidth)
-        col.w = 0;
-      else
-        col.w *= pow(float((lineWidth-d)/lineWidth), blendFactor);
-      //FragColor = col;
-
-      FragColor = vec4(color,1);
-      
+{
+  float au = 1.0 - smoothstep( 1.0 - ((2.0*u_aa_radius[0]) / g_line_width),  1.0, abs(g_u / g_line_width) );
+  float av = 1.0 - smoothstep( 1.0 - ((2.0*u_aa_radius[1]) / g_line_length), 1.0, abs(g_v / g_line_length) );
+  frag_color = g_col;
+  frag_color.a *= min(av, au);
 }

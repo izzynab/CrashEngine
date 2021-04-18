@@ -126,7 +126,7 @@ namespace CrashEngine {
 
 		m_MatrixUB->setData("projection", glm::value_ptr(projection));
 		
-		debugLine->AddGrid(100);
+		debugLine->AddGrid(60);
 		debugLine->AddDebugLine(glm::vec3(0, 0, 0), glm::vec3(20, 20, 20), glm::vec3(0, 0, 0.7f), lineThickness);
 		debugLine->AddDebugLine(glm::vec3(0, 0, 0), glm::vec3(-20, 20, -20), glm::vec3(0, 0, 0.7f), lineThickness);
 		

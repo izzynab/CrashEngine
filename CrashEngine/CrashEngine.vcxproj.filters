@@ -1904,5 +1904,6 @@
     <None Include="src\CrashEngine\Renderer\Shaders\ssaoBlur.frag" />
     <None Include="src\CrashEngine\Renderer\Shaders\Text.frag" />
     <None Include="src\CrashEngine\Renderer\Shaders\Text.vert" />
+    <None Include="src\CrashEngine\Renderer\Shaders\lines.geom" />
   </ItemGroup>
 </Project>

@@ -9,6 +9,8 @@ namespace CrashEngine {
 	public:
 		OpenGLShader(const std::string& vertexSrc, const std::string& fragmentSrc);
 
+		OpenGLShader(const char* vertexShader, const char* fragmentShader, const char* geometryShader);
+
 		OpenGLShader(const char* vertexShader, const char* fragmentShader);
 
 		~OpenGLShader();

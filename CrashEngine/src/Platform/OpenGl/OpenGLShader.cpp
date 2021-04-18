@@ -111,6 +111,82 @@ namespace CrashEngine {
 		glDetachShader(program, fragmentShader);
 	}
 
+	OpenGLShader::OpenGLShader(const char* vertexShader, const char* fragmentShader, const char* geometryShader)
+	{
+		std::string vPath = "C:\\EngineDev\\CrashEngine\\CrashEngine\\src\\CrashEngine\\Renderer\\Shaders\\";
+		std::string fPath = "C:\\EngineDev\\CrashEngine\\CrashEngine\\src\\CrashEngine\\Renderer\\Shaders\\";
+		std::string gPath = "C:\\EngineDev\\CrashEngine\\CrashEngine\\src\\CrashEngine\\Renderer\\Shaders\\";
+
+		vPath += vertexShader;
+		fPath += fragmentShader;
+		gPath += geometryShader;
+
+		// 1. retrieve the vertex/fragment source code from filePath
+		std::string vertexCode;
+		std::string fragmentCode;
+		std::string geometryCode;
+		std::ifstream vShaderFile;
+		std::ifstream fShaderFile;
+		std::ifstream gShaderFile;
+
+		// ensure ifstream objects can throw exceptions:
+		vShaderFile.exceptions(std::ifstream::failbit | std::ifstream::badbit);
+		fShaderFile.exceptions(std::ifstream::failbit | std::ifstream::badbit);
+		gShaderFile.exceptions(std::ifstream::failbit | std::ifstream::badbit);
+		try
+		{
+			// open files
+			vShaderFile.open(vPath);
+			fShaderFile.open(fPath);
+			gShaderFile.open(gPath);
+			std::stringstream vShaderStream, fShaderStream,gShaderStream;
+			// read file's buffer contents into streams
+			vShaderStream << vShaderFile.rdbuf();
+			fShaderStream << fShaderFile.rdbuf();
+			gShaderStream << gShaderFile.rdbuf();
+			// close file handlers
+			vShaderFile.close();
+			fShaderFile.close();
+			gShaderFile.close();
+			// convert stream into string
+			vertexCode = vShaderStream.str();
+			fragmentCode = fShaderStream.str();
+			geometryCode = gShaderStream.str();
+		}
+		catch (std::ifstream::failure& e)
+		{
+			CE_CORE_ERROR("SHADER::FILE_NOT_SUCCESFULLY_READ");
+		}
+		const char* vShaderCode = vertexCode.c_str();
+		const char* fShaderCode = fragmentCode.c_str();
+		const char* gShaderCode = geometryCode.c_str();
+		// 2. compile shaders
+		unsigned int vertex, fragment, geometry;
+		// vertex shader
+		vertex = glCreateShader(GL_VERTEX_SHADER);
+		glShaderSource(vertex, 1, &vShaderCode, NULL);
+		glCompileShader(vertex);
+		// fragment Shader
+		fragment = glCreateShader(GL_FRAGMENT_SHADER);
+		glShaderSource(fragment, 1, &fShaderCode, NULL);
+		glCompileShader(fragment);
+		// geometry Shader
+		geometry = glCreateShader(GL_GEOMETRY_SHADER);
+		glShaderSource(geometry, 1, &gShaderCode, NULL);
+		glCompileShader(geometry);
+		// shader Program
+		m_RendererID = glCreateProgram();
+		glAttachShader(m_RendererID, vertex);
+		glAttachShader(m_RendererID, fragment);
+		glAttachShader(m_RendererID, geometry);
+		glLinkProgram(m_RendererID);
+		// delete the shaders as they're linked into our program now and no longer necessary
+		glDeleteShader(vertex);
+		glDeleteShader(fragment);
+		glDeleteShader(geometry);
+	}
+
+
 	OpenGLShader::OpenGLShader(const char* vertexShader, const char* fragmentShader)
 	{
 		std::string vPath = "C:\\EngineDev\\CrashEngine\\CrashEngine\\src\\CrashEngine\\Renderer\\Shaders\\";

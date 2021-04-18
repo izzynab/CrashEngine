@@ -56,8 +56,6 @@ namespace CrashEngine {
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		
 		glLineWidth(width);
-		glEnable(GL_LINE_SMOOTH);
-		glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
 
 		glDrawArrays(GL_LINES, 0, count);
 		glDisable(GL_BLEND);

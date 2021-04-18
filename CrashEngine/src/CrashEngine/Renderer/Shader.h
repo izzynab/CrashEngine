@@ -11,6 +11,8 @@ namespace CrashEngine {
 	public:
 		static Shader* Create(const std::string& vertexSrc, const std::string& fragmentSrc);
 
+		static Shader* Create(const char* vertexShader, const char* fragmentShader, const char* geometryShader);
+
 		static Shader* Create(const char* vertexShader, const char* fragmentShader);
 
 		virtual void Bind() const = 0;

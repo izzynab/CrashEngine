@@ -770,6 +770,7 @@
     <None Include="src\CrashEngine\Renderer\Shaders\gbuffer.frag" />
     <None Include="src\CrashEngine\Renderer\Shaders\irradiance.frag" />
     <None Include="src\CrashEngine\Renderer\Shaders\lines.frag" />
+    <None Include="src\CrashEngine\Renderer\Shaders\lines.geom" />
     <None Include="src\CrashEngine\Renderer\Shaders\lines.vert" />
     <None Include="src\CrashEngine\Renderer\Shaders\mixbloom.frag" />
     <None Include="src\CrashEngine\Renderer\Shaders\pbr.frag" />
