@@ -139,6 +139,8 @@ namespace CrashEngine {
 		if (bloom)
 		{
 			ImGui::Checkbox("Blur", &m_Scene->postProcess->blur);
+			ImGui::SliderFloat("Threshold", &m_Scene->postProcess->blurThreshold,0.f,2.f);
+			ImGui::SliderFloat("Soft Threshold", &m_Scene->postProcess->blurSoftThreshold,0.f,1.f);
 			ImGui::TreePop();
 		}
 

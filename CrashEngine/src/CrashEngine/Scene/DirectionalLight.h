@@ -46,7 +46,5 @@ namespace CrashEngine {
 		std::vector<float> m_cascadeEnd;	
 		std::vector<glm::mat4> mCascadeWorldViewProj;
 
-		std::shared_ptr<DebugLine> debugLine;
-
 	};
 }

@@ -149,6 +149,8 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\CrashEngine\Debug\Debugger.h" />
+    <ClInclude Include="src\CrashEngine\Debug\PointsDrawer.h" />
     <ClInclude Include="src\CrashEngine\Math\Math.h" />
     <ClInclude Include="src\Crash.h" />
     <ClInclude Include="src\CrashEngine\Core\Application.h" />
@@ -184,6 +186,8 @@
     <ClInclude Include="src\CrashEngine\Renderer\Texture.h" />
     <ClInclude Include="src\CrashEngine\Renderer\TextureCreator.h" />
     <ClInclude Include="src\CrashEngine\Renderer\VertexArray.h" />
+    <ClInclude Include="src\CrashEngine\Scene\Atmosphere\AtmosphereConstants.h" />
+    <ClInclude Include="src\CrashEngine\Scene\Atmosphere\AtmosphereLight.h" />
     <ClInclude Include="src\CrashEngine\Scene\Components.h" />
     <ClInclude Include="src\CrashEngine\Scene\DirectionalLight.h" />
     <ClInclude Include="src\CrashEngine\Scene\Entity.h" />
@@ -703,6 +707,8 @@
     <ClInclude Include="vendor\glm\glm\vector_relational.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\CrashEngine\Debug\Debugger.cpp" />
+    <ClCompile Include="src\CrashEngine\Debug\PointsDrawer.cpp" />
     <ClCompile Include="src\CrashEngine\Math\Math.cpp" />
     <ClCompile Include="src\CrashEngine\Core\Application.cpp" />
     <ClCompile Include="src\CrashEngine\Core\Layer.cpp" />
@@ -724,6 +730,7 @@
     <ClCompile Include="src\CrashEngine\Renderer\Texture.cpp" />
     <ClCompile Include="src\CrashEngine\Renderer\TextureCreator.cpp" />
     <ClCompile Include="src\CrashEngine\Renderer\VertexArray.cpp" />
+    <ClCompile Include="src\CrashEngine\Scene\Atmosphere\AtmosphereLight.cpp" />
     <ClCompile Include="src\CrashEngine\Scene\DirectionalLight.cpp" />
     <ClCompile Include="src\CrashEngine\Scene\Entity.cpp" />
     <ClCompile Include="src\CrashEngine\Scene\Material.cpp" />
@@ -753,13 +760,38 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <None Include="src\CrashEngine\Renderer\Shaders\Atmosphere\clear_2d.comp" />
+    <None Include="src\CrashEngine\Renderer\Shaders\Atmosphere\clear_3d.comp" />
+    <None Include="src\CrashEngine\Renderer\Shaders\Atmosphere\compute_direct_irradiance.comp" />
+    <None Include="src\CrashEngine\Renderer\Shaders\Atmosphere\compute_indirect_irradiance.comp" />
+    <None Include="src\CrashEngine\Renderer\Shaders\Atmosphere\compute_multiple_scattering.comp" />
+    <None Include="src\CrashEngine\Renderer\Shaders\Atmosphere\compute_scattering_density.comp" />
+    <None Include="src\CrashEngine\Renderer\Shaders\Atmosphere\compute_single_scattering.comp" />
+    <None Include="src\CrashEngine\Renderer\Shaders\Atmosphere\compute_transmittance.comp" />
+    <None Include="src\CrashEngine\Renderer\Shaders\Atmosphere\constants.glsl" />
+    <None Include="src\CrashEngine\Renderer\Shaders\Atmosphere\cubemap.frag" />
+    <None Include="src\CrashEngine\Renderer\Shaders\Atmosphere\cubemap.vert" />
+    <None Include="src\CrashEngine\Renderer\Shaders\Atmosphere\irradiance_functions.glsl" />
+    <None Include="src\CrashEngine\Renderer\Shaders\Atmosphere\mesh.frag" />
+    <None Include="src\CrashEngine\Renderer\Shaders\Atmosphere\mesh.vert" />
+    <None Include="src\CrashEngine\Renderer\Shaders\Atmosphere\reflection_map.frag" />
+    <None Include="src\CrashEngine\Renderer\Shaders\Atmosphere\reflection_map.vert" />
+    <None Include="src\CrashEngine\Renderer\Shaders\Atmosphere\rendering_functions.glsl" />
+    <None Include="src\CrashEngine\Renderer\Shaders\Atmosphere\scattering_functions.glsl" />
+    <None Include="src\CrashEngine\Renderer\Shaders\Atmosphere\transmittance_functions.glsl" />
+    <None Include="src\CrashEngine\Renderer\Shaders\Atmosphere\uniforms.glsl" />
+    <None Include="src\CrashEngine\Renderer\Shaders\Atmosphere\utility.glsl" />
     <None Include="src\CrashEngine\Renderer\Shaders\background.frag" />
     <None Include="src\CrashEngine\Renderer\Shaders\background.vert" />
     <None Include="src\CrashEngine\Renderer\Shaders\Basic.frag" />
     <None Include="src\CrashEngine\Renderer\Shaders\Basic.vert" />
     <None Include="src\CrashEngine\Renderer\Shaders\blur.frag" />
+    <None Include="src\CrashEngine\Renderer\Shaders\blurTest.frag" />
     <None Include="src\CrashEngine\Renderer\Shaders\brdf.frag" />
-    <None Include="src\CrashEngine\Renderer\Shaders\brightness.frag" />
+    <None Include="src\CrashEngine\Renderer\Shaders\brightness.frag">
+      <FileType>Document</FileType>
+    </None>
+    <None Include="src\CrashEngine\Renderer\Shaders\computeTest.comp" />
     <None Include="src\CrashEngine\Renderer\Shaders\cubemap.vert" />
     <None Include="src\CrashEngine\Renderer\Shaders\deferred.frag" />
     <None Include="src\CrashEngine\Renderer\Shaders\depthMap.frag" />
@@ -778,6 +810,7 @@
     <None Include="src\CrashEngine\Renderer\Shaders\prefilter.frag" />
     <None Include="src\CrashEngine\Renderer\Shaders\ssao.frag" />
     <None Include="src\CrashEngine\Renderer\Shaders\ssaoBlur.frag" />
+    <None Include="src\CrashEngine\Renderer\Shaders\TexBasic.frag" />
     <None Include="src\CrashEngine\Renderer\Shaders\Text.frag" />
     <None Include="src\CrashEngine\Renderer\Shaders\Text.vert" />
     <None Include="vendor\assimp\include\assimp\config.h.in" />

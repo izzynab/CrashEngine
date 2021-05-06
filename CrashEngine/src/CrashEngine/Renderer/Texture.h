@@ -9,7 +9,8 @@ namespace CrashEngine {
 	{
 		RGB16F = 0x881B, 
 		RGBA16F = 0x881A,
-		RGB32F = 0x8814,
+		RGBA32F = 0x8814,
+		RGB32F = 0x8815,
 		RGB8 = 0x8051,
 		RGBA8 = 0x8058,
 		RGBA16  = 0x805B
@@ -77,6 +78,8 @@ namespace CrashEngine {
 		static std::shared_ptr<Texture2D> Create(TextureSpecification spec);
 		static std::shared_ptr<Texture2D> Create(uint32_t width, uint32_t height);
 		static std::shared_ptr<Texture2D> Create(const std::string& path);
+
+		virtual void BindImageTexture() = 0;
 
 		std::string m_Path;
 	};

@@ -87,4 +87,63 @@ namespace CrashEngine {
 		//glBlitFramebuffer(0, 0, readFreambuffer->GetSpecification().Width, readFreambuffer->GetSpecification().Height, 0, 0, drawFramebuffer->GetSpecification().Width, drawFramebuffer->GetSpecification().Height, GL_DEPTH_BUFFER_BIT, GL_NEAREST);
 	}
 
+	void OpenGLRendererAPI::Dispatch(float width, float height)
+	{
+		glDispatchCompute((GLuint)width, (GLuint)height, 1);
+	}
+
+	void OpenGLRendererAPI::MemoryBarier()
+	{
+		glMemoryBarrier(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT);
+		//if (glGetError() != GL_NO_ERROR)
+		{
+			//CE_CORE_ERROR("Error after memery barier");
+		}
+	}
+
+	void OpenGLRendererAPI::GetBoolValue(uint32_t parameterValue, bool* data)
+	{
+		glGetBooleanv(parameterValue, (GLboolean*)data);
+	}
+
+	void OpenGLRendererAPI::GetFloatValue(uint32_t parameterValue, float* data)
+	{
+		glGetFloatv(parameterValue, data);
+	}
+
+	void OpenGLRendererAPI::GetIntValue(uint32_t parameterValue, int* data)
+	{
+		glGetIntegerv(parameterValue, data);
+	}
+
+	void OpenGLRendererAPI::GetBoolIndexValue(uint32_t parameterValue, int index, bool* data)
+	{
+		glGetBooleani_v(parameterValue, index, (GLboolean*)data);
+	}
+
+	void OpenGLRendererAPI::GetFloatIndexValue(uint32_t parameterValue, int index, float* data)
+	{
+		glGetFloati_v(parameterValue, index, data);
+	}
+
+	void OpenGLRendererAPI::GetIntIndexValue(uint32_t parameterValue, int index, int* data)
+	{
+		glGetIntegeri_v(parameterValue, index, data);
+	}
+
+	void MessageCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam)
+	{
+		if (type == GL_DEBUG_TYPE_ERROR)
+		{
+			CE_CORE_ERROR("GL DEBUG ERROR: type = {0}, severity = {1}, message = {2}", type, severity, message);
+		}
+
+	}
+
+	void OpenGLRendererAPI::InitDebugOutput()
+	{
+		// During init, enable debug output
+		glEnable(GL_DEBUG_OUTPUT);
+		glDebugMessageCallback(MessageCallback, 0);
+	}
 }

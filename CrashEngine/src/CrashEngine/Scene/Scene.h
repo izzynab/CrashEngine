@@ -41,6 +41,8 @@ namespace CrashEngine {
 		void OnComponentAdded(Entity entity, T& component);
 
 	public:
+		std::string filepath;
+
 		std::shared_ptr<PostProcess> postProcess;
 		std::shared_ptr<SSAO> ssao;
 

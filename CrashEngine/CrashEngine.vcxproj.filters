@@ -1741,6 +1741,10 @@
       <Filter>vendor\glm\glm</Filter>
     </ClInclude>
     <ClInclude Include="src\CrashEngine\Math\Math.h" />
+    <ClInclude Include="src\CrashEngine\Debug\Debugger.h" />
+    <ClInclude Include="src\CrashEngine\Scene\Atmosphere\AtmosphereConstants.h" />
+    <ClInclude Include="src\CrashEngine\Scene\Atmosphere\AtmosphereLight.h" />
+    <ClInclude Include="src\CrashEngine\Debug\PointsDrawer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\CrashEngine\Core\Application.cpp">
@@ -1873,6 +1877,9 @@
       <Filter>vendor\ImGuizmo</Filter>
     </ClCompile>
     <ClCompile Include="src\CrashEngine\Math\Math.cpp" />
+    <ClCompile Include="src\CrashEngine\Debug\Debugger.cpp" />
+    <ClCompile Include="src\CrashEngine\Scene\Atmosphere\AtmosphereLight.cpp" />
+    <ClCompile Include="src\CrashEngine\Debug\PointsDrawer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="vendor\assimp\include\assimp\config.h.in">
@@ -1884,7 +1891,6 @@
     <None Include="src\CrashEngine\Renderer\Shaders\Basic.vert" />
     <None Include="src\CrashEngine\Renderer\Shaders\blur.frag" />
     <None Include="src\CrashEngine\Renderer\Shaders\brdf.frag" />
-    <None Include="src\CrashEngine\Renderer\Shaders\brightness.frag" />
     <None Include="src\CrashEngine\Renderer\Shaders\cubemap.vert" />
     <None Include="src\CrashEngine\Renderer\Shaders\deferred.frag" />
     <None Include="src\CrashEngine\Renderer\Shaders\depthMap.frag" />
@@ -1905,5 +1911,30 @@
     <None Include="src\CrashEngine\Renderer\Shaders\Text.frag" />
     <None Include="src\CrashEngine\Renderer\Shaders\Text.vert" />
     <None Include="src\CrashEngine\Renderer\Shaders\lines.geom" />
+    <None Include="src\CrashEngine\Renderer\Shaders\brightness.frag" />
+    <None Include="src\CrashEngine\Renderer\Shaders\blurTest.frag" />
+    <None Include="src\CrashEngine\Renderer\Shaders\Atmosphere\constants.glsl" />
+    <None Include="src\CrashEngine\Renderer\Shaders\Atmosphere\irradiance_functions.glsl" />
+    <None Include="src\CrashEngine\Renderer\Shaders\Atmosphere\rendering_functions.glsl" />
+    <None Include="src\CrashEngine\Renderer\Shaders\Atmosphere\scattering_functions.glsl" />
+    <None Include="src\CrashEngine\Renderer\Shaders\Atmosphere\transmittance_functions.glsl" />
+    <None Include="src\CrashEngine\Renderer\Shaders\Atmosphere\uniforms.glsl" />
+    <None Include="src\CrashEngine\Renderer\Shaders\Atmosphere\utility.glsl" />
+    <None Include="src\CrashEngine\Renderer\Shaders\Atmosphere\clear_2d.comp" />
+    <None Include="src\CrashEngine\Renderer\Shaders\Atmosphere\clear_3d.comp" />
+    <None Include="src\CrashEngine\Renderer\Shaders\Atmosphere\compute_direct_irradiance.comp" />
+    <None Include="src\CrashEngine\Renderer\Shaders\Atmosphere\compute_indirect_irradiance.comp" />
+    <None Include="src\CrashEngine\Renderer\Shaders\Atmosphere\compute_multiple_scattering.comp" />
+    <None Include="src\CrashEngine\Renderer\Shaders\Atmosphere\compute_scattering_density.comp" />
+    <None Include="src\CrashEngine\Renderer\Shaders\Atmosphere\compute_single_scattering.comp" />
+    <None Include="src\CrashEngine\Renderer\Shaders\Atmosphere\compute_transmittance.comp" />
+    <None Include="src\CrashEngine\Renderer\Shaders\Atmosphere\cubemap.frag" />
+    <None Include="src\CrashEngine\Renderer\Shaders\Atmosphere\cubemap.vert" />
+    <None Include="src\CrashEngine\Renderer\Shaders\Atmosphere\mesh.frag" />
+    <None Include="src\CrashEngine\Renderer\Shaders\Atmosphere\mesh.vert" />
+    <None Include="src\CrashEngine\Renderer\Shaders\Atmosphere\reflection_map.frag" />
+    <None Include="src\CrashEngine\Renderer\Shaders\Atmosphere\reflection_map.vert" />
+    <None Include="src\CrashEngine\Renderer\Shaders\computeTest.comp" />
+    <None Include="src\CrashEngine\Renderer\Shaders\TexBasic.frag" />
   </ItemGroup>
 </Project>

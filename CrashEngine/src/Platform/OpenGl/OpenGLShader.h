@@ -32,4 +32,22 @@ namespace CrashEngine {
 		unsigned int m_RendererID = 0;
 	};
 
+	class OpenGLComputeShader : public ComputeShader
+	{
+	public:
+		OpenGLComputeShader(const char* computeShader);
+
+		~OpenGLComputeShader();
+
+		virtual void Bind() const override;
+		virtual void Unbind() const override;
+
+		virtual void SetUniformInt(std::string name, int value) override;
+
+		virtual unsigned int GetID() override;
+
+	private:
+		unsigned int m_RendererID = 0;
+	};
+
 }

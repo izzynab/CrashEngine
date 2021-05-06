@@ -16,6 +16,8 @@ namespace CrashEngine {
 
 		void LoadHDR(std::string path);
 
+		void UpdateCubemap();
+
 		void RenderSky();
 
 		inline void BindIrradianceMap(uint32_t textureNr){ RenderCommand::BindCubemap(Irradiancemap->GetRendererID(), textureNr); }
@@ -28,6 +30,8 @@ namespace CrashEngine {
 		std::shared_ptr<Texture2D> brdfLUTTexture;
 
 		std::string directory;
+
+		int BlurSamples = 0;
 
 	private:
 		std::shared_ptr<TextureHDR> HDR;

@@ -34,7 +34,21 @@ namespace CrashEngine {
 		virtual void SetViewport(float Width, float Height) = 0;
 		virtual void BlitFramebuffers(std::shared_ptr<Framebuffer>& readFreambuffer, std::shared_ptr<Framebuffer>& drawFramebuffer) = 0;
 
+		virtual void Dispatch(float width,float height) = 0;
+		virtual void MemoryBarier() = 0;
+
+		virtual void GetBoolValue(uint32_t parameterValue, bool* data) = 0;
+		virtual void GetFloatValue(uint32_t parameterValue, float* data) = 0;
+		virtual void GetIntValue(uint32_t parameterValue, int* data) = 0;
+
+		virtual void GetBoolIndexValue(uint32_t parameterValue,int index, bool* data) = 0;
+		virtual void GetFloatIndexValue(uint32_t parameterValue, int index, float* data) = 0;
+		virtual void GetIntIndexValue(uint32_t parameterValue, int index, int* data) = 0;
+
+		virtual void InitDebugOutput() = 0;
+
 		inline static API GetAPI() { return s_API; }
+
 	private:
 		static API s_API;
 	};

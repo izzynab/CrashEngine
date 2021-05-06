@@ -66,6 +66,29 @@ namespace CrashEngine {
 		{
 			s_RendererAPI->BlitFramebuffers(readFreambuffer, drawFramebuffer);
 		}
+
+		inline static void Dispatch(float width, float height)
+		{
+			s_RendererAPI->Dispatch(width, height);
+		}
+		inline static void MemoryBarier()
+		{
+			s_RendererAPI->MemoryBarier();
+		}
+
+		inline static void GetBoolValue(uint32_t parameterValue, bool* data) { s_RendererAPI->GetBoolValue(parameterValue, data); }
+		inline static void GetFloatValue(uint32_t parameterValue, float* data) { s_RendererAPI->GetFloatValue(parameterValue, data); }
+		inline static void GetIntValue(uint32_t parameterValue, int* data) { s_RendererAPI->GetIntValue(parameterValue, data); }
+
+		inline static void GetBoolIndexValue(uint32_t parameterValue, int index, bool* data) { s_RendererAPI->GetBoolIndexValue(parameterValue, index, data); }
+		inline static void GetFloatIndexValue(uint32_t parameterValue, int index, float* data) { s_RendererAPI->GetFloatIndexValue(parameterValue, index, data); }
+		inline static void GetIntIndexValue(uint32_t parameterValue, int index, int* data) { s_RendererAPI->GetIntIndexValue(parameterValue, index, data); }
+
+		inline static void InitDebugOutput()
+		{
+			s_RendererAPI->InitDebugOutput();
+		}
+			
 	private:
 		static RendererAPI* s_RendererAPI;
 	};

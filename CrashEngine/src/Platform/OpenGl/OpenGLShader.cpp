@@ -160,6 +160,7 @@ namespace CrashEngine {
 		const char* vShaderCode = vertexCode.c_str();
 		const char* fShaderCode = fragmentCode.c_str();
 		const char* gShaderCode = geometryCode.c_str();
+
 		// 2. compile shaders
 		unsigned int vertex, fragment, geometry;
 		// vertex shader
@@ -174,6 +175,67 @@ namespace CrashEngine {
 		geometry = glCreateShader(GL_GEOMETRY_SHADER);
 		glShaderSource(geometry, 1, &gShaderCode, NULL);
 		glCompileShader(geometry);
+
+		GLint isVCompiled = 0;
+		glGetShaderiv(vertex, GL_COMPILE_STATUS, &isVCompiled);
+		if (isVCompiled == GL_FALSE)
+		{
+			GLint maxLength = 0;
+			glGetShaderiv(vertex, GL_INFO_LOG_LENGTH, &maxLength);
+
+			// The maxLength includes the NULL character
+			//std::vector<char> errorLog(maxLength);
+			std::string errorLog;
+			errorLog.resize(maxLength, '0');
+			glGetShaderInfoLog(vertex, maxLength, &maxLength, &errorLog[0]);
+			CE_CORE_ERROR("Vertex shader error: {0}", errorLog);
+
+			// Provide the infolog in whatever manor you deem best.
+			// Exit with failure.
+			glDeleteShader(vertex); // Don't leak the shader.
+			return;
+		}
+
+		GLint isFCompiled = 0;
+		glGetShaderiv(fragment, GL_COMPILE_STATUS, &isFCompiled);
+		if (isFCompiled == GL_FALSE)
+		{
+			GLint maxLength = 0;
+			glGetShaderiv(fragment, GL_INFO_LOG_LENGTH, &maxLength);
+
+			// The maxLength includes the NULL character
+			//std::vector<char> errorLog(maxLength);
+			std::string errorLog;
+			errorLog.resize(maxLength, '0');
+			glGetShaderInfoLog(fragment, maxLength, &maxLength, &errorLog[0]);
+			CE_CORE_ERROR("Vertex shader error: {0}", errorLog);
+
+			// Provide the infolog in whatever manor you deem best.
+			// Exit with failure.
+			glDeleteShader(fragment); // Don't leak the shader.
+			return;
+		}
+
+		GLint isGCompiled = 0;
+		glGetShaderiv(geometry, GL_COMPILE_STATUS, &isGCompiled);
+		if (isGCompiled == GL_FALSE)
+		{
+			GLint maxLength = 0;
+			glGetShaderiv(geometry, GL_INFO_LOG_LENGTH, &maxLength);
+
+			// The maxLength includes the NULL character
+			//std::vector<char> errorLog(maxLength);
+			std::string errorLog;
+			errorLog.resize(maxLength, '0');
+			glGetShaderInfoLog(geometry, maxLength, &maxLength, &errorLog[0]);
+			CE_CORE_ERROR("Vertex shader error: {0}", errorLog);
+
+			// Provide the infolog in whatever manor you deem best.
+			// Exit with failure.
+			glDeleteShader(geometry); // Don't leak the shader.
+			return;
+		}
+
 		// shader Program
 		m_RendererID = glCreateProgram();
 		glAttachShader(m_RendererID, vertex);
@@ -235,6 +297,47 @@ namespace CrashEngine {
 		fragment = glCreateShader(GL_FRAGMENT_SHADER);
 		glShaderSource(fragment, 1, &fShaderCode, NULL);
 		glCompileShader(fragment);
+
+		GLint isVCompiled = 0;
+		glGetShaderiv(vertex, GL_COMPILE_STATUS, &isVCompiled);
+		if (isVCompiled == GL_FALSE)
+		{
+			GLint maxLength = 0;
+			glGetShaderiv(vertex, GL_INFO_LOG_LENGTH, &maxLength);
+
+			// The maxLength includes the NULL character
+			//std::vector<char> errorLog(maxLength);
+			std::string errorLog;
+			errorLog.resize(maxLength, '0');
+			glGetShaderInfoLog(vertex, maxLength, &maxLength, &errorLog[0]);
+			CE_CORE_ERROR("Vertex shader error: {0}", errorLog);
+
+			// Provide the infolog in whatever manor you deem best.
+			// Exit with failure.
+			glDeleteShader(vertex); // Don't leak the shader.
+			return;
+		}
+
+		GLint isFCompiled = 0;
+		glGetShaderiv(fragment, GL_COMPILE_STATUS, &isFCompiled);
+		if (isFCompiled == GL_FALSE)
+		{
+			GLint maxLength = 0;
+			glGetShaderiv(fragment, GL_INFO_LOG_LENGTH, &maxLength);
+
+			// The maxLength includes the NULL character
+			//std::vector<char> errorLog(maxLength);
+			std::string errorLog;
+			errorLog.resize(maxLength, '0');
+			glGetShaderInfoLog(fragment, maxLength, &maxLength, &errorLog[0]);
+			CE_CORE_ERROR("Vertex shader error: {0}", errorLog);
+
+			// Provide the infolog in whatever manor you deem best.
+			// Exit with failure.
+			glDeleteShader(fragment); // Don't leak the shader.
+			return;
+		}
+
 		// shader Program
 		m_RendererID = glCreateProgram();
 		glAttachShader(m_RendererID, vertex);
@@ -307,4 +410,93 @@ namespace CrashEngine {
 		return m_RendererID;
 	}
 
+	OpenGLComputeShader::OpenGLComputeShader(const char* computeShader)
+	{
+		std::string Path = "C:\\EngineDev\\CrashEngine\\CrashEngine\\src\\CrashEngine\\Renderer\\Shaders\\";
+
+		Path += computeShader;
+
+		// 1. retrieve the vertex/fragment source code from filePath
+		std::string computeCode;
+		std::ifstream ShaderFile;
+		// ensure ifstream objects can throw exceptions:
+		ShaderFile.exceptions(std::ifstream::failbit | std::ifstream::badbit);
+		try
+		{
+			// open files
+			ShaderFile.open(Path);
+			std::stringstream ShaderStream;
+			// read file's buffer contents into streams
+			ShaderStream << ShaderFile.rdbuf();
+			// close file handlers
+			ShaderFile.close();
+			// convert stream into string
+			computeCode = ShaderStream.str();
+		}
+		catch (std::ifstream::failure& e)
+		{
+			CE_CORE_ERROR("SHADER::FILE_NOT_SUCCESFULLY_READ");
+		}
+		const char* ShaderCode = computeCode.c_str();
+		// 2. compile shaders
+		unsigned int compute;
+		// compute shader
+		compute = glCreateShader(GL_COMPUTE_SHADER);
+		glShaderSource(compute, 1, &ShaderCode, NULL);
+		glCompileShader(compute);
+		
+		GLint isCompiled = 0;
+		glGetShaderiv(compute, GL_COMPILE_STATUS, &isCompiled);
+		if (isCompiled == GL_FALSE)
+		{
+			GLint maxLength = 0;
+			glGetShaderiv(compute, GL_INFO_LOG_LENGTH, &maxLength);
+
+			// The maxLength includes the NULL character
+			//std::vector<char> errorLog(maxLength);
+			std::string errorLog;
+			errorLog.resize(maxLength, '0');
+			glGetShaderInfoLog(compute, maxLength, &maxLength, &errorLog[0]);
+			CE_CORE_ERROR("Compute shader error: {0}", errorLog);
+
+			// Provide the infolog in whatever manor you deem best.
+			// Exit with failure.
+			glDeleteShader(compute); // Don't leak the shader.
+			return;
+		}
+
+		// shader Program
+		m_RendererID = glCreateProgram();
+		glAttachShader(m_RendererID, compute);
+		glLinkProgram(m_RendererID);
+		// delete the shaders as they're linked into our program now and no longer necessary
+		glDeleteShader(compute);
+
+	}
+
+	OpenGLComputeShader::~OpenGLComputeShader()
+	{
+		glDeleteProgram(m_RendererID);
+	}
+
+	void OpenGLComputeShader::Bind() const
+	{
+		glUseProgram(m_RendererID);
+	}
+
+	void OpenGLComputeShader::Unbind() const
+	{
+		glUseProgram(0);
+	}
+
+	unsigned int OpenGLComputeShader::GetID()
+	{
+		return m_RendererID;
+	}
+
+	void OpenGLComputeShader::SetUniformInt(std::string name, int value)
+	{
+		int projectionLoc = glGetUniformLocation(m_RendererID, name.c_str());
+		glUniform1i((projectionLoc), value);
+	}
 }

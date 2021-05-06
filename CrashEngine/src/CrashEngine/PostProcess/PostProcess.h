@@ -25,7 +25,10 @@ namespace CrashEngine {
 
 	public:
 		bool blur = true;
-		float exposure = 1.f; 
+		float blurThreshold = 0.4f; 
+		float blurSoftThreshold = 0.1f;
+
+		float exposure = 1.f;
 
 	private:
 		Shader* blurShader;

@@ -68,10 +68,15 @@ namespace CrashEngine {
 		/*Shader draws pbr scene from textures of models*/
 		Shader* forwardShader;
 
+		Shader* blurShader;
+
+		Shader* QuadShader;
+
 		/*Last framebuffer which is shown in ImGui Dockspace Image*/
 		std::shared_ptr<Framebuffer> framebuffer;
 
-		//std::shared_ptr<Framebuffer> debugFramebuffer;
+		/*framebuffer used to debug purposes*/
+		std::shared_ptr<Framebuffer> debugFramebuffer;
 
 		/*Framebuffer which stores GBuffer images*/
 		std::shared_ptr<Framebuffer> deferredframebuffer;
@@ -86,7 +91,8 @@ namespace CrashEngine {
 		bool forward = false;
 		bool csm = false;
 
-		float lineThickness = 3.f;
+		std::shared_ptr<Texture2D> testTexture;
+		ComputeShader* compShader;
 	};
 
 }

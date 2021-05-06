@@ -61,7 +61,11 @@ namespace CrashEngine {
 
 		void OnUpdate(Camera& camera);
 
-		void AddDebugLine(glm::vec3 startVec, glm::vec3 endVec, glm::vec3 color = glm::vec3(0.1f,0.1f,0.9f), float width = 3.f);
+		void DrawUpdateLine(glm::vec3 startVec, glm::vec3 endVec, glm::vec3 color , float width);
+
+		void ClearUpdatLines();
+
+		void AddLine(glm::vec3 startVec, glm::vec3 endVec, glm::vec3 color , float width);
 		
 		void AddGrid(const float gridSize);
 	public:
@@ -70,11 +74,13 @@ namespace CrashEngine {
 		Shader* shader;
 
 	private:
+		//std::shared_ptr<Line> UpdateLine;
+
 		std::vector<Line> lines;
 
 		std::vector<LinesSet> linesSet;
 
-		int NumberOfLines = 0;
+		int UpdateLinesNumber = 0;
 	};
 
 }

@@ -10,10 +10,11 @@ namespace CrashEngine {
 	{
 		specification = spec;
 
-		glGenTextures(1, &m_RendererID);
+		//glGenTextures(1, &m_RendererID);
+		glCreateTextures(GL_TEXTURE_2D, 1, &m_RendererID);
 		// pre-allocate enough memory for the LUT texture.
 		glBindTexture(GL_TEXTURE_2D, m_RendererID);
-		glTexImage2D(GL_TEXTURE_2D, 0, specification.DataFormat, specification.Width, specification.Height, 0, specification.DataFormat, specification.type, 0);
+		glTexImage2D(GL_TEXTURE_2D, 0, specification.internalFormat, specification.Width, specification.Height, 0, specification.DataFormat, specification.type, 0);
 		// be sure to set wrapping mode to GL_CLAMP_TO_EDGE
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, specification.WrapParam);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, specification.WrapParam);
@@ -27,10 +28,13 @@ namespace CrashEngine {
 		specification.internalFormat = InternalFormat::RGB16F;
 		specification.DataFormat = DataFormat::RGB;
 
+		specification.Width = width;
+		specification.Height = height;
+
 		glGenTextures(1, &m_RendererID);
 		// pre-allocate enough memory for the LUT texture.
 		glBindTexture(GL_TEXTURE_2D, m_RendererID);
-		glTexImage2D(GL_TEXTURE_2D, 0, specification.internalFormat, width, height, 0, specification.DataFormat, GL_FLOAT, 0);
+		glTexImage2D(GL_TEXTURE_2D, 0, specification.internalFormat, width, height, 0, specification.DataFormat, specification.type, 0);
 		// be sure to set wrapping mode to GL_CLAMP_TO_EDGE
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
@@ -103,6 +107,11 @@ namespace CrashEngine {
 	void OpenGLTexture2D::Bind(uint32_t slot) const
 	{
 		glBindTextureUnit(slot, m_RendererID);
+	}
+
+	void OpenGLTexture2D::BindImageTexture()
+	{
+		glBindImageTexture(0, m_RendererID, 0, GL_FALSE, 0, GL_WRITE_ONLY, specification.internalFormat);
 	}
 
 

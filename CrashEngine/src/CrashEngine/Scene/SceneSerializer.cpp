@@ -197,6 +197,8 @@ namespace CrashEngine {
 		out << YAML::BeginMap; // blur
 
 		out << YAML::Key << "blur" << YAML::Value << m_Scene->postProcess->blur;
+		out << YAML::Key << "threshold" << YAML::Value << m_Scene->postProcess->blurThreshold;
+		out << YAML::Key << "softthreshold" << YAML::Value << m_Scene->postProcess->blurSoftThreshold;
 
 		out << YAML::EndMap; // blur
 
@@ -217,6 +219,7 @@ namespace CrashEngine {
 		YAML::Emitter out;
 		out << YAML::BeginMap;
 		out << YAML::Key << "Scene" << YAML::Value << "Untitled";
+		out << YAML::Key << "Filepath" << YAML::Value << m_Scene->filepath;
 		out << YAML::Key << "Entities" << YAML::Value << YAML::BeginSeq;
 		m_Scene->m_Registry.each([&](auto entityID)
 			{
@@ -256,6 +259,8 @@ namespace CrashEngine {
 		std::string sceneName = data["Scene"].as<std::string>();
 		CE_CORE_TRACE("Deserializing scene '{0}'", sceneName);
 
+		m_Scene->filepath = data["Filepath"].as<std::string>();
+
 		auto entities = data["Entities"];
 		if (entities)
 		{
@@ -269,7 +274,7 @@ namespace CrashEngine {
 					name = tagComponent["Tag"].as<std::string>();
 
 				Entity deserializedEntity;
-
+				
 				auto mesh = entity["Mesh"];
 				if (mesh)
 				{
@@ -340,6 +345,8 @@ namespace CrashEngine {
 
 		auto bloom = data["Bloom"];
 		m_Scene->postProcess->blur = bloom["blur"].as<bool>();
+		m_Scene->postProcess->blurThreshold = bloom["threshold"].as<float>();
+		m_Scene->postProcess->blurSoftThreshold = bloom["softthreshold"].as<float>();
 
 		auto ssao = data["SSAO"];
 		m_Scene->ssao->radius = ssao["radius"].as<float>();

@@ -52,14 +52,13 @@ namespace CrashEngine {
 
 	void OpenGLFramebuffer::BlitDepthToFramebuffer(std::shared_ptr<Framebuffer> framebuffer)
 	{
-		Bind();
+		//Bind();
 		glBindFramebuffer(GL_READ_FRAMEBUFFER, m_RendererID);
 		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, framebuffer->GetRenderID());
 	
-		glReadBuffer(GL_DEPTH_ATTACHMENT);
-		glDrawBuffer(GL_DEPTH_ATTACHMENT);
 		glBlitFramebuffer(0, 0, m_Specification.Width, m_Specification.Height, 0, 0, framebuffer->GetSpecification().Width, framebuffer->GetSpecification().Height, GL_DEPTH_BUFFER_BIT, GL_NEAREST);
-		Unbind();
+
+		//Unbind();
 	}
 
 	void OpenGLFramebuffer::CreateTextures()
@@ -132,7 +131,7 @@ namespace CrashEngine {
 	void OpenGLFramebuffer::SetTexture(int texTarget, uint32_t textureID, int mipMapLevel, uint32_t id)
 	{
 		//glBindFramebuffer(GL_FRAMEBUFFER, m_RendererID);
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, texTarget, textureID, mipMapLevel);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + id, texTarget, textureID, mipMapLevel);
 	}
 
 	void OpenGLFramebuffer::SetDepthTexture(int texTarget, uint32_t textureID)

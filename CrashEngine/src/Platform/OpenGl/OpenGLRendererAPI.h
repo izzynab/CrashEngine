@@ -27,6 +27,19 @@ namespace CrashEngine {
 		virtual void SetViewport(float Width, float Height) override;
 		virtual void BlitFramebuffers(std::shared_ptr<Framebuffer>& readFreambuffer, std::shared_ptr<Framebuffer>& drawFramebuffer) override;
 
+		virtual void Dispatch(float width, float height) override;
+		virtual void MemoryBarier() override;
+
+		virtual void GetBoolValue(uint32_t parameterValue, bool* data) override;
+		virtual void GetFloatValue(uint32_t parameterValue, float* data) override;
+		virtual void GetIntValue(uint32_t parameterValue, int* data) override;
+
+		virtual void GetBoolIndexValue(uint32_t parameterValue, int index, bool* data) override;
+		virtual void GetFloatIndexValue(uint32_t parameterValue, int index, float* data)override;
+		virtual void GetIntIndexValue(uint32_t parameterValue, int index, int* data) override;
+
+		virtual void InitDebugOutput() override;
+
 	};
 
 

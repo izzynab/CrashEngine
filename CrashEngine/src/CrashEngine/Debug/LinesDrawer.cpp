@@ -13,6 +13,8 @@ namespace CrashEngine {
 	DebugLine::DebugLine()
 	{
 		shader = Shader::Create("lines.vert", "lines.frag","lines.geom");
+
+		//UpdateLine.reset(new Line());
 	}
 
 	void DebugLine::OnUpdate(Camera& camera)
@@ -45,10 +47,21 @@ namespace CrashEngine {
 		}
 	}
 
-	void DebugLine::AddDebugLine(glm::vec3 startVec, glm::vec3 endVec, glm::vec3 color, float width)
+	void DebugLine::DrawUpdateLine(glm::vec3 startVec, glm::vec3 endVec, glm::vec3 color, float width)
 	{
-		NumberOfLines++;
+		UpdateLinesNumber++;
 
+		AddLine(startVec, endVec, color, width);
+	}
+
+	void DebugLine::ClearUpdatLines()
+	{
+		lines.erase(lines.end()- UpdateLinesNumber, lines.end());
+		UpdateLinesNumber = 0;
+	}
+
+	void DebugLine::AddLine(glm::vec3 startVec, glm::vec3 endVec, glm::vec3 color, float width)
+	{
 		Line line;
 		line.vertices.push_back(startVec.x);
 		line.vertices.push_back(startVec.y);

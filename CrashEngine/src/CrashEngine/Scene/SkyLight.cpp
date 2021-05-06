@@ -71,13 +71,21 @@ namespace CrashEngine {
 		spec.Width = 1080;
 
 		Framebuffer = Framebuffer::Create(spec);
-		Framebuffer->Bind();
 
 		directory = path;
 		HDR = TextureHDR::Create(path);
 
+		UpdateCubemap();
+
+	}
+
+	void SkyLight::UpdateCubemap()
+	{
+		Framebuffer->Bind();
+
 		// pbr: convert HDR equirectangular environment map to cubemap equivalent
 		equirectangularToCubemapShader->Bind();
+		equirectangularToCubemapShader->SetUniformInt("samples", BlurSamples);
 		RenderCommand::BindTexture(HDR->GetRendererID(), 0);
 
 		RenderCommand::SetViewport(1080, 1080);

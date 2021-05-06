@@ -30,4 +30,17 @@ namespace CrashEngine {
 		virtual unsigned int GetID() = 0;
 	};
 
+	class ComputeShader
+	{
+	public:
+		static ComputeShader* Create(const char* computeShader);
+
+		virtual void Bind() const = 0;
+		virtual void Unbind() const = 0;
+
+		virtual void SetUniformInt(std::string name, int value) = 0;
+
+		virtual unsigned int GetID() = 0;
+	};
+
 }

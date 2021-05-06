@@ -28,7 +28,7 @@ namespace CrashEngine {
 	private:
 		Camera m_Camera;
 
-		glm::vec3 m_CameraPosition = { 0.0f, 0.0f, 0.0f };
+		glm::vec3 m_CameraPosition = { -10.0f, 20.0f, 0.0f };
 		bool firstMouse = true;
 		float sensitivity = 0.1f;
 

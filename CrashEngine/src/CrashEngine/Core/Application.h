@@ -11,6 +11,8 @@
 
 #include "CrashEngine/ImGui/ImGuiLayer.h"
 
+#include "CrashEngine/Debug/Debugger.h"
+
 
 namespace CrashEngine {
 	class CRASH_API Application
@@ -27,6 +29,7 @@ namespace CrashEngine {
 		void PushOverlay(Layer* layer);
 
 		inline Window& GetWindow() { return *m_Window; }
+		inline Debugger& GetDebugger() { return *m_Debugger; }
 
 		inline static Application& Get() { return *s_Instance; }
 	private:
@@ -36,6 +39,8 @@ namespace CrashEngine {
 		ImGuiLayer* m_ImGuiLayer;
 		bool m_Running = true;
 		LayerStack m_LayerStack;
+
+		std::unique_ptr<Debugger> m_Debugger;
 
 		float m_LastFrameTime = 0.0f;
 

@@ -61,6 +61,8 @@ namespace CrashEngine {
 		bloom->Bind();
 		RenderCommand::Clear();
 		brightShader->Bind();
+		brightShader->SetUniformFloat("Threshold", blurThreshold); 
+		brightShader->SetUniformFloat("SoftThreshold", blurSoftThreshold);
 		RenderCommand::BindTexture(draw_framebuffer->GetColorAttachmentRendererID(), 0);
 		quad->RenderQuad();
 		brightShader->Unbind();
@@ -95,7 +97,6 @@ namespace CrashEngine {
 		BloomMixShader->Bind();
 		RenderCommand::BindTexture(draw_framebuffer->GetColorAttachmentRendererID(), 0);
 		RenderCommand::BindTexture(blurFramebuffer[1]->GetColorAttachmentRendererID(), 1);
-		BloomMixShader->SetUniformInt("exposure", exposure);
 		BloomMixShader->SetUniformInt("blur", blur);
 
 		quad->RenderQuad();

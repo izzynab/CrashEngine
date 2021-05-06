@@ -19,7 +19,7 @@ namespace CrashEngine {
 		cube.reset(new Cube());
 		quad.reset(new Quad());
 
-		debugLine.reset(new DebugLine());
+		//debugLine.reset(new DebugLine());
 
 		imguilayer.reset(new ImGuiLayer);
 
@@ -42,8 +42,6 @@ namespace CrashEngine {
 		deferredframebuffer->InitializeMultipleTextures(4);
 
 		framebuffer = Framebuffer::Create(spec);
-
-		//debugFramebuffer = Framebuffer::Create(spec);
 
 		//------------shaders-------------------------
 		deferredShader = Shader::Create("basic.vert", "deferred.frag");
@@ -106,9 +104,11 @@ namespace CrashEngine {
 		EnvironmentPanel.reset(new SceneEnvironmentPanel(skyLight, directionalLight, m_ActiveScene));
 
 		SceneSerializer serializer(m_ActiveScene, skyLight, directionalLight);
-		serializer.Deserialize("C:/EngineDev/CrashEngine/Models/Scenes/sun.crash");
+		serializer.Deserialize("C:/EngineDev/CrashEngine/Models/Scenes/jd.crash");
 
 		//-------------------------End of initialize-----------------------------------------
+		
+		Application::Get().GetDebugger().Begin();
 
 		glm::mat4 projection = cameraController->GetCamera().GetProjectionMatrix();
 		UniformBufferLayout uniformLayout = {
@@ -122,13 +122,33 @@ namespace CrashEngine {
 		m_MatrixUB->linkShader(skyLight->GetSkyShader()->GetID(), "Matrices");
 		m_MatrixUB->linkShader(GBufferShader->GetID(), "Matrices");
 		m_MatrixUB->linkShader(m_ActiveScene->ssao->ssaoShader->GetID(), "Matrices");
-		m_MatrixUB->linkShader(debugLine->shader->GetID(), "Matrices");
+		m_MatrixUB->linkShader(Application::Get().GetDebugger().GetShader().GetID(), "Matrices");
 
 		m_MatrixUB->setData("projection", glm::value_ptr(projection));
-		
-		debugLine->AddGrid(60);
-		debugLine->AddDebugLine(glm::vec3(0, 0, 0), glm::vec3(20, 20, 20), glm::vec3(0, 0, 0.7f), lineThickness);
-		debugLine->AddDebugLine(glm::vec3(0, 0, 0), glm::vec3(-20, 20, -20), glm::vec3(0, 0, 0.7f), lineThickness);
+
+		//---------------------Test space--------------------------------------------------------
+		RenderCommand::InitDebugOutput();
+
+
+		TextureSpecification tspec;
+		tspec.Width = 1080;
+		tspec.Height = 1080;
+		tspec.type = Type::FLOAT;
+		tspec.DataFormat = DataFormat::RGBA;
+		tspec.FilterParam = FilterParam::LINEAR;
+		tspec.internalFormat = InternalFormat::RGBA32F;
+		testTexture = Texture2D::Create(tspec);
+
+		debugFramebuffer = Framebuffer::Create(spec);
+		debugFramebuffer->Bind();
+		debugFramebuffer->Resize(1080, 1080);
+		//debugFramebuffer->SetTexture(CE_TEXTURE_2D, testTexture->GetRendererID(), 0);
+
+		compShader = ComputeShader::Create("computeTest.comp");
+
+		QuadShader = Shader::Create("Basic.vert", "TexBasic.frag");
+		QuadShader->Bind();
+		QuadShader->SetUniformInt("tex", 0);
 		
 	}
 
@@ -204,31 +224,48 @@ namespace CrashEngine {
 		deferredShader->SetUniformVec3("lightColor", directionalLight->color * directionalLight->intensity);
 		deferredShader->SetUniformVec3("camPos", cameraController->GetCamera().GetPosition());
 		for (int i = 0; i < 3; i++)
-			RenderCommand::BindTexture(directionalLight->depthMap[i]->GetRendererID(), 8+i);
+			directionalLight->depthMap[i]->Bind(8 + i);
+
 
 		deferredShader->Bind();
 		quad->RenderQuad();
 
 		deferredframebuffer->BlitDepthToFramebuffer(framebuffer);
-
-		framebuffer->Bind();
-		skyLight->RenderSky();
-
-		framebuffer->Unbind();
 		//-----------deffered------------------------
 
 		//-----------Post Proscess-------------------
-		m_ActiveScene->postProcess->ApplyFXAA(framebuffer);
 		m_ActiveScene->postProcess->Blur(framebuffer);
+
+		framebuffer->Bind();
+		skyLight->RenderSky();
+		framebuffer->Unbind();
+
+		//-----------Post Proscess-------------------
+		m_ActiveScene->postProcess->ApplyFXAA(framebuffer);
 		m_ActiveScene->postProcess->GammaHDRCorretion(framebuffer);
 
 		//-----------Debug lines---------------------
 		framebuffer->Bind();
 		auto& camera = cameraController->GetCamera();
-		debugLine->OnUpdate(camera);
+		Application::Get().GetDebugger().OnUpdate(camera);
 		framebuffer->Unbind();
 
+		//-----------Test render----------------------
+		compShader->Bind();
 
+		testTexture->BindImageTexture();
+
+		RenderCommand::Dispatch(testTexture->GetWidth(),testTexture->GetHeight());
+		RenderCommand::MemoryBarier();
+
+
+		debugFramebuffer->Bind();
+		RenderCommand::SetViewport(1080, 1080);
+		QuadShader->Bind();
+		RenderCommand::BindTexture(testTexture->GetRendererID(), 0);
+		RenderCommand::Clear();
+		quad->RenderQuad();
+		debugFramebuffer->Unbind();
 
 		Renderer::EndScene();
 	}
@@ -288,12 +325,31 @@ namespace CrashEngine {
 					}
 				}
 
-				if (ImGui::MenuItem("Save")) {}
+				if (ImGui::MenuItem("Save")) 
+				{
+					std::optional<std::string> filepath = m_ActiveScene->filepath;
+					if (filepath)
+					{
+						SceneSerializer serializer(m_ActiveScene, skyLight, directionalLight);
+						serializer.Serialize(filepath.value());
+					}
+					else
+					{
+						std::optional<std::string> filepathAs = FileDialogs::SaveFile("(*.crash)\0*.crash\0");
+						if (filepathAs)
+						{
+							m_ActiveScene->filepath = filepathAs.value();
+							SceneSerializer serializer(m_ActiveScene, skyLight, directionalLight);
+							serializer.Serialize(filepathAs.value());
+						}
+					}
+				}
 				if (ImGui::MenuItem("Save As.."))
 				{
 					std::optional<std::string> filepath = FileDialogs::SaveFile("(*.crash)\0*.crash\0");
 					if (filepath)
 					{
+						m_ActiveScene->filepath = filepath.value();
 						SceneSerializer serializer(m_ActiveScene, skyLight, directionalLight);
 						serializer.Serialize(filepath.value());
 					}
@@ -378,7 +434,11 @@ namespace CrashEngine {
 
 
 		ImGui::Begin("Debug");
-		ImGui::SliderFloat("line Thickness", &lineThickness, 1.f, 10.f);
+		if (ImGui::SliderInt("samples of blur", &skyLight->BlurSamples, 0, 50))
+		{
+			skyLight->UpdateCubemap();
+		}
+		
 		if (ImGui::Button("Show Info"))
 		{
 
@@ -397,6 +457,7 @@ namespace CrashEngine {
 
 		ImGui::SliderInt("shadow", &deferred, 0, 2);
 		ImGui::Image((void*)directionalLight->depthMap[deferred]->GetRendererID(), ImVec2(400, 400), ImVec2(0, 1), ImVec2(1, 0));
+		//ImGui::Image((void*)debugFramebuffer->GetColorAttachmentRendererID(), ImVec2(400, 400), ImVec2(0, 1), ImVec2(1, 0));
 
 		ImGui::SliderFloat("far_plane", &directionalLight->far_plane, -10, 200);
 		ImGui::SliderFloat("near_plane", &directionalLight->near_plane, -200, -10);
@@ -409,7 +470,7 @@ namespace CrashEngine {
 
 		ImGui::End();
 		
-		glm::mat4 projection = glm::perspective(glm::radians(cameraController->GetCamera().fov), (float)imguilayer->CurrentWindowView.x / (float)imguilayer->CurrentWindowView.y, 0.1f, 400.0f);
+		glm::mat4 projection = glm::perspective(glm::radians(cameraController->GetCamera().fov), (float)imguilayer->CurrentWindowView.x / (float)imguilayer->CurrentWindowView.y, 0.1f, 1500.0f);
 		m_MatrixUB->setData("projection", glm::value_ptr(projection));
 		cameraController->GetCamera().SetProjection(projection);
 	}
