@@ -785,6 +785,8 @@
     <None Include="src\CrashEngine\Renderer\Shaders\background.vert" />
     <None Include="src\CrashEngine\Renderer\Shaders\Basic.frag" />
     <None Include="src\CrashEngine\Renderer\Shaders\Basic.vert" />
+    <None Include="src\CrashEngine\Renderer\Shaders\Basic3D.frag" />
+    <None Include="src\CrashEngine\Renderer\Shaders\Basic3D.vert" />
     <None Include="src\CrashEngine\Renderer\Shaders\blur.frag" />
     <None Include="src\CrashEngine\Renderer\Shaders\blurTest.frag" />
     <None Include="src\CrashEngine\Renderer\Shaders\brdf.frag" />

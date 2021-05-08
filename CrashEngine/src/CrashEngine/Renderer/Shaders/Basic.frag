@@ -4,7 +4,6 @@ in vec2 TexCoords;
 
 uniform vec3 color;
 
-
 void main()
 {    
     FragColor = color;

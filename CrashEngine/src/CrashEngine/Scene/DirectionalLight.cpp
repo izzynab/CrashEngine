@@ -54,10 +54,11 @@ namespace CrashEngine
 
 		glm::mat4 projViewMatix = camera->GetProjectionMatrix() * camera->GetViewMatrix();
 
-
 		//glm::mat4 lightView = glm::lookAt(camera->GetPosition() + rot,camera->GetPosition(),up);
 
-		Application::Get().GetDebugger().ClearUpdatLines();
+		Application::Get().GetDebugger().ClearUpdateLines();
+		Application::Get().GetDebugger().ClearUpdatePoints();
+
 
 		for (int i = 0; i < 3; i++)
 		{
@@ -120,6 +121,9 @@ namespace CrashEngine
 			{
 				glm::vec4 corner = glm::vec4(frustumCorners[i],1);
 				corner = lightView * corner;
+
+				//frustumCorners[i] = lightView * glm::vec4(frustumCorners[i],1);
+
 				minX = glm::min(minX, corner.x);
 				maxX = glm::max(maxX, corner.x);
 
@@ -145,6 +149,16 @@ namespace CrashEngine
 			Application::Get().GetDebugger().DrawUpdateLine(frustumCorners[6], frustumCorners[7]);
 			Application::Get().GetDebugger().DrawUpdateLine(frustumCorners[4], frustumCorners[6]);
 			Application::Get().GetDebugger().DrawUpdateLine(frustumCorners[5], frustumCorners[7]);
+
+			//connection
+			Application::Get().GetDebugger().DrawUpdateLine(frustumCorners[0], frustumCorners[4]);
+			Application::Get().GetDebugger().DrawUpdateLine(frustumCorners[1], frustumCorners[5]);
+			Application::Get().GetDebugger().DrawUpdateLine(frustumCorners[2], frustumCorners[6]);
+			Application::Get().GetDebugger().DrawUpdateLine(frustumCorners[3], frustumCorners[7]);
+
+
+			Application::Get().GetDebugger().DrawUpdatePoint(centroid, glm::vec3(0.7f, 0.2f, 0.4f), 1.f, PointType::Sphere);
+			Application::Get().GetDebugger().DrawUpdatePoint(lightPosition, glm::vec3(0.9f, 0.2f, 0.1f), 1.f, PointType::Cube);
 
 			CE_CORE_TRACE("minX: {0} maxX: {1}", minX, maxX);
 			CE_CORE_TRACE("minY: {0} maxY: {1}", minY, maxY);

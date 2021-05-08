@@ -1936,5 +1936,7 @@
     <None Include="src\CrashEngine\Renderer\Shaders\Atmosphere\reflection_map.vert" />
     <None Include="src\CrashEngine\Renderer\Shaders\computeTest.comp" />
     <None Include="src\CrashEngine\Renderer\Shaders\TexBasic.frag" />
+    <None Include="src\CrashEngine\Renderer\Shaders\Basic3D.vert" />
+    <None Include="src\CrashEngine\Renderer\Shaders\Basic3D.frag" />
   </ItemGroup>
 </Project>

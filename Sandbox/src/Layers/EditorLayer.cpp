@@ -122,7 +122,8 @@ namespace CrashEngine {
 		m_MatrixUB->linkShader(skyLight->GetSkyShader()->GetID(), "Matrices");
 		m_MatrixUB->linkShader(GBufferShader->GetID(), "Matrices");
 		m_MatrixUB->linkShader(m_ActiveScene->ssao->ssaoShader->GetID(), "Matrices");
-		m_MatrixUB->linkShader(Application::Get().GetDebugger().GetShader().GetID(), "Matrices");
+		m_MatrixUB->linkShader(Application::Get().GetDebugger().GetLinesShader().GetID(), "Matrices");
+		m_MatrixUB->linkShader(Application::Get().GetDebugger().GetPointsShader().GetID(), "Matrices");
 
 		m_MatrixUB->setData("projection", glm::value_ptr(projection));
 

@@ -19,7 +19,6 @@ namespace CrashEngine {
 
 	void DebugLine::OnUpdate(Camera& camera)
 	{
-		//TODO: try working out why lines changes width when rotating camera
 		for (int i = 0; i < lines.size(); i++)
 		{
 			glm::mat4 model = glm::mat4(1.0f);
@@ -54,7 +53,7 @@ namespace CrashEngine {
 		AddLine(startVec, endVec, color, width);
 	}
 
-	void DebugLine::ClearUpdatLines()
+	void DebugLine::ClearUpdateLines()
 	{
 		lines.erase(lines.end()- UpdateLinesNumber, lines.end());
 		UpdateLinesNumber = 0;

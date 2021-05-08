@@ -46,7 +46,7 @@ namespace CrashEngine {
 	struct CameraComponent
 	{
 		SceneCamera Camera;
-		bool Primary = true; // TODO: think about moving to Scene
+		bool Primary = true; 
 		bool FixedAspectRatio = false;
 
 		CameraComponent() = default;

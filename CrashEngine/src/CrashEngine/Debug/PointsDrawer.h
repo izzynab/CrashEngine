@@ -9,6 +9,19 @@
 
 namespace CrashEngine {
 
+	enum class PointType
+	{
+		Cube,Sphere
+	};
+
+	struct Point
+	{
+		glm::vec3 pos;
+		glm::vec3 color;
+		float size;
+		PointType type;
+	};
+
 	class DebugPoint
 	{
 	public:
@@ -16,11 +29,11 @@ namespace CrashEngine {
 
 		void OnUpdate(Camera& camera);
 
-		void DrawUpdateLine(glm::vec3 startVec, glm::vec3 endVec, glm::vec3 color, float width);
+		void DrawUpdatePoint(glm::vec3 pos, glm::vec3 color, float size, PointType type);
 
-		void ClearUpdatPoint();
+		void ClearUpdatePoints();
 
-		void AddPoint(glm::vec3 startVec, glm::vec3 endVec, glm::vec3 color, float width);
+		void AddPoint(glm::vec3 pos, glm::vec3 color, float size, PointType type);
 
 	public:
 		glm::mat4 view = glm::mat4(1);
@@ -28,13 +41,12 @@ namespace CrashEngine {
 		Shader* shader;
 
 	private:
-		//std::shared_ptr<Line> UpdateLine;
+		int UpdatePointsNumber = 0;
 
-		std::vector<Line> lines;
+		std::shared_ptr<Sphere> sphere;
+		std::shared_ptr<Cube> cube;
 
-		std::vector<LinesSet> linesSet;
-
-		int UpdateLinesNumber = 0;
+		std::vector<Point> points;
 	};
 
 }
