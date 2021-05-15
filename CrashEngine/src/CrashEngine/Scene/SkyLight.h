@@ -6,6 +6,10 @@
 #include "CrashEngine/Renderer/Buffer.h"
 #include "CrashEngine/Renderer/VertexArray.h"
 
+#include "CrashEngine/Renderer/Texture.h"
+#include "CrashEngine/Renderer/Shader.h"
+#include "CrashEngine/Renderer/BasicShapes.h"
+#include "CrashEngine/Renderer/TextureCreator.h"
 
 namespace CrashEngine {
 

@@ -19,113 +19,29 @@ namespace CrashEngine {
 		cube.reset(new Cube());
 		quad.reset(new Quad());
 
-		//debugLine.reset(new DebugLine());
-
 		imguilayer.reset(new ImGuiLayer);
 
-		Height = Application::Get().GetWindow().GetHeight();
-		Width = Application::Get().GetWindow().GetWidth();
-
-		cameraController.reset(new CameraController(glm::vec3(0.0f, 0.0f, 3.0f), Width, Height));
+		editorCameraController.reset(new CameraController(glm::vec3(0.0f, 0.0f, 3.0f), Application::Get().GetWindow().GetWidth(), Application::Get().GetWindow().GetHeight()));
 
 		//------------framebuffers--------------------
 		FramebufferSpecification spec;
-		spec.Height = Height;
-		spec.Width = Width;
-
-		deferredframebuffer = Framebuffer::Create(spec, false);
-		deferredframebuffer->Bind();
-		deferredframebuffer->CreateTexture(0, Color::RGBA);//position
-		deferredframebuffer->CreateTexture(1, Color::RGBA);//albedo
-		deferredframebuffer->CreateTexture(2, Color::RGBA);//normal
-		deferredframebuffer->CreateTexture(3, Color::RGBA);//metallic roughness ao
-		deferredframebuffer->InitializeMultipleTextures(4);
+		spec.Height = Application::Get().GetWindow().GetHeight();
+		spec.Width = Application::Get().GetWindow().GetWidth();
 
 		framebuffer = Framebuffer::Create(spec);
 
-		//------------shaders-------------------------
-		deferredShader = Shader::Create("basic.vert", "deferred.frag");
-		deferredShader->Bind();
+		previewFramebuffer = Framebuffer::Create(spec);
+		
+		renderProperties.reset(new RenderProperties());
 
-		deferredShader->SetUniformInt("position", 0);
-		deferredShader->SetUniformInt("albedo", 1);
-		deferredShader->SetUniformInt("normal", 2);
-		deferredShader->SetUniformInt("MetalRoughAO", 3);
+		HierarchyPanel.reset(new SceneHierarchyPanel(renderProperties->GetScene()));
+		EnvironmentPanel.reset(new SceneEnvironmentPanel(renderProperties->GetScene()));
 
-		deferredShader->SetUniformInt("irradianceMap", 4);
-		deferredShader->SetUniformInt("prefilterMap", 5);
-		deferredShader->SetUniformInt("brdfLUT", 6);
-		deferredShader->SetUniformInt("ssao", 7);
-		deferredShader->SetUniformInt("shadowMap[0]", 8);
-		deferredShader->SetUniformInt("shadowMap[1]", 9);
-		deferredShader->SetUniformInt("shadowMap[2]", 10);
-
-		GBufferShader = Shader::Create("pbr.vert", "gbuffer.frag");
-		GBufferShader->Bind();
-		GBufferShader->SetUniformInt("albedoMap", 0);
-		GBufferShader->SetUniformInt("normalMap", 1);
-		GBufferShader->SetUniformInt("metallicMap", 2);
-		GBufferShader->SetUniformInt("roughnessMap", 3);
-		GBufferShader->SetUniformInt("aoMap", 4);
-
-
-		forwardShader = Shader::Create("pbr.vert", "pbr.frag");
-		forwardShader->Bind();
-
-		forwardShader->SetUniformInt("albedoMap", 0);
-		forwardShader->SetUniformInt("normalMap", 1);
-		forwardShader->SetUniformInt("metallicMap", 2);
-		forwardShader->SetUniformInt("roughnessMap", 3);
-		forwardShader->SetUniformInt("aoMap", 4);
-
-		forwardShader->SetUniformInt("irradianceMap", 5);
-		forwardShader->SetUniformInt("prefilterMap", 6);
-		forwardShader->SetUniformInt("brdfLUT", 7);
-		forwardShader->SetUniformInt("shadowMap", 8);
-
-		RenderCommand::SetViewport(Width, Height);
-
-		//-------------------------End of initialize-----------------------------------------
-		m_ActiveScene = std::make_shared<Scene>();
-
-
-		directionalLight.reset(new DirectionalLight);
-		directionalLight->camera = &cameraController->GetCamera();
-		directionalLight->m_ActiveScene = m_ActiveScene;
-		directionalLight->Height = Application::Get().GetWindow().GetHeight();
-		directionalLight->Width = Application::Get().GetWindow().GetWidth();
-		directionalLight->pbrTextureShader = deferredShader;
-
-		skyLight.reset(new SkyLight);
-
-		m_ActiveScene->SetDefaultShader(GBufferShader);
-
-		HierarchyPanel.reset(new SceneHierarchyPanel(m_ActiveScene));
-		EnvironmentPanel.reset(new SceneEnvironmentPanel(skyLight, directionalLight, m_ActiveScene));
-
-		SceneSerializer serializer(m_ActiveScene, skyLight, directionalLight);
+		SceneSerializer serializer(renderProperties->GetScene());
 		serializer.Deserialize("C:/EngineDev/CrashEngine/Models/Scenes/jd.crash");
 
-		//-------------------------End of initialize-----------------------------------------
-		
-		Application::Get().GetDebugger().Begin();
 
-		glm::mat4 projection = cameraController->GetCamera().GetProjectionMatrix();
-		UniformBufferLayout uniformLayout = {
-			{ ShaderDataType::Mat4, "projection" },
-			{ ShaderDataType::Mat4, "view"},
-		};
 
-		m_MatrixUB.reset(UniformBuffer::Create(uniformLayout, 0));
-		m_MatrixUB->linkShader(forwardShader->GetID(), "Matrices");
-		m_MatrixUB->linkShader(deferredShader->GetID(), "Matrices");
-		m_MatrixUB->linkShader(skyLight->GetSkyShader()->GetID(), "Matrices");
-		m_MatrixUB->linkShader(GBufferShader->GetID(), "Matrices");
-		m_MatrixUB->linkShader(m_ActiveScene->ssao->ssaoShader->GetID(), "Matrices");
-		m_MatrixUB->linkShader(Application::Get().GetDebugger().GetLinesShader().GetID(), "Matrices");
-		m_MatrixUB->linkShader(Application::Get().GetDebugger().GetPointsShader().GetID(), "Matrices");
-
-		m_MatrixUB->setData("projection", glm::value_ptr(projection));
 
 		//---------------------Test space--------------------------------------------------------
 		RenderCommand::InitDebugOutput();
@@ -170,87 +86,16 @@ namespace CrashEngine {
 		}*/
 
 		Renderer::BeginScene();
-		cameraController->OnUpdate(ts);
-
-		//----------------shadows----------------
-		directionalLight->DrawCSM();
-		//----------------shadows----------------
-
-		Height = imguilayer->CurrentWindowView.y;
-		Width = imguilayer->CurrentWindowView.x;
-
-		deferredframebuffer->Resize(Width, Height);
-		framebuffer->Resize(Width, Height);
-		
-
-		glm::mat4 view = cameraController->GetCamera().GetViewMatrix();
-		m_MatrixUB->setData("view", glm::value_ptr(view));
-
-		//-----------deffered------------------------
-
-		deferredframebuffer->Bind();
-		RenderCommand::SetViewport(Width, Height);
-		RenderCommand::SetClearColor({ 1.f, 0.f, 0.0f, 0.0f });
-		RenderCommand::Clear();
-
-		m_ActiveScene->OnUpdate(ts);
-		deferredframebuffer->Unbind();
-
-		//-------ssao-------
-		m_ActiveScene->ssao->Render(Width, Height, deferredframebuffer->GetColorAttachmentRendererID(0), deferredframebuffer->GetColorAttachmentRendererID(2));
-		//-------ssao-------
-
-		framebuffer->Bind();
-		RenderCommand::SetViewport(Width, Height);
-		RenderCommand::Clear();
-
-		deferredShader->Bind();
-
-		RenderCommand::BindTexture(deferredframebuffer->GetColorAttachmentRendererID(0), 0);
-		RenderCommand::BindTexture(deferredframebuffer->GetColorAttachmentRendererID(1), 1);
-		RenderCommand::BindTexture(deferredframebuffer->GetColorAttachmentRendererID(2), 2);
-		RenderCommand::BindTexture(deferredframebuffer->GetColorAttachmentRendererID(3), 3);
-		RenderCommand::BindTexture(m_ActiveScene->ssao->GetTextureRendererID(), 7);
-
-		skyLight->BindIrradianceMap(4);
-		skyLight->BindPrefilterMap(5);
-		skyLight->BindbrdfTexture(6);
-
-		glm::vec3 rotation = glm::mat3(view) * glm::vec3(
-			glm::cos(directionalLight->rotation.x) * glm::sin(directionalLight->rotation.y),
-			glm::sin(directionalLight->rotation.x) * glm::sin(directionalLight->rotation.y),
-			glm::cos(directionalLight->rotation.y));
-
-		deferredShader->SetUniformVec3("lightRotation", rotation);
-		deferredShader->SetUniformVec3("lightColor", directionalLight->color * directionalLight->intensity);
-		deferredShader->SetUniformVec3("camPos", cameraController->GetCamera().GetPosition());
-		for (int i = 0; i < 3; i++)
-			directionalLight->depthMap[i]->Bind(8 + i);
 
 
-		deferredShader->Bind();
-		quad->RenderQuad();
+		editorCameraController->OnUpdate(ts);
 
-		deferredframebuffer->BlitDepthToFramebuffer(framebuffer);
-		//-----------deffered------------------------
+		editorCameraController->GetCamera().SetSize(imguilayer->CurrentWindowView.y, imguilayer->CurrentWindowView.x);
 
-		//-----------Post Proscess-------------------
-		m_ActiveScene->postProcess->Blur(framebuffer);
+		Renderer::RenderScene(renderProperties,framebuffer, &editorCameraController->GetCamera(),ts);
 
-		framebuffer->Bind();
-		skyLight->RenderSky();
-		framebuffer->Unbind();
 
-		//-----------Post Proscess-------------------
-		m_ActiveScene->postProcess->ApplyFXAA(framebuffer);
-		m_ActiveScene->postProcess->GammaHDRCorretion(framebuffer);
-
-		//-----------Debug lines---------------------
-		framebuffer->Bind();
-		auto& camera = cameraController->GetCamera();
-		Application::Get().GetDebugger().OnUpdate(camera);
-		framebuffer->Unbind();
-
+		Renderer::EndScene();
 		//-----------Test render----------------------
 		compShader->Bind();
 
@@ -267,8 +112,6 @@ namespace CrashEngine {
 		RenderCommand::Clear();
 		quad->RenderQuad();
 		debugFramebuffer->Unbind();
-
-		Renderer::EndScene();
 	}
 
 	void Editor::OnImGuiRender()
@@ -281,57 +124,32 @@ namespace CrashEngine {
 				ImGui::MenuItem("Hello, it's my menu", NULL, false, false);
 				if (ImGui::MenuItem("New"))
 				{
-					m_ActiveScene = std::make_shared<Scene>();
+					renderProperties.reset(new RenderProperties());
 
-					directionalLight.reset(new DirectionalLight);
-					directionalLight->camera = &cameraController->GetCamera();
-					directionalLight->m_ActiveScene = m_ActiveScene;
-					directionalLight->Height = Application::Get().GetWindow().GetHeight();
-					directionalLight->Width = Application::Get().GetWindow().GetWidth();
-					directionalLight->pbrTextureShader = deferredShader;
-
-					skyLight.reset(new SkyLight);
-					m_MatrixUB->linkShader(skyLight->GetSkyShader()->GetID(), "Matrices");
-
-					m_ActiveScene->SetDefaultShader(GBufferShader);
-
-
-					HierarchyPanel.reset(new SceneHierarchyPanel(m_ActiveScene));
-					EnvironmentPanel.reset(new SceneEnvironmentPanel(skyLight, directionalLight, m_ActiveScene));
+					HierarchyPanel.reset(new SceneHierarchyPanel(renderProperties->GetScene()));
+					EnvironmentPanel.reset(new SceneEnvironmentPanel(renderProperties->GetScene()));
 				}
 				if (ImGui::MenuItem("Open"))
 				{
 					std::optional<std::string> filepath = FileDialogs::OpenFile("(*.crash)\0*.crash\0");
 					if (filepath)
 					{
-						m_ActiveScene = std::make_shared<Scene>();
+						renderProperties.reset(new RenderProperties());
 
-						directionalLight.reset(new DirectionalLight);
-						directionalLight->camera = &cameraController->GetCamera();
-						directionalLight->m_ActiveScene = m_ActiveScene;
-						directionalLight->Height = Application::Get().GetWindow().GetHeight();
-						directionalLight->Width = Application::Get().GetWindow().GetWidth();
-						directionalLight->pbrTextureShader = deferredShader;
+						HierarchyPanel.reset(new SceneHierarchyPanel(renderProperties->GetScene()));
+						EnvironmentPanel.reset(new SceneEnvironmentPanel(renderProperties->GetScene()));
 
-						skyLight.reset(new SkyLight);
-						m_MatrixUB->linkShader(skyLight->GetSkyShader()->GetID(), "Matrices");
-
-						m_ActiveScene->SetDefaultShader(GBufferShader);
-
-						HierarchyPanel.reset(new SceneHierarchyPanel(m_ActiveScene));
-						EnvironmentPanel.reset(new SceneEnvironmentPanel(skyLight, directionalLight, m_ActiveScene));
-
-						SceneSerializer serializer(m_ActiveScene, skyLight, directionalLight);
+						SceneSerializer serializer(renderProperties->GetScene());
 						serializer.Deserialize(filepath.value());
 					}
 				}
 
 				if (ImGui::MenuItem("Save")) 
 				{
-					std::optional<std::string> filepath = m_ActiveScene->filepath;
+					std::optional<std::string> filepath = renderProperties->GetScene()->filepath;
 					if (filepath)
 					{
-						SceneSerializer serializer(m_ActiveScene, skyLight, directionalLight);
+						SceneSerializer serializer(renderProperties->GetScene());
 						serializer.Serialize(filepath.value());
 					}
 					else
@@ -339,8 +157,8 @@ namespace CrashEngine {
 						std::optional<std::string> filepathAs = FileDialogs::SaveFile("(*.crash)\0*.crash\0");
 						if (filepathAs)
 						{
-							m_ActiveScene->filepath = filepathAs.value();
-							SceneSerializer serializer(m_ActiveScene, skyLight, directionalLight);
+							renderProperties->GetScene()->filepath = filepathAs.value();
+							SceneSerializer serializer(renderProperties->GetScene());
 							serializer.Serialize(filepathAs.value());
 						}
 					}
@@ -350,8 +168,8 @@ namespace CrashEngine {
 					std::optional<std::string> filepath = FileDialogs::SaveFile("(*.crash)\0*.crash\0");
 					if (filepath)
 					{
-						m_ActiveScene->filepath = filepath.value();
-						SceneSerializer serializer(m_ActiveScene, skyLight, directionalLight);
+						renderProperties->GetScene()->filepath = filepath.value();
+						SceneSerializer serializer(renderProperties->GetScene());
 						serializer.Serialize(filepath.value());
 					}
 				}
@@ -370,7 +188,7 @@ namespace CrashEngine {
 		imguilayer->Dockspace(framebuffer);
 
 		//Gizmos
-		auto& camera = cameraController->GetCamera();
+		auto& camera = editorCameraController->GetCamera();
 		const glm::mat4& cameraProjection = camera.GetProjectionMatrix();
 		glm::mat4 cameraView = camera.GetViewMatrix();
 
@@ -384,7 +202,6 @@ namespace CrashEngine {
 		ImGuizmo::SetDrawlist();
 		ImGuizmo::AllowAxisFlip(false);		
 		
-		//ImGuizmo::DrawGrid(glm::value_ptr(cameraView), glm::value_ptr(cameraProjection), glm::value_ptr(identityMatrix), 100.f);
 
 		Entity selectedEntity = HierarchyPanel->GetSelectedEntity();
 		if (selectedEntity && gizmoType != -1)
@@ -435,16 +252,16 @@ namespace CrashEngine {
 
 
 		ImGui::Begin("Debug");
-		if (ImGui::SliderInt("samples of blur", &skyLight->BlurSamples, 0, 50))
+		if (ImGui::SliderInt("samples of blur", &renderProperties->GetScene()->skyLight->BlurSamples, 0, 50))
 		{
-			skyLight->UpdateCubemap();
+			renderProperties->GetScene()->skyLight->UpdateCubemap();
 		}
 		
 		if (ImGui::Button("Show Info"))
 		{
 
 		}
-		ImGui::SliderFloat("Camera Speed", &cameraController->m_CameraSpeed, 1.f, 100.f);
+		ImGui::SliderFloat("Camera Speed", &editorCameraController->m_CameraSpeed, 1.f, 100.f);
 		ImGui::Checkbox("ssao", &forward);
 
 		
@@ -457,28 +274,26 @@ namespace CrashEngine {
 		
 
 		ImGui::SliderInt("shadow", &deferred, 0, 2);
-		ImGui::Image((void*)directionalLight->depthMap[deferred]->GetRendererID(), ImVec2(400, 400), ImVec2(0, 1), ImVec2(1, 0));
+		ImGui::Image((void*)renderProperties->GetScene()->directionalLight->depthMap[deferred]->GetRendererID(), ImVec2(400, 400), ImVec2(0, 1), ImVec2(1, 0));
+		//ImGui::Image((void*)renderProperties->GetDefferedFramebuffer()->GetColorAttachmentRendererID(deferred), ImVec2(400, 400), ImVec2(0, 1), ImVec2(1, 0));
 		//ImGui::Image((void*)debugFramebuffer->GetColorAttachmentRendererID(), ImVec2(400, 400), ImVec2(0, 1), ImVec2(1, 0));
 
-		ImGui::SliderFloat("far_plane", &directionalLight->far_plane, -10, 200);
-		ImGui::SliderFloat("near_plane", &directionalLight->near_plane, -200, -10);
-		ImGui::SliderFloat("size", &directionalLight->size, 0, 200);
+		ImGui::SliderFloat("far_plane", &renderProperties->GetScene()->directionalLight->far_plane, -10, 200);
+		ImGui::SliderFloat("near_plane", &renderProperties->GetScene()->directionalLight->near_plane, -200, -10);
+		ImGui::SliderFloat("size", &renderProperties->GetScene()->directionalLight->size, 0, 200);
 
 		ImGui::Checkbox("Use colors CSM", &csm);
 
-		deferredShader->Bind();
-		deferredShader->SetUniformInt("csmColor", csm);
+		renderProperties->GetDefferedShader()->Bind();
+		renderProperties->GetDefferedShader()->SetUniformInt("csmColor", csm);
 
 		ImGui::End();
-		
-		glm::mat4 projection = glm::perspective(glm::radians(cameraController->GetCamera().fov), (float)imguilayer->CurrentWindowView.x / (float)imguilayer->CurrentWindowView.y, 0.1f, 1500.0f);
-		m_MatrixUB->setData("projection", glm::value_ptr(projection));
-		cameraController->GetCamera().SetProjection(projection);
+	
 	}
 
 	void Editor::OnEvent(CrashEngine::Event& event)
 	{
-		cameraController->OnEvent(event);
+		editorCameraController->OnEvent(event);
 
 		//EventDispatcher dispatcher(event);
 		//dispatcher.Dispatch<KeyPressedEvent>();

@@ -7,7 +7,6 @@
 #include "CrashEngine/Events/MouseEvent.h"
 
 namespace CrashEngine {
-
 	class CameraController
 	{
 	public:

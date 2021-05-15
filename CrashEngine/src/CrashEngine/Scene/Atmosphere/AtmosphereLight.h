@@ -3,7 +3,9 @@
 #include "CrashEngine/Core/Core.h"
 #include "AtmosphereConstants.h"
 
-#include "CrashEngine/Renderer/Renderer.h"
+//#include "CrashEngine/Renderer/Renderer.h"
+#include "CrashEngine/Renderer/Shader.h"
+#include "CrashEngine/Renderer/Texture.h"
 
 namespace CrashEngine {
 

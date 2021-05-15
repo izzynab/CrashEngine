@@ -80,9 +80,11 @@ namespace CrashEngine {
 		return out;
 	}
 
-	SceneSerializer::SceneSerializer(const std::shared_ptr<Scene>& scene, std::shared_ptr<SkyLight>& skyLight, std::shared_ptr<DirectionalLight>& directionalLight)
-		: m_Scene(scene), m_skyLight(skyLight), m_directionalLight(directionalLight)
+	SceneSerializer::SceneSerializer(const std::shared_ptr<Scene>& scene)
+		: m_Scene(scene)
 	{
+		m_skyLight = scene->skyLight;
+		m_directionalLight = scene->directionalLight;
 	}
 
 	static void SerializeEntity(YAML::Emitter& out, Entity entity)

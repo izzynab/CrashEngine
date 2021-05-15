@@ -18,6 +18,10 @@ namespace CrashEngine {
 	{
 		postProcess.reset(new PostProcess());
 		ssao.reset(new SSAO());
+
+		skyLight.reset(new SkyLight);
+
+		directionalLight.reset(new DirectionalLight);
 	}
 
 	Scene::~Scene()
@@ -95,20 +99,11 @@ namespace CrashEngine {
 
 			glm::mat4 model = transform.GetTransform();
 
-			if (shader)
-			{
-				shader->Bind();
-				shader->SetUniformMat4("model", model);
+			shader->Bind();
+			shader->SetUniformMat4("model", model);
 
-				mod.Draw(shader);
-			}
-			else
-			{
-				defaultShader->Bind();
-				defaultShader->SetUniformMat4("model", model);
+			mod.Draw(shader);		
 
-				mod.Draw(defaultShader);
-			}
 		}
 
 		

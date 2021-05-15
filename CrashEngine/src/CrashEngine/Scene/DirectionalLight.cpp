@@ -1,5 +1,6 @@
 #include "cepch.h"
 #include "DirectionalLight.h"
+
 #include "CrashEngine/Renderer/RenderCommand.h"
 #include "CrashEngine/Core/Defines.h"
 
@@ -35,14 +36,14 @@ namespace CrashEngine
 	}
 
 
-	void DirectionalLight::DrawCSM()
+	void DirectionalLight::DrawCSM(Camera* camera,Shader*defferedShader)
 	{
 		glm::vec3 up = glm::vec3(0.0f, 1.f, 0.0f);
 		glm::vec3 right = glm::vec3(1.0f, 0.f, 0.0f);
 
 		float fov = camera->fov;
-		float AspectRatio = Width / Height;
-		float AspectRatio1 = Height / Width;
+		float AspectRatio = camera->ScreenWidth / camera->ScreenHeight;
+		float AspectRatio1 = camera->ScreenHeight / camera->ScreenWidth;
 		float tanHalfHFOV = tanf(glm::radians(fov / 2.0f));
 		float tanHalfVFOV = tanf(glm::radians((fov * AspectRatio1) / 2.0f));
 
@@ -160,9 +161,9 @@ namespace CrashEngine
 			Application::Get().GetDebugger().DrawUpdatePoint(centroid, glm::vec3(0.7f, 0.2f, 0.4f), 1.f, PointType::Sphere);
 			Application::Get().GetDebugger().DrawUpdatePoint(lightPosition, glm::vec3(0.9f, 0.2f, 0.1f), 1.f, PointType::Cube);
 
-			CE_CORE_TRACE("minX: {0} maxX: {1}", minX, maxX);
-			CE_CORE_TRACE("minY: {0} maxY: {1}", minY, maxY);
-			CE_CORE_TRACE("minZ: {0} maxZ: {1}", minZ, maxZ);
+			//CE_CORE_TRACE("minX: {0} maxX: {1}", minX, maxX);
+			//CE_CORE_TRACE("minY: {0} maxY: {1}", minY, maxY);
+			//CE_CORE_TRACE("minZ: {0} maxZ: {1}", minZ, maxZ);
 		}
 
 
@@ -186,9 +187,10 @@ namespace CrashEngine
 			
 			depthMapShader->Bind();
 			depthMapShader->SetUniformMat4("lightSpaceMatrix", lightSpaceMatrix);
-			pbrTextureShader->Bind();
-			pbrTextureShader->SetUniformMat4("lightSpaceMatrix[" + std::to_string(i) + "]", lightSpaceMatrix);
-			pbrTextureShader->SetUniformFloat("cascadeEndClipSpace[" + std::to_string(i) + "]", m_cascadeEnd[i+1]);
+
+			defferedShader->Bind();
+			defferedShader->SetUniformMat4("lightSpaceMatrix[" + std::to_string(i) + "]", lightSpaceMatrix);
+			defferedShader->SetUniformFloat("cascadeEndClipSpace[" + std::to_string(i) + "]", m_cascadeEnd[i+1]);
 
 			RenderCommand::SetViewport(1024, 1024);
 			depthFramebuffer->Bind();
@@ -196,35 +198,10 @@ namespace CrashEngine
 			//depthFramebuffer->SetDepthTexture(CE_TEXTURE_2D, depthMap[0]->GetRendererID());
 			RenderCommand::SetClearColor(glm::vec4(0, 0.5, 0, 1));
 			RenderCommand::Clear();
-			m_ActiveScene->DepthRender(depthMapShader);
+			//m_ActiveScene->DepthRender(depthMapShader);
 		}
 		depthFramebuffer->Unbind();
 
 	}
-	glm::vec3 DirectionalLight::CalcSphereCenter(float Near,float Far)
-	{
-		// Create a bounding sphere around the camera frustum for 360 rotation
-		float end = Near + Far;
-		glm::vec3 camPos = camera->GetPosition();
-		glm::vec3 look = camera->m_Front;
-		glm::vec3 sphereCenter = camPos + look * (Near + 0.5f * end);
 
-		return sphereCenter;
-	}
-	float DirectionalLight::CalcSphereRadius(glm::vec3 sphereCenter, float Far)
-	{
-		// Create a vector to the frustum far corner
-		float aspect = Height / Width;
-		float tanFovX = tanf(aspect* camera->fov);
-		float tanFovY = tanf(aspect);
-		glm::vec3 look = camera->m_Front;
-		glm::vec3 right = glm::cross(camera->GetPosition() - camera->m_Front, camera->m_Up - camera->GetPosition());
-		glm::vec3 farCorner = look + right * tanFovX + camera->m_Up * tanFovY;
-
-		// Compute the frustumBoundingSphere radius
-		glm::vec3 boundVec = camera->GetPosition() + farCorner * Far - sphereCenter;
-		float sphereRadius = length(boundVec);
-		return sphereRadius;
-
-	}
 }

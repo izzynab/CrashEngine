@@ -11,9 +11,11 @@
 
 
 namespace CrashEngine {
-	SceneEnvironmentPanel::SceneEnvironmentPanel(const std::shared_ptr<SkyLight>& skyLight, const std::shared_ptr<DirectionalLight>& directionalLight, const std::shared_ptr<Scene>& m_ActiveScene)
-		:m_SkyLight(skyLight),m_DirectionalLight(directionalLight), m_Scene(m_ActiveScene)
+	SceneEnvironmentPanel::SceneEnvironmentPanel(const std::shared_ptr<Scene>& m_ActiveScene)
+		:m_Scene(m_ActiveScene)
 	{
+		m_DirectionalLight = m_ActiveScene->directionalLight;
+		m_SkyLight = m_ActiveScene->skyLight;
 	}
 
 	static void DrawVec3Control(const std::string& label, glm::vec3& values, float resetValue = 0.0f, float columnWidth = 100.0f)

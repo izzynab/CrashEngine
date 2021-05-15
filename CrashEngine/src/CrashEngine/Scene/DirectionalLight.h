@@ -5,7 +5,6 @@
 #include "CrashEngine/Renderer/Texture.h"
 #include "CrashEngine/Renderer/Shader.h"
 #include "CrashEngine/Renderer/Camera.h"
-#include "CrashEngine/Scene/Scene.h"
 #include "CrashEngine/Debug/LinesDrawer.h"
 
 namespace CrashEngine {
@@ -15,11 +14,7 @@ namespace CrashEngine {
 	public:
 		DirectionalLight();
 
-		void DrawCSM();
-
-	private:
-		glm::vec3 CalcSphereCenter(float start, float end);
-		float CalcSphereRadius(glm::vec3 sphereCenter, float Far);
+		void DrawCSM(Camera *camera, Shader* defferedShader);
 
 	public:
 		glm::mat4 lightView;
@@ -31,11 +26,7 @@ namespace CrashEngine {
 		float intensity = 50.f;
 
 		Shader* depthMapShader;
-		Shader* pbrTextureShader;
-		Camera* camera;
-		std::shared_ptr<Scene> m_ActiveScene;
-		float Height;
-		float Width;
+
 
 		std::vector<std::shared_ptr<Texture2D>> depthMap;
 		std::shared_ptr<Framebuffer> depthFramebuffer;

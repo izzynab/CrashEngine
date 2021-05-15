@@ -429,11 +429,11 @@
 			"id" : "zlibstatic::@de27f3809863e2bb7c79"
 		},
 		{
-			"backtrace" : 3,
-			"id" : "IrrXML::@44e0d5d69fa7d24670bc"
+			"id" : "assimp::@1c76e98fcac0e60aa45c"
 		},
 		{
-			"id" : "assimp::@1c76e98fcac0e60aa45c"
+			"backtrace" : 3,
+			"id" : "IrrXML::@44e0d5d69fa7d24670bc"
 		}
 	],
 	"id" : "unit::@36f028580bb02cc8272a",

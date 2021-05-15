@@ -1,0 +1,77 @@
+Scene: Untitled
+Filepath: C:\EngineDev\CrashEngine\Models\Scenes\123.crash
+Entities:
+  - Entity: 12837192831273
+    TagComponent:
+      Tag: sphere
+    TransformComponent:
+      Translation: [-6.0999999, 6.48151207, 6]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    Mesh:
+      Directory: C:\EngineDev\CrashEngine\Models\sphere.obj
+      Material:
+        Name: name
+        Albedo:
+          path: ""
+          albedo use: false
+          albedo color: [1, 0, 0, 0]
+          albedo load: false
+        Metallic:
+          path: ""
+          metallic use: false
+          metallic color: 1
+          metallic load: false
+        Roughness:
+          path: ""
+          roughness use: false
+          roughness color: 0.275000006
+          roughness load: false
+        Normal:
+          path: ""
+        Ao:
+          path: ""
+  - Entity: 12837192831273
+    TagComponent:
+      Tag: Cube1
+    TransformComponent:
+      Translation: [23.2923317, 8.77758217, 0.777145922]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    Mesh:
+      Directory: C:\EngineDev\CrashEngine\Models\cube.obj
+      Material:
+        Name: name
+        Albedo:
+          path: ""
+          albedo use: false
+          albedo color: [0.965811968, 0, 0.814453423, 0]
+          albedo load: false
+        Metallic:
+          path: ""
+          metallic use: false
+          metallic color: 0.257999986
+          metallic load: false
+        Roughness:
+          path: ""
+          roughness use: false
+          roughness color: 0.824000001
+          roughness load: false
+        Normal:
+          path: ""
+        Ao:
+          path: ""
+Directional light:
+  rotation: [0.418879032, 0.680678427, 0]
+  color: [0.564668775, 0.564663112, 0.564663112]
+  intensity: 76.6060028
+Sky light:
+  directory: C:\EngineDev\CrashEngine\Models\Textures\hdr\14-Hamarikyu_Bridge_B_3k.hdr
+Bloom:
+  blur: true
+  threshold: 0.400000006
+  softthreshold: 0.100000001
+SSAO:
+  radius: 0.643999994
+  bias: 0.0130000003
+  power: 3.25200009

@@ -27,6 +27,7 @@ namespace CrashEngine {
 	}
 	void Camera::RecalculateProjectionMatrix()
 	{
+		if (ScreenWidth <= 0 || ScreenHeight <= 0) return;
 		m_ProjectionMatrix = glm::perspective(glm::radians(fov), ScreenWidth / ScreenHeight, 0.1f, 1500.0f);
 	}
 }

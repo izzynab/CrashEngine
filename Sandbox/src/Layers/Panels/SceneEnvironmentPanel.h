@@ -1,7 +1,6 @@
 #pragma once
 
-#include "CrashEngine/Scene/SkyLight.h"
-#include "CrashEngine/Scene/DirectionalLight.h"
+#include "CrashEngine/Scene/Scene.h"
 
 namespace CrashEngine {
 
@@ -9,7 +8,7 @@ namespace CrashEngine {
 	{
 	public:
 		SceneEnvironmentPanel() = default;
-		SceneEnvironmentPanel(const std::shared_ptr<SkyLight> &skyLight, const std::shared_ptr<DirectionalLight>& directionalLight, const std::shared_ptr<Scene> &m_ActiveScene);
+		SceneEnvironmentPanel(const std::shared_ptr<Scene> &m_ActiveScene);
 
 		void OnImGuiRender();
 

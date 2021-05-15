@@ -52,4 +52,6 @@ namespace CrashEngine {
 		CameraComponent() = default;
 		CameraComponent(const CameraComponent&) = default;
 	};
+
+
 }

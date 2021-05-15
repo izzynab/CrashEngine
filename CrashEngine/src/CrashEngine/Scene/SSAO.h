@@ -1,6 +1,10 @@
 #pragma once
 
 #include "CrashEngine/Renderer/Renderer.h"
+#include "CrashEngine/Renderer/Texture.h"
+#include "CrashEngine/Renderer/Shader.h"
+#include "CrashEngine/Renderer/BasicShapes.h"
+#include "CrashEngine/Renderer/Framebuffer.h"
 
 namespace CrashEngine
 {

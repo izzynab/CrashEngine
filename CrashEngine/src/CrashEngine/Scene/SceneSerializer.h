@@ -10,7 +10,7 @@ namespace CrashEngine {
 	class SceneSerializer
 	{
 	public:
-		SceneSerializer(const std::shared_ptr<Scene>& scene, std::shared_ptr<SkyLight> &skyLight, std::shared_ptr<DirectionalLight> &directionalLight);
+		SceneSerializer(const std::shared_ptr<Scene>& scene);
 
 		void Serialize(const std::string& filepath);
 		void SerializeRuntime(const std::string& filepath);
