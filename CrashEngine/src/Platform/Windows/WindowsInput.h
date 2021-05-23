@@ -13,6 +13,9 @@ namespace CrashEngine {
 		virtual std::pair<float, float> GetMousePositionImpl() override;
 		virtual float GetMouseXImpl() override;
 		virtual float GetMouseYImpl() override;
+
+		virtual void DisableCursorImpl() override;
+		virtual void EnableCursorImpl() override;
 	};
 
 }

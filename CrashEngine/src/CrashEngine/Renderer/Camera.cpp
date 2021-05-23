@@ -9,16 +9,22 @@
 namespace CrashEngine {
 
 	Camera::Camera(glm::vec3 position, float width, float height)
-		: m_ProjectionMatrix(), m_ViewMatrix(1.f), ScreenWidth(width), ScreenHeight(height)
+		: m_ProjectionMatrix(), m_ViewMatrix(1.f), ScreenWidth(width), ScreenHeight(height), m_Position(position)
 	{
-		m_Position = position;
-
 		RecalculateViewMatrix();
 		RecalculateProjectionMatrix();
 	}
 
 	Camera::~Camera()
 	{
+	}
+
+	void Camera::SetSize(float height, float width)
+	{
+		if(height == ScreenHeight && width == ScreenWidth) return;
+		ScreenHeight = height;
+		ScreenWidth = width; 
+		RecalculateProjectionMatrix();
 	}
 
 	void Camera::RecalculateViewMatrix()
@@ -30,4 +36,6 @@ namespace CrashEngine {
 		if (ScreenWidth <= 0 || ScreenHeight <= 0) return;
 		m_ProjectionMatrix = glm::perspective(glm::radians(fov), ScreenWidth / ScreenHeight, 0.1f, 1500.0f);
 	}
+
+
 }

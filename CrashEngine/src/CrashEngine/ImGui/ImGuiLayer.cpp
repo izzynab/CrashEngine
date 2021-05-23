@@ -8,6 +8,7 @@
 #include "examples/imgui_impl_opengl3.h"
 
 #include "CrashEngine/Scene/SceneSerializer.h"
+//#include "CrashEngine/Renderer/RenderProperties.h"
 
 #include "ImGuizmo.h"
 
@@ -133,7 +134,7 @@ namespace CrashEngine {
 
 	}
 
-	void ImGuiLayer::Dockspace(std::shared_ptr<Framebuffer> renderFramebuffer)
+	void ImGuiLayer::Dockspace(std::shared_ptr<RenderProperties>& renderProperties, std::vector<std::shared_ptr<Framebuffer>> framebuffers)
 	{
 		bool s = true;
 		bool* show = &s;
@@ -172,28 +173,14 @@ namespace CrashEngine {
 		ImGui::PopStyleVar();
 
 		if (opt_fullscreen)
+		{
 			ImGui::PopStyleVar(2);
+		}	
 
+		ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
+		ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
 
 		
-			ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
-			ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
-
-			ImGui::Begin("Render context");
-
-
-			CurrentWindowView = ImVec2(ImGui::GetWindowWidth(), ImGui::GetWindowHeight() - 40);
-
-			ImGui::Image((void*)renderFramebuffer->GetColorAttachmentRendererID(0), CurrentWindowView, ImVec2(0, 1), ImVec2(1, 0));
-
-			if (OldWindowSize.x != CurrentWindowView.x || OldWindowSize.y != CurrentWindowView.y)
-			{
-				renderFramebuffer->Resize(CurrentWindowView.x, CurrentWindowView.y);
-				OldWindowSize = CurrentWindowView;
-
-			}
-			
-			
 	}
 
 	void ImGuiLayer::MainMenu()

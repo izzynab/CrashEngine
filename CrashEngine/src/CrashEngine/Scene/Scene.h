@@ -11,7 +11,7 @@
 #include "CrashEngine/PostProcess/PostProcess.h"
 
 #include "CrashEngine/Scene/Material.h"
-#include "CrashEngine/Scene/SSAO.h"
+#include "CrashEngine/PostProcess/SSAO.h"
 #include "CrashEngine/Scene/DirectionalLight.h"
 #include "CrashEngine/Scene/SkyLight.h"
 

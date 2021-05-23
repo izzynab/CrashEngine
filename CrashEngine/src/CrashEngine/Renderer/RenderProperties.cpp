@@ -1,5 +1,9 @@
 #include "cepch.h"
 #include "RenderProperties.h"
+#include "CrashEngine/Core/Application.h"
+
+#include "glm/glm.hpp"
+#include <glm/gtc/type_ptr.hpp>
 
 namespace CrashEngine {
 	RenderProperties::RenderProperties()
@@ -7,19 +11,6 @@ namespace CrashEngine {
 		quad.reset(new Quad());
 
 		Application::Get().GetDebugger().Begin();
-
-		//------------framebuffers--------------------
-		FramebufferSpecification spec;
-		spec.Height = Application::Get().GetWindow().GetHeight();
-		spec.Width = Application::Get().GetWindow().GetWidth();
-
-		deferredframebuffer = Framebuffer::Create(spec, false);
-		deferredframebuffer->Bind();
-		deferredframebuffer->CreateTexture(0, Color::RGBA);//position
-		deferredframebuffer->CreateTexture(1, Color::RGBA);//albedo
-		deferredframebuffer->CreateTexture(2, Color::RGBA);//normal
-		deferredframebuffer->CreateTexture(3, Color::RGBA);//metallic roughness ao
-		deferredframebuffer->InitializeMultipleTextures(4);
 
 		//------------shaders-------------------------
 		deferredShader.reset(Shader::Create("basic.vert", "deferred.frag"));
@@ -46,20 +37,6 @@ namespace CrashEngine {
 		GBufferShader->SetUniformInt("roughnessMap", 3);
 		GBufferShader->SetUniformInt("aoMap", 4);
 
-		forwardShader.reset(Shader::Create("pbr.vert", "pbr.frag"));
-		forwardShader->Bind();
-
-		forwardShader->SetUniformInt("albedoMap", 0);
-		forwardShader->SetUniformInt("normalMap", 1);
-		forwardShader->SetUniformInt("metallicMap", 2);
-		forwardShader->SetUniformInt("roughnessMap", 3);
-		forwardShader->SetUniformInt("aoMap", 4);
-
-		forwardShader->SetUniformInt("irradianceMap", 5);
-		forwardShader->SetUniformInt("prefilterMap", 6);
-		forwardShader->SetUniformInt("brdfLUT", 7);
-		forwardShader->SetUniformInt("shadowMap", 8);
-
 		//---------------scene-----------------------
 		m_ActiveScene = std::make_shared<Scene>();
 
@@ -70,16 +47,51 @@ namespace CrashEngine {
 		};
 
 		m_MatrixUB.reset(UniformBuffer::Create(uniformLayout, 0));
-		m_MatrixUB->linkShader(forwardShader->GetID(), "Matrices");
 		m_MatrixUB->linkShader(deferredShader->GetID(), "Matrices");
-		m_MatrixUB->linkShader(m_ActiveScene->skyLight->GetSkyShader()->GetID(), "Matrices");
 		m_MatrixUB->linkShader(GBufferShader->GetID(), "Matrices");
-		m_MatrixUB->linkShader(m_ActiveScene->ssao->ssaoShader->GetID(), "Matrices");
+		m_MatrixUB->linkShader(m_ActiveScene->ssao->GetShaderID(), "Matrices");
+		m_MatrixUB->linkShader(m_ActiveScene->skyLight->GetSkyShader()->GetID(), "Matrices");
 		m_MatrixUB->linkShader(Application::Get().GetDebugger().GetLinesShader().GetID(), "Matrices");
 		m_MatrixUB->linkShader(Application::Get().GetDebugger().GetPointsShader().GetID(), "Matrices");
 
 		//glm::mat4 projection = m_ActiveScene->GetActiveCamera().GetProjectionMatrix();
 		//m_MatrixUB->setData("projection", glm::value_ptr(projection));
 
+	}
+
+	void RenderProperties::AddView(float width, float height, std::string name, uint32_t id)
+	{
+		view view;
+		view.name = name;
+		view.id = id;
+
+		FramebufferSpecification spec;
+		spec.Height = height;
+		spec.Width = width;
+
+		std::shared_ptr<Framebuffer> deferredframebuffer;
+		deferredframebuffer = Framebuffer::Create(spec, false);
+		deferredframebuffer->Bind();
+		deferredframebuffer->CreateTexture(0, Color::RGBA);//position
+		deferredframebuffer->CreateTexture(1, Color::RGBA);//albedo
+		deferredframebuffer->CreateTexture(2, Color::RGBA);//normal
+		deferredframebuffer->CreateTexture(3, Color::RGBA);//metallic roughness ao
+		deferredframebuffer->InitializeMultipleTextures(4);
+
+		view.deferredframebuffer = deferredframebuffer;
+
+		glm::vec3 position = glm::vec3(1.0f,10.0f,1.0f);
+		std::shared_ptr<Camera> camera;
+		camera.reset(new Camera(position, width, height));
+
+		std::shared_ptr<CameraController> cameraController;
+		cameraController.reset(new CameraController(camera));
+		view.cameraController = cameraController;
+		view.camera = camera;
+
+		views.push_back(view);
+
+		m_ActiveScene->postProcess->AddView(width, height, id);
+		m_ActiveScene->ssao->AddView(width, height, id);
 	}
 }

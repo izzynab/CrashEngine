@@ -21,26 +21,26 @@ namespace CrashEngine {
 
 		imguilayer.reset(new ImGuiLayer);
 
-		editorCameraController.reset(new CameraController(glm::vec3(0.0f, 0.0f, 3.0f), Application::Get().GetWindow().GetWidth(), Application::Get().GetWindow().GetHeight()));
-
 		//------------framebuffers--------------------
+
 		FramebufferSpecification spec;
 		spec.Height = Application::Get().GetWindow().GetHeight();
 		spec.Width = Application::Get().GetWindow().GetWidth();
-
-		framebuffer = Framebuffer::Create(spec);
-
-		previewFramebuffer = Framebuffer::Create(spec);
-		
+ 
 		renderProperties.reset(new RenderProperties());
+
+		Renderer::AddView(Application::Get().GetWindow().GetWidth(), Application::Get().GetWindow().GetHeight(), "Main", renderProperties, framebuffers);
+
+		Renderer::AddView(800,800,"Test", renderProperties, framebuffers);
+
+		editorCameraController = renderProperties->GetCameraController(0);
+
 
 		HierarchyPanel.reset(new SceneHierarchyPanel(renderProperties->GetScene()));
 		EnvironmentPanel.reset(new SceneEnvironmentPanel(renderProperties->GetScene()));
 
 		SceneSerializer serializer(renderProperties->GetScene());
 		serializer.Deserialize("C:/EngineDev/CrashEngine/Models/Scenes/jd.crash");
-
-
 
 
 		//---------------------Test space--------------------------------------------------------
@@ -66,52 +66,45 @@ namespace CrashEngine {
 		QuadShader = Shader::Create("Basic.vert", "TexBasic.frag");
 		QuadShader->Bind();
 		QuadShader->SetUniformInt("tex", 0);
-		
+
 	}
 
 	void Editor::OnUpdate(Timestep ts)
 	{
-		/*auto sview = m_ActiveScene->m_Registry.view<TransformComponent, Mesh, TagComponent>();
-
-		for (auto entity : sview)
-		{
-			if (sview.get<TagComponent>(entity).Tag == "Cube1")
-			{
-				auto& mod = sview.get<Mesh>(entity);
-				auto& transform = sview.get<TransformComponent>(entity).Translation = glm::vec3(
-					glm::cos(directionalLight->rotation.x) * glm::sin(directionalLight->rotation.y),
-					glm::sin(directionalLight->rotation.x) * glm::sin(directionalLight->rotation.y),
-					glm::cos(directionalLight->rotation.y));
-			}
-		}*/
-
 		Renderer::BeginScene();
 
+		auto camera = renderProperties->GetScene()->m_Registry.view<TagComponent,CameraComponent>();
 
-		editorCameraController->OnUpdate(ts);
+		for (auto entity : camera)
+		{
+			if (camera.get<CameraComponent>(entity).DrawFrustum == true)
+			{
+				Application::Get().GetDebugger().DrawFrustum(camera.get<CameraComponent>(entity).Camera.get());
+				//CE_TRACE("Camera frustum draw call: {0}", camera.get<TagComponent>(entity).Tag);
+			}
+		}
 
-		editorCameraController->GetCamera().SetSize(imguilayer->CurrentWindowView.y, imguilayer->CurrentWindowView.x);
+		//Application::Get().GetDebugger().DrawFrustum(secondCamera.get());
 
-		Renderer::RenderScene(renderProperties,framebuffer, &editorCameraController->GetCamera(),ts);
+		if(!viewName.empty())editorCameraController->OnUpdate(ts);
 
+		Renderer::RenderScene(renderProperties, framebuffers,ts);
 
 		Renderer::EndScene();
+
 		//-----------Test render----------------------
 		compShader->Bind();
-
 		testTexture->BindImageTexture();
-
 		RenderCommand::Dispatch(testTexture->GetWidth(),testTexture->GetHeight());
 		RenderCommand::MemoryBarier();
 
-
-		debugFramebuffer->Bind();
+		/*debugFramebuffer->Bind();
 		RenderCommand::SetViewport(1080, 1080);
 		QuadShader->Bind();
 		RenderCommand::BindTexture(testTexture->GetRendererID(), 0);
 		RenderCommand::Clear();
 		quad->RenderQuad();
-		debugFramebuffer->Unbind();
+		debugFramebuffer->Unbind();*/
 	}
 
 	void Editor::OnImGuiRender()
@@ -184,58 +177,86 @@ namespace CrashEngine {
 			ImGui::EndMainMenuBar();
 		}
 
+		imguilayer->Dockspace(renderProperties, framebuffers);
 
-		imguilayer->Dockspace(framebuffer);
-
-		//Gizmos
-		auto& camera = editorCameraController->GetCamera();
-		const glm::mat4& cameraProjection = camera.GetProjectionMatrix();
-		glm::mat4 cameraView = camera.GetViewMatrix();
-
-		glm::mat4 identityMatrix = glm::mat4(1.f);
-
-		float windowWidth = (float)ImGui::GetWindowWidth();
-		float windowHeight = (float)ImGui::GetWindowHeight();
-		ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, windowWidth, windowHeight);
-
-		ImGuizmo::SetOrthographic(false);
-		ImGuizmo::SetDrawlist();
-		ImGuizmo::AllowAxisFlip(false);		
-		
-
-		Entity selectedEntity = HierarchyPanel->GetSelectedEntity();
-		if (selectedEntity && gizmoType != -1)
+		if (!isCursorVisible)
 		{
-			// Entity transform
-			auto& tc = selectedEntity.GetComponent<TransformComponent>();
-			glm::mat4 transform = tc.GetTransform();
-
-			// Snapping
-			bool snap = Input::IsKeyPressed(CE_KEY_LEFT_CONTROL);
-			float snapValue = 0.5f; // Snap to 0.5m for translation/scale
-			// Snap to 45 degrees for rotation
-			if (gizmoType == ImGuizmo::OPERATION::ROTATE)
-				snapValue = 45.0f;
-
-			float snapValues[3] = { snapValue, snapValue, snapValue };
-
-			ImGuizmo::Manipulate(glm::value_ptr(cameraView), glm::value_ptr(cameraProjection),
-				(ImGuizmo::OPERATION)gizmoType, ImGuizmo::LOCAL, glm::value_ptr(transform),
-				nullptr, snap ? snapValues : nullptr);
-
-			if (ImGuizmo::IsUsing())
-			{
-				glm::vec3 translation, rotation, scale;
-				Math::DecomposeTransform(transform, translation, rotation, scale);
-
-				glm::vec3 deltaRotation = rotation - tc.Rotation;
-				tc.Translation = translation;
-				tc.Rotation += deltaRotation;
-				tc.Scale = scale;
-			}
+			ImGui::SetWindowFocus(viewName.c_str());
 		}
-		
-		ImGui::End();
+
+		viewName = std::string();
+
+		for (int i = 0; i < renderProperties->GetViewsNumber(); i++)
+		{
+			ImGui::Begin(renderProperties->GetViewName(i).c_str());
+
+			ImVec2 CurrentWindowView = ImVec2(ImGui::GetWindowWidth(), ImGui::GetWindowHeight() - 40);
+			renderProperties->GetCamera(i)->SetSize(CurrentWindowView.y, CurrentWindowView.x);
+
+			ImVec2 imageSize = ImVec2(framebuffers[i]->GetSpecification().Width, framebuffers[i]->GetSpecification().Height);
+
+			ImGui::Image((void*)framebuffers[i]->GetColorAttachmentRendererID(0), imageSize, ImVec2(0, 1), ImVec2(1, 0));
+
+			if (ImGui::IsWindowFocused())
+			{
+				editorCameraController = renderProperties->GetCameraController(i);
+				viewName = renderProperties->GetViewName(i);
+			}
+
+			//todo: fix gizmos
+			//Gizmos
+			auto& camera = renderProperties->GetCamera(i);
+			const glm::mat4& cameraProjection = camera->GetProjectionMatrix();
+			glm::mat4 cameraView = camera->GetViewMatrix();
+
+			glm::mat4 identityMatrix = glm::mat4(1.f);
+
+			float windowWidth = (float)ImGui::GetWindowWidth();
+			float windowHeight = (float)ImGui::GetWindowHeight();
+			ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, windowWidth, windowHeight);
+
+			//CE_INFO("{0}: Set rect {1} {2}  {3} {4}", renderProperties->GetViewName(i).c_str(), ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, windowWidth, windowHeight);
+
+			ImGuizmo::SetOrthographic(false);
+			ImGuizmo::SetDrawlist();
+			ImGuizmo::AllowAxisFlip(false);
+
+
+			Entity selectedEntity = HierarchyPanel->GetSelectedEntity();
+			if (selectedEntity && gizmoType != -1)
+			{
+				// Entity transform
+				auto& tc = selectedEntity.GetComponent<TransformComponent>();
+				glm::mat4 transform = tc.GetTransform();
+
+				// Snapping
+				bool snap = Input::IsKeyPressed(CE_KEY_LEFT_CONTROL);
+				float snapValue = 0.5f; // Snap to 0.5m for translation/scale
+				// Snap to 45 degrees for rotation
+				if (gizmoType == ImGuizmo::OPERATION::ROTATE)
+					snapValue = 45.0f;
+
+				float snapValues[3] = { snapValue, snapValue, snapValue };
+
+				ImGuizmo::Manipulate(glm::value_ptr(cameraView), glm::value_ptr(cameraProjection),
+					(ImGuizmo::OPERATION)gizmoType, ImGuizmo::LOCAL, glm::value_ptr(transform),
+					nullptr, snap ? snapValues : nullptr);
+
+				if (ImGuizmo::IsUsing())
+				{
+					glm::vec3 translation, rotation, scale;
+					Math::DecomposeTransform(transform, translation, rotation, scale);
+
+					glm::vec3 deltaRotation = rotation - tc.Rotation;
+					tc.Translation = translation;
+					tc.Rotation += deltaRotation;
+					tc.Scale = scale;
+				}
+			}
+			
+			ImGui::End();
+		}
+
 		ImGui::End();
 
 
@@ -248,19 +269,18 @@ namespace CrashEngine {
 		EnvironmentPanel->OnImGuiRender();
 
 
-
-
-
 		ImGui::Begin("Debug");
 		if (ImGui::SliderInt("samples of blur", &renderProperties->GetScene()->skyLight->BlurSamples, 0, 50))
 		{
 			renderProperties->GetScene()->skyLight->UpdateCubemap();
 		}
 		
-		if (ImGui::Button("Show Info"))
+		if (ImGui::SliderInt("view", &view, 0, framebuffers.size() - 1))
 		{
-
+			//editorCameraController->SetCamera(renderProperties->GetCamera(view));
+			//editorCameraController = renderProperties->GetCameraController(view);
 		}
+
 		ImGui::SliderFloat("Camera Speed", &editorCameraController->m_CameraSpeed, 1.f, 100.f);
 		ImGui::Checkbox("ssao", &forward);
 
@@ -276,7 +296,7 @@ namespace CrashEngine {
 		ImGui::SliderInt("shadow", &deferred, 0, 2);
 		ImGui::Image((void*)renderProperties->GetScene()->directionalLight->depthMap[deferred]->GetRendererID(), ImVec2(400, 400), ImVec2(0, 1), ImVec2(1, 0));
 		//ImGui::Image((void*)renderProperties->GetDefferedFramebuffer()->GetColorAttachmentRendererID(deferred), ImVec2(400, 400), ImVec2(0, 1), ImVec2(1, 0));
-		//ImGui::Image((void*)debugFramebuffer->GetColorAttachmentRendererID(), ImVec2(400, 400), ImVec2(0, 1), ImVec2(1, 0));
+		//ImGui::Image((void*)debugFramebuffer->GetColorAttachmentRendererID(), ImVec2(secondCamera->ScreenWidth/3, secondCamera->ScreenHeight/3), ImVec2(0, 1), ImVec2(1, 0));
 
 		ImGui::SliderFloat("far_plane", &renderProperties->GetScene()->directionalLight->far_plane, -10, 200);
 		ImGui::SliderFloat("near_plane", &renderProperties->GetScene()->directionalLight->near_plane, -200, -10);
@@ -320,7 +340,37 @@ namespace CrashEngine {
 			}
 		}
 
+		if (event.GetEventType() == EventType::WindowFocus)
+		{
+			//todo: cursor visibility should be only changed when focus is set on render window
 
+			/*for(int i = 0;)...
+			* if(e.GetName() == views[i])
+			* {
+			*   disable cursor
+			* }
+			*/
+		}
+
+		if (event.GetEventType() == EventType::MouseButtonPressed)
+		{
+			CrashEngine::MouseButtonPressedEvent& e = (CrashEngine::MouseButtonPressedEvent&)event;
+			if (e.GetMouseButton() == 1)
+			{
+				Input::DisableCursor();
+				isCursorVisible = false;
+			}
+		}
+
+		if (event.GetEventType() == EventType::MouseButtonReleased)
+		{
+			CrashEngine::MouseButtonReleasedEvent& e = (CrashEngine::MouseButtonReleasedEvent&)event;
+			if (e.GetMouseButton() == 1)
+			{
+				Input::EnableCursor();
+				isCursorVisible = true;
+			}
+		}
 
 	}
 

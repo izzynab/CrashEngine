@@ -8,22 +8,11 @@ namespace CrashEngine {
 	{
 		quad.reset(new Quad());
 
-		FramebufferSpecification spec;
-		spec.Height = 1080;
-		spec.Width = 2560;
-
 		//----------------HDR and Gamma-------------------------
 		HDRGammaCorrection = Shader::Create("Basic.vert", "GammaHDR.frag");
 
 		HDRGammaCorrection->Bind();
 		HDRGammaCorrection->SetUniformInt("scene", 0);
-
-		//----------------blur-------------------------
-		blurFramebuffer[0] = Framebuffer::Create(spec);
-		blurFramebuffer[1] = Framebuffer::Create(spec);
-
-		bloom = Framebuffer::Create(spec);
-		draw_framebuffer = Framebuffer::Create(spec);
 
 		blurShader = Shader::Create("Basic.vert", "blur.frag");
 		BloomMixShader = Shader::Create("Basic.vert", "mixbloom.frag");
@@ -43,8 +32,33 @@ namespace CrashEngine {
 		FXAAShader->SetUniformInt("colorTexture", 0);
 	}
 
-	void PostProcess::Blur(std::shared_ptr<Framebuffer>& framebuffer)
+	void PostProcess::AddView(float width, float height, uint32_t id)
 	{
+		FramebufferSpecification spec;
+		spec.Height = height;
+		spec.Width = width;
+
+		view view;
+		view.id = id;
+
+		//----------------blur-------------------------
+		view.blurFramebuffer[0] = Framebuffer::Create(spec);
+		view.blurFramebuffer[1] = Framebuffer::Create(spec);
+
+		view.bloom = Framebuffer::Create(spec);
+		view.draw_framebuffer = Framebuffer::Create(spec);
+
+		views.push_back(view);
+	}
+
+	void PostProcess::Blur(std::shared_ptr<Framebuffer>& framebuffer, uint32_t viewID)
+	{
+		std::shared_ptr<Framebuffer> blurFramebuffer[2];
+		blurFramebuffer[0] = views[viewID].blurFramebuffer[0];
+		blurFramebuffer[1] = views[viewID].blurFramebuffer[1];
+		std::shared_ptr<Framebuffer> bloom = views[viewID].bloom;
+		std::shared_ptr<Framebuffer> draw_framebuffer = views[viewID].draw_framebuffer;
+
 		if (!blur) return;
 		float width = framebuffer->GetSpecification().Width;
 		float height = framebuffer->GetSpecification().Height;
@@ -105,8 +119,10 @@ namespace CrashEngine {
 		draw_framebuffer->BlitDepthToFramebuffer(framebuffer);
 	}
 
-	void PostProcess::GammaHDRCorretion(std::shared_ptr<Framebuffer>& framebuffer)
+	void PostProcess::GammaHDRCorretion(std::shared_ptr<Framebuffer>& framebuffer, uint32_t viewID)
 	{
+		std::shared_ptr<Framebuffer> draw_framebuffer = views[viewID].draw_framebuffer;
+
 		draw_framebuffer->Resize(framebuffer->GetSpecification().Width, framebuffer->GetSpecification().Height);
 		RenderCommand::BlitFramebuffers(framebuffer, draw_framebuffer);
 		framebuffer->BlitDepthToFramebuffer(draw_framebuffer);
@@ -124,8 +140,10 @@ namespace CrashEngine {
 
 	}
 
-	void PostProcess::ApplyFXAA(std::shared_ptr<Framebuffer>& framebuffer)
+	void PostProcess::ApplyFXAA(std::shared_ptr<Framebuffer>& framebuffer, uint32_t viewID)
 	{
+		std::shared_ptr<Framebuffer> draw_framebuffer = views[viewID].draw_framebuffer;
+
 		draw_framebuffer->Resize(framebuffer->GetSpecification().Width, framebuffer->GetSpecification().Height);
 		RenderCommand::BlitFramebuffers(framebuffer, draw_framebuffer);
 		framebuffer->BlitDepthToFramebuffer(draw_framebuffer);

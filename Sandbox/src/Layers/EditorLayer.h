@@ -40,37 +40,35 @@ namespace CrashEngine {
 		std::shared_ptr <SceneHierarchyPanel> HierarchyPanel;
 		std::shared_ptr <SceneEnvironmentPanel> EnvironmentPanel;
 
-		std::shared_ptr<CameraController> editorCameraController;
-
 		std::shared_ptr<RenderProperties> renderProperties;
-
-		//std::shared_ptr<Camera> testCamera;
 
 		std::shared_ptr<Sphere> sphere;
 		std::shared_ptr<Cube> cube;
 		std::shared_ptr<Quad> quad;
 
-
 		Shader* QuadShader;
 
 		/*Last framebuffer which is shown in ImGui Dockspace Image*/
-		std::shared_ptr<Framebuffer> framebuffer;
-
-		/*Framebuffer which is used to show second camera view to small ImGui window*/
-		std::shared_ptr<Framebuffer> previewFramebuffer;
+		std::vector<std::shared_ptr<Framebuffer>> framebuffers;
 
 		/*framebuffer used to debug purposes*/
 		std::shared_ptr<Framebuffer> debugFramebuffer;
 
-		float previewHeight = 600.f;
-		float previewWidth = 600.f;
+		std::shared_ptr<CameraController> editorCameraController;
+		//std::shared_ptr<Camera> editorCamera;
 
 		int gizmoType = 7;
+		std::string viewName;
+		bool isCursorVisible = true;
 
+		//----------------test--------------------
+
+		int view = 0;
 		int deferred = 0;
 		bool metrics = false;
 		bool forward = false;
 		bool csm = false;
+
 
 		std::shared_ptr<Texture2D> testTexture;
 		ComputeShader* compShader;

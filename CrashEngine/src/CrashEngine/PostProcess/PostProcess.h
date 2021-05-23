@@ -8,20 +8,29 @@ namespace CrashEngine {
 
 	class PostProcess
 	{
+		struct view
+		{
+			uint32_t id;
+
+			std::shared_ptr<Framebuffer> blurFramebuffer[2];
+			std::shared_ptr<Framebuffer> bloom;
+			std::shared_ptr<Framebuffer> draw_framebuffer;
+		};
+
 	public:
 		PostProcess();
 
 	public:
 		/*FXAA  must be before any other post process*/
-		/*May be good looking post process when approximate 4 near pixels colors to one pixel*/
-		/*Some kind of sobe filter???*/
-		void ApplyFXAA(std::shared_ptr<Framebuffer>& framebuffer);
+		void ApplyFXAA(std::shared_ptr<Framebuffer>& framebuffer, uint32_t viewID = 0);
 
 		/*Function blurs image*/
-		void Blur(std::shared_ptr<Framebuffer> &framebuffer);
+		void Blur(std::shared_ptr<Framebuffer> &framebuffer, uint32_t viewID = 0);
 
 		/*Gamma Correction and tone mapping on image*/
-		void GammaHDRCorretion(std::shared_ptr<Framebuffer>& framebuffer);
+		void GammaHDRCorretion(std::shared_ptr<Framebuffer>& framebuffer, uint32_t viewID = 0);
+
+		void AddView(float width, float height,  uint32_t id);
 
 	public:
 		bool blur = true;
@@ -37,9 +46,7 @@ namespace CrashEngine {
 		Shader* HDRGammaCorrection;
 		Shader* FXAAShader;
 
-		std::shared_ptr<Framebuffer> blurFramebuffer[2];
-		std::shared_ptr<Framebuffer> bloom;
-		std::shared_ptr<Framebuffer> draw_framebuffer;
+		std::vector<view> views;
 		std::shared_ptr<Quad> quad;
 	};
 }

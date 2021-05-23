@@ -8,15 +8,6 @@ namespace CrashEngine
 	{
 		quad.reset(new Quad());
 
-		FramebufferSpecification spec;
-		spec.Height = Application::Get().GetWindow().GetHeight();
-		spec.Width = Application::Get().GetWindow().GetWidth();
-
-		ssaoFramebuffer = Framebuffer::Create(spec);
-
-		ssaoBlurFramebuffer = Framebuffer::Create(spec);
-
-
 		ssaoShader = Shader::Create("basic.vert", "ssao.frag");
 		ssaoShader->Bind();
 		ssaoShader->SetUniformInt("gPosition", 0);
@@ -64,12 +55,15 @@ namespace CrashEngine
 		noiseTexture->SetData(&ssaoNoise[0]);
 	}
 
-	void SSAO::Render(float Width, float Height, uint32_t GBufferPosition, uint32_t GBufferNormals)
+	void SSAO::Render(float width, float height,uint32_t GBufferPosition, uint32_t GBufferNormals, uint32_t viewID)
 	{
-		noiseScale = glm::vec2(Width / 4.0, Height / 4.0);
+		std::shared_ptr<Framebuffer> ssaoFramebuffer = views[viewID].ssaoFramebuffer;
+		std::shared_ptr<Framebuffer> ssaoBlurFramebuffer = views[viewID].ssaoBlurFramebuffer;
 
-		ssaoFramebuffer->Resize(Width, Height);
-		ssaoBlurFramebuffer->Resize(Width, Height);
+		noiseScale = glm::vec2(width / 4.0, height / 4.0);
+
+		ssaoFramebuffer->Resize(width, height);
+		ssaoBlurFramebuffer->Resize(width, height);
 
 		ssaoFramebuffer->Bind();
 		RenderCommand::Clear();
@@ -93,5 +87,20 @@ namespace CrashEngine
 		RenderCommand::BindTexture(ssaoFramebuffer->GetColorAttachmentRendererID(0), 0);
 		quad->RenderQuad();
 		ssaoBlurFramebuffer->Unbind();
+	}
+
+	void SSAO::AddView(float width, float height, uint32_t id)
+	{
+		FramebufferSpecification spec;
+		spec.Height = height;
+		spec.Width = width;
+
+		view view;
+		view.id = id;
+
+		view.ssaoFramebuffer = Framebuffer::Create(spec);
+		view.ssaoBlurFramebuffer = Framebuffer::Create(spec);
+
+		views.push_back(view);
 	}
 }

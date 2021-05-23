@@ -228,9 +228,6 @@
     <ClInclude Include="src\CrashEngine\Scene\PointLight.h">
       <Filter>src\CrashEngine\Scene</Filter>
     </ClInclude>
-    <ClInclude Include="src\CrashEngine\Scene\SSAO.h">
-      <Filter>src\CrashEngine\Scene</Filter>
-    </ClInclude>
     <ClInclude Include="src\CrashEngine\Scene\Scene.h">
       <Filter>src\CrashEngine\Scene</Filter>
     </ClInclude>
@@ -1762,6 +1759,9 @@
       <Filter>vendor\glm\glm</Filter>
     </ClInclude>
     <ClInclude Include="src\CrashEngine\Renderer\RenderProperties.h" />
+    <ClInclude Include="src\CrashEngine\PostProcess\SSAO.h">
+      <Filter>src\CrashEngine\Scene</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\CrashEngine\Core\Application.cpp">
@@ -1854,9 +1854,6 @@
     <ClCompile Include="src\CrashEngine\Scene\PointLight.cpp">
       <Filter>src\CrashEngine\Scene</Filter>
     </ClCompile>
-    <ClCompile Include="src\CrashEngine\Scene\SSAO.cpp">
-      <Filter>src\CrashEngine\Scene</Filter>
-    </ClCompile>
     <ClCompile Include="src\CrashEngine\Scene\Scene.cpp">
       <Filter>src\CrashEngine\Scene</Filter>
     </ClCompile>
@@ -1907,6 +1904,9 @@
     </ClCompile>
     <ClCompile Include="vendor\ImGuizmo\ImGuizmo.cpp">
       <Filter>vendor\ImGuizmo</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CrashEngine\PostProcess\SSAO.cpp">
+      <Filter>src\CrashEngine\Scene</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

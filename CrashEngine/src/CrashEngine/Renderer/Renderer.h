@@ -11,9 +11,10 @@ namespace CrashEngine {
 	{
 	public:
 		static void BeginScene();
-		//static void RenderScene(std::shared_ptr<Framebuffer> framebuffer, std::shared_ptr<Framebuffer> deferredframebuffer,float Width,float Height,Camera *camera, std::shared_ptr<UniformBuffer> uniformBuffer, std::shared_ptr<Scene> m_ActiveScene,Timestep ts);
-		static void RenderScene(std::shared_ptr<RenderProperties>& renderProperties, std::shared_ptr<Framebuffer>& renderFramebuffer, Camera* camera, Timestep ts);
+		static void RenderScene(std::shared_ptr<RenderProperties>& renderProperties, std::vector<std::shared_ptr<Framebuffer>> &renderFramebuffers, Timestep ts);
 		static void EndScene();
+
+		static void AddView(float width,float height, std::string name,std::shared_ptr<RenderProperties>& renderProperties, std::vector<std::shared_ptr<Framebuffer>>& renderFramebuffers);
 
 		static void Submit(const std::shared_ptr<VertexArray>& vertexArray, bool strip = false);
 		static void SubmitDebug(const std::shared_ptr<VertexArray>& vertexArray, unsigned int trianglesNumber);

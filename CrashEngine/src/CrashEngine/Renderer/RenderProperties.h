@@ -1,6 +1,6 @@
 #pragma once
 
-#include "CrashEngine/Core/Application.h"
+//#include "CrashEngine/Core/Application.h"
 #include "CrashEngine/Scene/Scene.h"
 
 #include "Shader.h"
@@ -10,16 +10,22 @@
 
 namespace CrashEngine {
 
-	class disstream
-	{
-	public:
-		int jd = 1;
-	};
-
 	class RenderProperties
 	{
+		struct view
+		{
+			std::string name;
+			uint32_t id;
+
+			std::shared_ptr<Framebuffer> deferredframebuffer;
+			std::shared_ptr<Camera> camera;
+			std::shared_ptr<CameraController> cameraController;
+		};
+
 	public:
 		RenderProperties();
+
+		void AddView(float width, float height, std::string name, uint32_t id);
 
 	private:
 		/*Currently active scene*/
@@ -34,22 +40,31 @@ namespace CrashEngine {
 		/*Shader draws pbr scene from gbuffer images*/
 		std::shared_ptr<Shader> deferredShader;
 
-		/*Shader draws pbr scene from textures of models*/
-		std::shared_ptr<Shader> forwardShader;
-
-		/*Framebuffer which stores GBuffer images*/
-		std::shared_ptr<Framebuffer> deferredframebuffer;
-
 		std::shared_ptr<Quad> quad;
+
+		/*Framebuffers which stores GBuffer images*/
+		//std::vector<std::shared_ptr<Framebuffer>> deferredframebuffers;
+
+		/*Cameras for views*/
+		//std::vector<std::shared_ptr<Camera>> cameras;
 
 	public:
 		inline std::shared_ptr<Scene> GetScene() { return m_ActiveScene; }
 		inline std::shared_ptr<UniformBuffer> GetUBO() { return m_MatrixUB; }
-		inline std::shared_ptr<Framebuffer> GetDefferedFramebuffer() { return deferredframebuffer; }
+		inline std::shared_ptr<Framebuffer> GetDefferedFramebuffer(int id) { return views[id].deferredframebuffer; }
+		inline std::shared_ptr<Camera> GetCamera(int id) { return views[id].camera; }
+		inline std::shared_ptr<CameraController> GetCameraController(int id) { return views[id].cameraController; }
 
 		inline std::shared_ptr<Shader> GetDefferedShader() { return deferredShader; }
 		inline std::shared_ptr<Shader> GetGBufferShader() { return GBufferShader; }
 
 		inline std::shared_ptr<Quad> GetQuad() { return quad; }
+
+		inline int GetViewsNumber() { return views.size(); }
+		inline std::string GetViewName(uint32_t id) { return views[id].name; }
+
+	private:
+		std::vector<view> views;
+
 	};
 }

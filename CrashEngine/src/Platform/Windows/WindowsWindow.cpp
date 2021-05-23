@@ -126,22 +126,12 @@ namespace CrashEngine {
 				{
 					MouseButtonPressedEvent event(button);
 					data.EventCallback(event);
-					if (event.GetMouseButton() == 1)
-					{
-						glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-						if (glfwRawMouseMotionSupported()) { glfwSetInputMode(window, GLFW_RAW_MOUSE_MOTION, GLFW_TRUE); }
-					}
 					break;
 				}
 				case GLFW_RELEASE:
 				{
 					MouseButtonReleasedEvent event(button);
-					data.EventCallback(event);
-					if (event.GetMouseButton() == 1)
-					{
-						glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
-					}
-					
+					data.EventCallback(event);	
 					break;
 				}
 				}

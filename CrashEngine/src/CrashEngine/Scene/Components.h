@@ -45,11 +45,14 @@ namespace CrashEngine {
 
 	struct CameraComponent
 	{
-		SceneCamera Camera;
+		std::shared_ptr<SceneCamera> Camera;
 		bool Primary = true; 
-		bool FixedAspectRatio = false;
+		bool DrawFrustum = false;
 
-		CameraComponent() = default;
+		CameraComponent()
+		{
+			Camera.reset(new SceneCamera());
+		}
 		CameraComponent(const CameraComponent&) = default;
 	};
 

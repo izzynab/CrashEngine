@@ -63,6 +63,8 @@ namespace CrashEngine {
 
 		void DrawUpdateLine(glm::vec3 startVec, glm::vec3 endVec, glm::vec3 color , float width);
 
+		void DrawFrustum(Camera& camera);
+
 		void ClearUpdateLines();
 
 		void AddLine(glm::vec3 startVec, glm::vec3 endVec, glm::vec3 color , float width);

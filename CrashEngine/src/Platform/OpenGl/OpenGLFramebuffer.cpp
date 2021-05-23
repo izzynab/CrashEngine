@@ -16,7 +16,7 @@ namespace CrashEngine {
 		{
 			glCreateTextures(GL_TEXTURE_2D, 1, &m_DepthAttachment);
 			glBindTexture(GL_TEXTURE_2D, m_DepthAttachment);
-			glTexStorage2D(GL_TEXTURE_2D, 1, GL_DEPTH24_STENCIL8, m_Specification.Width, m_Specification.Height);
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, m_Specification.Width, m_Specification.Height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, 0);
 			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, m_DepthAttachment, 0);
 		}
 	}
@@ -67,7 +67,7 @@ namespace CrashEngine {
 
 		glCreateTextures(GL_TEXTURE_2D, 1, &m_DepthAttachment);
 		glBindTexture(GL_TEXTURE_2D, m_DepthAttachment);
-		glTexStorage2D(GL_TEXTURE_2D, 1, GL_DEPTH24_STENCIL8, m_Specification.Width, m_Specification.Height);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, m_Specification.Width, m_Specification.Height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, 0);
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, m_DepthAttachment, 0);
 
 		//CE_CORE_ASSERT(glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE, "Framebuffer is incomplete!");
@@ -121,11 +121,18 @@ namespace CrashEngine {
 			CE_CORE_WARN("Attempted to rezize framebuffer to {0}, {1}", width, height);
 			return;
 		}
+		if (width == m_Specification.Width && height == m_Specification.Height)
+		{
+			return;
+		}
 		m_Specification.Width = width;
 		m_Specification.Height = height;
 
 		//Invalidate();
 		SetNewTexture(width, height);
+
+		glBindTexture(GL_TEXTURE_2D, m_DepthAttachment);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, m_Specification.Width, m_Specification.Height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, 0);
 	}
 
 	void OpenGLFramebuffer::SetTexture(int texTarget, uint32_t textureID, int mipMapLevel, uint32_t id)

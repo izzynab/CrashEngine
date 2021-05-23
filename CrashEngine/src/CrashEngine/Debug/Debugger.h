@@ -17,6 +17,7 @@ namespace CrashEngine {
 
 		inline Shader& GetLinesShader() { return *debugLines->shader; }
 		inline void DrawUpdateLine(glm::vec3 startVec, glm::vec3 endVec, glm::vec3 color = glm::vec3(0.1f, 0.1f, 0.9f), float width = 3.f) { return debugLines->DrawUpdateLine(startVec, endVec, color, width); }
+		inline void DrawFrustum(Camera* camera) { debugLines->DrawFrustum(*camera); }
 		inline void ClearUpdateLines() { debugLines->ClearUpdateLines(); }
 		inline void AddLine(glm::vec3 startVec, glm::vec3 endVec, glm::vec3 color = glm::vec3(0.1f, 0.1f, 0.9f), float width = 3.f) { return debugLines->AddLine(startVec, endVec, color, width); }
 		inline void AddGrid(const float gridSize = 60.f) { return debugLines->AddGrid(gridSize); }

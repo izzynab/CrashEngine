@@ -7,13 +7,20 @@
 
 namespace CrashEngine {
 
-	CameraController::CameraController(glm::vec3 position, float width, float height)
-		: m_Camera(position, width, height)
+	CameraController::CameraController(std::shared_ptr<Camera> &camera)
 	{
-		lastX = width / 2;
-		lastY = height / 2;
+		m_Camera = camera.get();
 
+		lastX = m_Camera->ScreenWidth / 2;
+		lastY = m_Camera->ScreenHeight / 2;
+	}
 
+	void CameraController::SetCamera(std::shared_ptr<Camera>& camera)
+	{
+		m_Camera = camera.get();
+
+		lastX = m_Camera->ScreenWidth / 2;
+		lastY = m_Camera->ScreenHeight / 2;
 	}
 
 
@@ -21,23 +28,24 @@ namespace CrashEngine {
 	void CameraController::OnUpdate(Timestep ts)
 	{
 		float cameraSpeed = m_CameraSpeed * ts.GetSeconds();
+
 		if (Input::IsMouseButtonPressed(CE_MOUSE_BUTTON_RIGHT))
 		{
 			if (Input::IsKeyPressed(CE_KEY_W))
 			{
-				m_CameraPosition += cameraSpeed * m_Camera.m_Front;
+				m_Camera->m_Position += cameraSpeed * m_Camera->m_Front;
 			}
 			if (Input::IsKeyPressed(CE_KEY_S))
 			{
-				m_CameraPosition -= cameraSpeed * m_Camera.m_Front;
+				m_Camera->m_Position -= cameraSpeed * m_Camera->m_Front;
 			}
 			if (Input::IsKeyPressed(CE_KEY_A))
 			{
-				m_CameraPosition -= glm::normalize(glm::cross(m_Camera.m_Front, m_Camera.m_Up)) * cameraSpeed;
+				m_Camera->m_Position -= glm::normalize(glm::cross(m_Camera->m_Front, m_Camera->m_Up)) * cameraSpeed;
 			}
 			if (Input::IsKeyPressed(CE_KEY_D))
 			{
-				m_CameraPosition += glm::normalize(glm::cross(m_Camera.m_Front, m_Camera.m_Up)) * cameraSpeed;
+				m_Camera->m_Position += glm::normalize(glm::cross(m_Camera->m_Front, m_Camera->m_Up)) * cameraSpeed;
 			}
 			
 			float xpos = Input::GetMouseX();
@@ -72,15 +80,14 @@ namespace CrashEngine {
 			direction.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
 			direction.y = sin(glm::radians(pitch));
 			direction.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
-			m_Camera.m_Front = glm::normalize(direction);
+			m_Camera->m_Front = glm::normalize(direction);
 		}
 		else
 		{
 			firstMouse = true;
 		}
 	
-
-		m_Camera.SetPosition(m_CameraPosition);
+		m_Camera->RecalculateViewMatrix();
 	}
 
 	void CameraController::OnEvent(Event& e)
@@ -92,7 +99,7 @@ namespace CrashEngine {
 
 	void CameraController::OnResize(float width, float height)
 	{
-		m_Camera.SetSize(height, width);
+		m_Camera->SetSize(height, width);
 		lastX = width / 2;
 		lastY = height / 2;
 	}
@@ -101,12 +108,13 @@ namespace CrashEngine {
 	{
 		//todo: not sure if this works
 		m_CameraSpeed -= e.GetYOffset() * 0.25f;
+		if (m_CameraSpeed >= 100.f) m_CameraSpeed = 100.f;
+		if (m_CameraSpeed <= 1.f) m_CameraSpeed = 1.f;
 		return false;
 	}
 
 	bool CameraController::OnWindowResized(WindowResizeEvent& e)
 	{
-
 		OnResize((float)e.GetWidth(), (float)e.GetHeight());
 		return false;
 	}

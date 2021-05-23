@@ -261,13 +261,32 @@ namespace CrashEngine {
 		{
 			if (ImGui::MenuItem("Camera"))
 			{
-				/*if (!m_SelectionContext.HasComponent<CameraComponent>())
+				if (!m_SelectionContext.HasComponent<CameraComponent>())
 					m_SelectionContext.AddComponent<CameraComponent>();
 				else
-					CE_CORE_ERROR("This entity already has the Camera Component!");*/
+					CE_CORE_ERROR("This entity already has the Camera Component!");
 				ImGui::CloseCurrentPopup();
 			}
 	
+			if (ImGui::MenuItem("Mesh"))
+			{
+				if (!m_SelectionContext.HasComponent<Mesh>())
+				{
+					std::optional<std::string> filepath = FileDialogs::OpenFile("");
+					if (filepath)
+					{
+						Mesh& mesh = Mesh(filepath.value());
+						mesh.directory = filepath.value();
+						m_SelectionContext.AddComponent<Mesh>(mesh);
+					}
+				}
+				else
+					CE_CORE_ERROR("This entity already has the Mesh Component!");
+
+				
+				ImGui::CloseCurrentPopup();
+			}
+
 
 			ImGui::EndPopup();
 		}
@@ -295,14 +314,29 @@ namespace CrashEngine {
 	
 			});
 
+		DrawComponent<CameraComponent>("Camera", entity, [](auto& component)
+			{	
+				glm::vec3 rotation = component.Camera->Rotation;
+				DrawVec3Control("Rotation", rotation);
+				component.Camera->UpdateRotation(rotation);
+
+				
+				glm::vec3 position = component.Camera->Position;
+				DrawVec3Control("Position", position);
+				component.Camera->UpdatePosition(position);
+
+
+				ImGui::Checkbox("Primary", &component.Primary); 
+				ImGui::Checkbox("DrawFrustum", &component.DrawFrustum); 
+			});
 
 		DrawComponent<PointLight>("Point Light", entity, [](auto& component)
 			{
 				ImGui::NewLine();
-				ImGui::ColorPicker3("Light color", &component.color.x);
+				ImGui::SliderFloat("Intensity", &component.intensity, 0.f, 60.f);
 
 				ImGui::NewLine();
-				ImGui::SliderFloat("Intensity", &component.intensity, 0.f, 60.f);
+				ImGui::ColorPicker3("Light color", &component.color.x);
 
 			});
 

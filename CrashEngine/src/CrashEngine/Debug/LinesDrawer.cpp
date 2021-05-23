@@ -53,6 +53,76 @@ namespace CrashEngine {
 		AddLine(startVec, endVec, color, width);
 	}
 
+	void DebugLine::DrawFrustum(Camera& camera)
+	{
+		//ClearUpdateLines();
+
+		/*float tanHalfHFOV = tanf(glm::radians(camera.fov / 2.0f));
+		float tanHalfVFOV = tanf(glm::radians((camera.fov * (camera.ScreenHeight / camera.ScreenWidth)) / 2.0f));
+
+		float xn = 10 * tanHalfHFOV;
+		float xf = 1500 * tanHalfHFOV;
+		float yn = 10 * tanHalfVFOV;
+		float yf = 1500 * tanHalfVFOV;
+
+		glm::vec3 frustumCorners[8] = {
+			// near face
+			camera.GetViewMatrix() * glm::vec4(glm::vec3(xn, yn, 10) + camera.GetPosition(),1),
+			camera.GetViewMatrix()* glm::vec4(glm::vec3(-xn, yn, 10) + camera.GetPosition(),1),
+			camera.GetViewMatrix() * glm::vec4(glm::vec3(xn, -yn, 10) + camera.GetPosition(),1),
+			camera.GetViewMatrix() * glm::vec4(glm::vec3(-xn, -yn, 10) + camera.GetPosition(),1),
+
+			// far face
+			camera.GetViewMatrix()* glm::vec4(glm::vec3(xf, yf,1500) + camera.GetPosition(),1),
+			camera.GetViewMatrix() * glm::vec4(glm::vec3(-xf, yf, 1500) + camera.GetPosition(),1),
+			camera.GetViewMatrix() * glm::vec4(glm::vec3(xf, -yf, 1500) + camera.GetPosition(),1),
+			camera.GetViewMatrix() * glm::vec4(glm::vec3(-xf, -yf, 1500) + camera.GetPosition(),1)
+		};*/
+
+
+		glm::mat4 inv = camera.GetViewMatrix() * camera.GetProjectionMatrix();
+
+		glm::vec4 f[8u] =
+		{
+			// near face
+			{1, 1, 10, 1.f},
+			{-1, 1, 10, 1.f},
+			{1, -1, 10, 1.f},
+			{-1, -1, 10, 1.f},
+
+			// far face
+			{1, 1, 1500, 1.f},
+			{-1, 1, 1500 , 1.f},
+			{1, -1, 1500 , 1.f},
+			{-1, -1,1500, 1.f},
+		};
+
+		glm::vec3 frustumCorners[8];
+		for (int i = 0; i < 8; i++)
+		{
+			glm::vec4 ff = inv * f[i];
+			frustumCorners[i].x = ff.x / ff.w;
+			frustumCorners[i].y = ff.y / ff.w;
+			frustumCorners[i].z = ff.z / ff.w;
+		}
+
+
+		DrawUpdateLine(frustumCorners[0], frustumCorners[1],glm::vec3(0.8f,0.8f,0.8f),3.f);
+		DrawUpdateLine(frustumCorners[2], frustumCorners[3],glm::vec3(0.8f,0.8f,0.8f),3.f);
+		DrawUpdateLine(frustumCorners[0], frustumCorners[2],glm::vec3(0.8f,0.8f,0.8f),3.f);
+		DrawUpdateLine(frustumCorners[1], frustumCorners[3],glm::vec3(0.8f,0.8f,0.8f),3.f);
+														  
+		DrawUpdateLine(frustumCorners[4], frustumCorners[5],glm::vec3(0.8f,0.8f,0.8f),3.f);
+		DrawUpdateLine(frustumCorners[6], frustumCorners[7],glm::vec3(0.8f,0.8f,0.8f),3.f);
+		DrawUpdateLine(frustumCorners[4], frustumCorners[6],glm::vec3(0.8f,0.8f,0.8f),3.f);
+		DrawUpdateLine(frustumCorners[5], frustumCorners[7],glm::vec3(0.8f,0.8f,0.8f),3.f);
+														 
+		DrawUpdateLine(frustumCorners[0], frustumCorners[4],glm::vec3(0.8f,0.8f,0.8f),3.f);
+		DrawUpdateLine(frustumCorners[1], frustumCorners[5],glm::vec3(0.8f,0.8f,0.8f),3.f);
+		DrawUpdateLine(frustumCorners[2], frustumCorners[6],glm::vec3(0.8f,0.8f,0.8f),3.f);
+		DrawUpdateLine(frustumCorners[3], frustumCorners[7],glm::vec3(0.8f,0.8f,0.8f),3.f);
+	}
+
 	void DebugLine::ClearUpdateLines()
 	{
 		lines.erase(lines.end()- UpdateLinesNumber, lines.end());
