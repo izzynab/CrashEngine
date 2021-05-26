@@ -130,11 +130,9 @@ namespace CrashEngine {
 		spec.Height = height;
 		spec.Width = width;
 
-		uint32_t id = renderProperties->GetViewsNumber() + 1;
-
 		renderFramebuffers.push_back(Framebuffer::Create(spec));
 
-		renderProperties->AddView(width, height, name, id);
+		renderProperties->AddView(width, height, name);
 	
 	}
 

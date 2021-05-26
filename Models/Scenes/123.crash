@@ -3,34 +3,11 @@ Filepath: C:\EngineDev\CrashEngine\Models\Scenes\123.crash
 Entities:
   - Entity: 12837192831273
     TagComponent:
-      Tag: sphere
+      Tag: Empty Entity
     TransformComponent:
-      Translation: [-6.0999999, 6.48151207, 6]
+      Translation: [14.8338461, 6.28285456, 11.9138889]
       Rotation: [0, 0, 0]
       Scale: [1, 1, 1]
-    Mesh:
-      Directory: C:\EngineDev\CrashEngine\Models\sphere.obj
-      Material:
-        Name: name
-        Albedo:
-          path: ""
-          albedo use: false
-          albedo color: [1, 0, 0, 0]
-          albedo load: false
-        Metallic:
-          path: ""
-          metallic use: false
-          metallic color: 1
-          metallic load: false
-        Roughness:
-          path: ""
-          roughness use: false
-          roughness color: 0.275000006
-          roughness load: false
-        Normal:
-          path: ""
-        Ao:
-          path: ""
   - Entity: 12837192831273
     TagComponent:
       Tag: Cube1
@@ -56,6 +33,36 @@ Entities:
           path: ""
           roughness use: false
           roughness color: 0.824000001
+          roughness load: false
+        Normal:
+          path: ""
+        Ao:
+          path: ""
+  - Entity: 12837192831273
+    TagComponent:
+      Tag: sphere
+    TransformComponent:
+      Translation: [-6.0999999, 6.48151207, 6]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    Mesh:
+      Directory: C:\EngineDev\CrashEngine\Models\sphere.obj
+      Material:
+        Name: name
+        Albedo:
+          path: ""
+          albedo use: false
+          albedo color: [1, 0, 0, 0]
+          albedo load: false
+        Metallic:
+          path: ""
+          metallic use: false
+          metallic color: 1
+          metallic load: false
+        Roughness:
+          path: ""
+          roughness use: false
+          roughness color: 0.275000006
           roughness load: false
         Normal:
           path: ""

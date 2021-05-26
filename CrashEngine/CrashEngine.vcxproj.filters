@@ -1762,6 +1762,7 @@
     <ClInclude Include="src\CrashEngine\PostProcess\SSAO.h">
       <Filter>src\CrashEngine\Scene</Filter>
     </ClInclude>
+    <ClInclude Include="src\CrashEngine\Events\WindowEvent.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\CrashEngine\Core\Application.cpp">

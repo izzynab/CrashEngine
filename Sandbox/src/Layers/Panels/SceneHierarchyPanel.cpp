@@ -76,6 +76,8 @@ namespace CrashEngine {
 		}
 
 		ImGui::End();
+
+		//MaterialPanel->OnImGuiRender();
 	}
 
 	void SceneHierarchyPanel::DrawEntityNode(Entity entity)

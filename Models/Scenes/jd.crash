@@ -133,5 +133,5 @@ Bloom:
   softthreshold: 0.100000001
 SSAO:
   radius: 0.643999994
-  bias: 0.0130000003
+  bias: 0.232999995
   power: 3.25200009

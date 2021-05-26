@@ -31,8 +31,6 @@ namespace CrashEngine {
 
 		Renderer::AddView(Application::Get().GetWindow().GetWidth(), Application::Get().GetWindow().GetHeight(), "Main", renderProperties, framebuffers);
 
-		Renderer::AddView(800,800,"Test", renderProperties, framebuffers);
-
 		editorCameraController = renderProperties->GetCameraController(0);
 
 
@@ -84,9 +82,9 @@ namespace CrashEngine {
 			}
 		}
 
-		//Application::Get().GetDebugger().DrawFrustum(secondCamera.get());
+		Application::Get().GetDebugger().DrawFrustum(renderProperties->GetCamera(0).get());
 
-		if(!viewName.empty())editorCameraController->OnUpdate(ts);
+		if(!viewName.empty()) editorCameraController->OnUpdate(ts);
 
 		Renderer::RenderScene(renderProperties, framebuffers,ts);
 
@@ -119,6 +117,10 @@ namespace CrashEngine {
 				{
 					renderProperties.reset(new RenderProperties());
 
+					Renderer::AddView(Application::Get().GetWindow().GetWidth(), Application::Get().GetWindow().GetHeight(), "Main", renderProperties, framebuffers);
+
+					editorCameraController = renderProperties->GetCameraController(0);
+
 					HierarchyPanel.reset(new SceneHierarchyPanel(renderProperties->GetScene()));
 					EnvironmentPanel.reset(new SceneEnvironmentPanel(renderProperties->GetScene()));
 				}
@@ -128,6 +130,10 @@ namespace CrashEngine {
 					if (filepath)
 					{
 						renderProperties.reset(new RenderProperties());
+
+						Renderer::AddView(Application::Get().GetWindow().GetWidth(), Application::Get().GetWindow().GetHeight(), "Main", renderProperties, framebuffers);
+
+						editorCameraController = renderProperties->GetCameraController(0);
 
 						HierarchyPanel.reset(new SceneHierarchyPanel(renderProperties->GetScene()));
 						EnvironmentPanel.reset(new SceneEnvironmentPanel(renderProperties->GetScene()));
@@ -174,6 +180,17 @@ namespace CrashEngine {
 
 				ImGui::EndMenu();
 			}
+
+			if (ImGui::BeginMenu("Tools"))
+			{
+				if (ImGui::MenuItem("Add view")) 
+				{
+					if(!renderProperties->views.empty())Renderer::AddView(800, 800, "View " + std::to_string(renderProperties->views.back().id), renderProperties, framebuffers);
+					else Renderer::AddView(800, 800, "Main", renderProperties, framebuffers);
+				}
+
+				ImGui::EndMenu();		
+			}
 			ImGui::EndMainMenuBar();
 		}
 
@@ -184,11 +201,18 @@ namespace CrashEngine {
 			ImGui::SetWindowFocus(viewName.c_str());
 		}
 
-		viewName = std::string();
+		//viewName = std::string();
 
 		for (int i = 0; i < renderProperties->GetViewsNumber(); i++)
 		{
-			ImGui::Begin(renderProperties->GetViewName(i).c_str());
+			if (!renderProperties->views[i].isOpen)
+			{
+				renderProperties->views.erase(renderProperties->views.begin() + i);
+				i--;
+				continue;
+			}
+
+			ImGui::Begin(renderProperties->GetViewName(i).c_str(), &renderProperties->views[i].isOpen);
 
 			ImVec2 CurrentWindowView = ImVec2(ImGui::GetWindowWidth(), ImGui::GetWindowHeight() - 40);
 			renderProperties->GetCamera(i)->SetSize(CurrentWindowView.y, CurrentWindowView.x);
@@ -203,62 +227,63 @@ namespace CrashEngine {
 				viewName = renderProperties->GetViewName(i);
 			}
 
-			//todo: fix gizmos
-			//Gizmos
-			auto& camera = renderProperties->GetCamera(i);
-			const glm::mat4& cameraProjection = camera->GetProjectionMatrix();
-			glm::mat4 cameraView = camera->GetViewMatrix();
+			if (viewName == renderProperties->GetViewName(i))
+			{		
+				//Gizmos
+				auto& camera = renderProperties->GetCamera(i);
+				const glm::mat4& cameraProjection = camera->GetProjectionMatrix();
+				glm::mat4 cameraView = camera->GetViewMatrix();
 
-			glm::mat4 identityMatrix = glm::mat4(1.f);
+				glm::mat4 identityMatrix = glm::mat4(1.f);
 
-			float windowWidth = (float)ImGui::GetWindowWidth();
-			float windowHeight = (float)ImGui::GetWindowHeight();
-			ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, windowWidth, windowHeight);
+				float windowWidth = (float)ImGui::GetWindowWidth();
+				float windowHeight = (float)ImGui::GetWindowHeight();
+				ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, windowWidth, windowHeight);
 
-			//CE_INFO("{0}: Set rect {1} {2}  {3} {4}", renderProperties->GetViewName(i).c_str(), ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, windowWidth, windowHeight);
-
-			ImGuizmo::SetOrthographic(false);
-			ImGuizmo::SetDrawlist();
-			ImGuizmo::AllowAxisFlip(false);
+				ImGuizmo::SetOrthographic(false);
+				ImGuizmo::SetDrawlist();
+				ImGuizmo::AllowAxisFlip(false);
 
 
-			Entity selectedEntity = HierarchyPanel->GetSelectedEntity();
-			if (selectedEntity && gizmoType != -1)
-			{
-				// Entity transform
-				auto& tc = selectedEntity.GetComponent<TransformComponent>();
-				glm::mat4 transform = tc.GetTransform();
-
-				// Snapping
-				bool snap = Input::IsKeyPressed(CE_KEY_LEFT_CONTROL);
-				float snapValue = 0.5f; // Snap to 0.5m for translation/scale
-				// Snap to 45 degrees for rotation
-				if (gizmoType == ImGuizmo::OPERATION::ROTATE)
-					snapValue = 45.0f;
-
-				float snapValues[3] = { snapValue, snapValue, snapValue };
-
-				ImGuizmo::Manipulate(glm::value_ptr(cameraView), glm::value_ptr(cameraProjection),
-					(ImGuizmo::OPERATION)gizmoType, ImGuizmo::LOCAL, glm::value_ptr(transform),
-					nullptr, snap ? snapValues : nullptr);
-
-				if (ImGuizmo::IsUsing())
+				Entity selectedEntity = HierarchyPanel->GetSelectedEntity();
+				if (selectedEntity && gizmoType != -1)
 				{
-					glm::vec3 translation, rotation, scale;
-					Math::DecomposeTransform(transform, translation, rotation, scale);
+					// Entity transform
+					auto& tc = selectedEntity.GetComponent<TransformComponent>();
+					glm::mat4 transform = tc.GetTransform();
 
-					glm::vec3 deltaRotation = rotation - tc.Rotation;
-					tc.Translation = translation;
-					tc.Rotation += deltaRotation;
-					tc.Scale = scale;
+					// Snapping
+					bool snap = Input::IsKeyPressed(CE_KEY_LEFT_CONTROL);
+					float snapValue = 0.5f; // Snap to 0.5m for translation/scale
+					// Snap to 45 degrees for rotation
+					if (gizmoType == ImGuizmo::OPERATION::ROTATE)
+						snapValue = 45.0f;
+
+					float snapValues[3] = { snapValue, snapValue, snapValue };
+
+					ImGuizmo::Manipulate(glm::value_ptr(cameraView), glm::value_ptr(cameraProjection),
+						(ImGuizmo::OPERATION)gizmoType, ImGuizmo::LOCAL, glm::value_ptr(transform),
+						nullptr, snap ? snapValues : nullptr);
+
+					if (ImGuizmo::IsUsing())
+					{
+						glm::vec3 translation, rotation, scale;
+						Math::DecomposeTransform(transform, translation, rotation, scale);
+
+						glm::vec3 deltaRotation = rotation - tc.Rotation;
+						tc.Translation = translation;
+						tc.Rotation += deltaRotation;
+						tc.Scale = scale;
+					}
 				}
+				renderProperties->SetViewActive(i, true);
 			}
+			else renderProperties->SetViewActive(i, false);
 			
 			ImGui::End();
 		}
 
 		ImGui::End();
-
 
 		if (imguilayer->MenuEnabled) { imguilayer->Menu(); }
 		if (imguilayer->WindowMetricsEnabled) { imguilayer->WindowMetrics(); }
@@ -342,36 +367,45 @@ namespace CrashEngine {
 
 		if (event.GetEventType() == EventType::WindowFocus)
 		{
-			//todo: cursor visibility should be only changed when focus is set on render window
+			CrashEngine::WindowFocusEvent& e = (CrashEngine::WindowFocusEvent&)event;
 
-			/*for(int i = 0;)...
-			* if(e.GetName() == views[i])
-			* {
-			*   disable cursor
-			* }
-			*/
-		}
-
-		if (event.GetEventType() == EventType::MouseButtonPressed)
-		{
-			CrashEngine::MouseButtonPressedEvent& e = (CrashEngine::MouseButtonPressedEvent&)event;
-			if (e.GetMouseButton() == 1)
+			for (int i = 0; renderProperties->GetViewsNumber(); i++)
 			{
-				Input::DisableCursor();
-				isCursorVisible = false;
+				if (e.GetName() == renderProperties->GetViewName(i))
+				{
+					
+				}
 			}
+		
+			
 		}
 
-		if (event.GetEventType() == EventType::MouseButtonReleased)
+		for (int i = 0; i < renderProperties->GetViewsNumber(); i++)
 		{
-			CrashEngine::MouseButtonReleasedEvent& e = (CrashEngine::MouseButtonReleasedEvent&)event;
-			if (e.GetMouseButton() == 1)
+			if (renderProperties->IsViewActive(i))
 			{
-				Input::EnableCursor();
-				isCursorVisible = true;
-			}
-		}
+				if (event.GetEventType() == EventType::MouseButtonPressed)
+				{
+					CrashEngine::MouseButtonPressedEvent& e = (CrashEngine::MouseButtonPressedEvent&)event;
 
+					if (e.GetMouseButton() == 1)
+					{
+						Input::DisableCursor();
+						isCursorVisible = false;
+					}
+				}
+
+				if (event.GetEventType() == EventType::MouseButtonReleased)
+				{
+					CrashEngine::MouseButtonReleasedEvent& e = (CrashEngine::MouseButtonReleasedEvent&)event;
+					if (e.GetMouseButton() == 1)
+					{
+						Input::EnableCursor();
+						isCursorVisible = true;
+					}
+				}
+			}		
+		}		
 	}
 
 }

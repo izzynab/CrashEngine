@@ -55,9 +55,9 @@ namespace CrashEngine {
 
 	void DebugLine::DrawFrustum(Camera& camera)
 	{
-		//ClearUpdateLines();
+		//todo: draw camera frustum
 
-		/*float tanHalfHFOV = tanf(glm::radians(camera.fov / 2.0f));
+		float tanHalfHFOV = tanf(glm::radians(camera.fov / 2.0f));
 		float tanHalfVFOV = tanf(glm::radians((camera.fov * (camera.ScreenHeight / camera.ScreenWidth)) / 2.0f));
 
 		float xn = 10 * tanHalfHFOV;
@@ -77,10 +77,10 @@ namespace CrashEngine {
 			camera.GetViewMatrix() * glm::vec4(glm::vec3(-xf, yf, 1500) + camera.GetPosition(),1),
 			camera.GetViewMatrix() * glm::vec4(glm::vec3(xf, -yf, 1500) + camera.GetPosition(),1),
 			camera.GetViewMatrix() * glm::vec4(glm::vec3(-xf, -yf, 1500) + camera.GetPosition(),1)
-		};*/
+		};
 
 
-		glm::mat4 inv = camera.GetViewMatrix() * camera.GetProjectionMatrix();
+		/*glm::mat4 inv = camera.GetViewMatrix() * camera.GetProjectionMatrix();
 
 		glm::vec4 f[8u] =
 		{
@@ -104,7 +104,7 @@ namespace CrashEngine {
 			frustumCorners[i].x = ff.x / ff.w;
 			frustumCorners[i].y = ff.y / ff.w;
 			frustumCorners[i].z = ff.z / ff.w;
-		}
+		}*/
 
 
 		DrawUpdateLine(frustumCorners[0], frustumCorners[1],glm::vec3(0.8f,0.8f,0.8f),3.f);

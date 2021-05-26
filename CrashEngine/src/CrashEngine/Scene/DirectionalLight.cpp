@@ -38,6 +38,8 @@ namespace CrashEngine
 
 	void DirectionalLight::DrawCSM(Camera* camera,Shader*defferedShader)
 	{
+		//todo: make shadows
+
 		glm::vec3 up = glm::vec3(0.0f, 1.f, 0.0f);
 		glm::vec3 right = glm::vec3(1.0f, 0.f, 0.0f);
 

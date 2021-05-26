@@ -170,6 +170,7 @@
     <ClInclude Include="src\CrashEngine\Events\Event.h" />
     <ClInclude Include="src\CrashEngine\Events\KeyEvent.h" />
     <ClInclude Include="src\CrashEngine\Events\MouseEvent.h" />
+    <ClInclude Include="src\CrashEngine\Events\WindowEvent.h" />
     <ClInclude Include="src\CrashEngine\ImGui\ImGuiLayer.h" />
     <ClInclude Include="src\CrashEngine\Math\Math.h" />
     <ClInclude Include="src\CrashEngine\PostProcess\PostProcess.h" />

@@ -5,6 +5,7 @@
 #include "CrashEngine/Events/ApplicationEvent.h"
 #include "CrashEngine/Events/KeyEvent.h"
 #include "CrashEngine/Events/MouseEvent.h"
+#include "CrashEngine/Events/WindowEvent.h"
 
 #include "CrashEngine/Renderer/Framebuffer.h"
 #include "CrashEngine/Renderer/RenderProperties.h"

@@ -36,8 +36,7 @@ namespace CrashEngine {
 
 	void MaterialPanel::OnImGuiRender()
 	{
-		ImGui::Begin("Material");
-
+		ImGui::Begin("Material", NULL, ImGuiWindowFlags_NoFocusOnAppearing);
 
 		if (m_Mesh->material)
 		{

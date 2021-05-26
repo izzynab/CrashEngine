@@ -5,7 +5,7 @@ namespace CrashEngine {
 
 	PointLight::PointLight()
 	{
-
+		//todo: make point lights
 	}
 
 }

@@ -84,8 +84,6 @@ namespace CrashEngine {
 		// When viewports are enabled we tweak WindowRounding/WindowBg so platform windows can look identical to regular ones.
 		ImGuiStyle& style = ImGui::GetStyle();
 
-		//todo: function that reads from txt file things and set this to imguistyle 
-
 		if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
 		{
 			style.WindowRounding = 0.0f;
@@ -207,7 +205,6 @@ namespace CrashEngine {
 		ImGui::Begin("Style Editor");
 		ImGui::ShowStyleEditor();
 		ImGuiStyle& style = ImGui::GetStyle();
-		//TODO: fucntion which saves style to txt file when click export so add export button
 		ImGui::End();
 	}
 

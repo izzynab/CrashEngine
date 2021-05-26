@@ -9,7 +9,7 @@ namespace CrashEngine {
 
 	AtmosphereLight::AtmosphereLight()
 	{
-
+		//todo: make AtmosphereLight
 	}
 
 	AtmosphereLight::~AtmosphereLight()

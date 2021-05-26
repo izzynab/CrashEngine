@@ -122,7 +122,7 @@ namespace CrashEngine {
 			shader->Bind();
 			shader->SetUniformMat4("model", model);
 
-			mod.Draw(shader,false);//todo: depth render couses errors 
+			mod.Draw(shader,false);
 		}
 
 

@@ -59,11 +59,12 @@ namespace CrashEngine {
 
 	}
 
-	void RenderProperties::AddView(float width, float height, std::string name, uint32_t id)
+	void RenderProperties::AddView(float width, float height, std::string name)
 	{
+		allViews++;
 		view view;
 		view.name = name;
-		view.id = id;
+		view.id = allViews;
 
 		FramebufferSpecification spec;
 		spec.Height = height;
@@ -91,7 +92,7 @@ namespace CrashEngine {
 
 		views.push_back(view);
 
-		m_ActiveScene->postProcess->AddView(width, height, id);
-		m_ActiveScene->ssao->AddView(width, height, id);
+		m_ActiveScene->postProcess->AddView(width, height, allViews);
+		m_ActiveScene->ssao->AddView(width, height, allViews);
 	}
 }
