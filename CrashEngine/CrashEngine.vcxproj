@@ -149,7 +149,6 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="MeshDrawer.h" />
     <ClInclude Include="src\Crash.h" />
     <ClInclude Include="src\CrashEngine\Core\Application.h" />
     <ClInclude Include="src\CrashEngine\Core\Core.h" />
@@ -166,6 +165,7 @@
     <ClInclude Include="src\CrashEngine\Core\Window.h" />
     <ClInclude Include="src\CrashEngine\Debug\Debugger.h" />
     <ClInclude Include="src\CrashEngine\Debug\LinesDrawer.h" />
+    <ClInclude Include="src\CrashEngine\Debug\MeshDrawer.h" />
     <ClInclude Include="src\CrashEngine\Debug\PointsDrawer.h" />
     <ClInclude Include="src\CrashEngine\Events\ApplicationEvent.h" />
     <ClInclude Include="src\CrashEngine\Events\Event.h" />
@@ -175,6 +175,7 @@
     <ClInclude Include="src\CrashEngine\ImGui\ImGuiLayer.h" />
     <ClInclude Include="src\CrashEngine\Math\Math.h" />
     <ClInclude Include="src\CrashEngine\PostProcess\PostProcess.h" />
+    <ClInclude Include="src\CrashEngine\PostProcess\SSAO.h" />
     <ClInclude Include="src\CrashEngine\Renderer\BasicShapes.h" />
     <ClInclude Include="src\CrashEngine\Renderer\Buffer.h" />
     <ClInclude Include="src\CrashEngine\Renderer\Camera.h" />
@@ -182,9 +183,9 @@
     <ClInclude Include="src\CrashEngine\Renderer\Framebuffer.h" />
     <ClInclude Include="src\CrashEngine\Renderer\GraphicsContext.h" />
     <ClInclude Include="src\CrashEngine\Renderer\RenderCommand.h" />
+    <ClInclude Include="src\CrashEngine\Renderer\RenderProperties.h" />
     <ClInclude Include="src\CrashEngine\Renderer\Renderer.h" />
     <ClInclude Include="src\CrashEngine\Renderer\RendererAPI.h" />
-    <ClInclude Include="src\CrashEngine\Renderer\RenderProperties.h" />
     <ClInclude Include="src\CrashEngine\Renderer\Shader.h" />
     <ClInclude Include="src\CrashEngine\Renderer\Texture.h" />
     <ClInclude Include="src\CrashEngine\Renderer\TextureCreator.h" />
@@ -197,7 +198,6 @@
     <ClInclude Include="src\CrashEngine\Scene\Material.h" />
     <ClInclude Include="src\CrashEngine\Scene\Mesh.h" />
     <ClInclude Include="src\CrashEngine\Scene\PointLight.h" />
-    <ClInclude Include="src\CrashEngine\PostProcess\SSAO.h" />
     <ClInclude Include="src\CrashEngine\Scene\Scene.h" />
     <ClInclude Include="src\CrashEngine\Scene\SceneCamera.h" />
     <ClInclude Include="src\CrashEngine\Scene\SceneSerializer.h" />
@@ -710,18 +710,19 @@
     <ClInclude Include="vendor\glm\glm\vector_relational.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="MeshDrawer.cpp" />
     <ClCompile Include="src\CrashEngine\Core\Application.cpp" />
     <ClCompile Include="src\CrashEngine\Core\Layer.cpp" />
     <ClCompile Include="src\CrashEngine\Core\LayerStack.cpp" />
     <ClCompile Include="src\CrashEngine\Core\Log.cpp" />
     <ClCompile Include="src\CrashEngine\Debug\Debugger.cpp" />
     <ClCompile Include="src\CrashEngine\Debug\LinesDrawer.cpp" />
+    <ClCompile Include="src\CrashEngine\Debug\MeshDrawer.cpp" />
     <ClCompile Include="src\CrashEngine\Debug\PointsDrawer.cpp" />
     <ClCompile Include="src\CrashEngine\ImGui\ImGuiBuild.cpp" />
     <ClCompile Include="src\CrashEngine\ImGui\ImGuiLayer.cpp" />
     <ClCompile Include="src\CrashEngine\Math\Math.cpp" />
     <ClCompile Include="src\CrashEngine\PostProcess\PostProcess.cpp" />
+    <ClCompile Include="src\CrashEngine\PostProcess\SSAO.cpp" />
     <ClCompile Include="src\CrashEngine\Renderer\BasicShapes.cpp" />
     <ClCompile Include="src\CrashEngine\Renderer\Buffer.cpp" />
     <ClCompile Include="src\CrashEngine\Renderer\Camera.cpp" />
@@ -741,7 +742,6 @@
     <ClCompile Include="src\CrashEngine\Scene\Material.cpp" />
     <ClCompile Include="src\CrashEngine\Scene\Mesh.cpp" />
     <ClCompile Include="src\CrashEngine\Scene\PointLight.cpp" />
-    <ClCompile Include="src\CrashEngine\PostProcess\SSAO.cpp" />
     <ClCompile Include="src\CrashEngine\Scene\Scene.cpp" />
     <ClCompile Include="src\CrashEngine\Scene\SceneCamera.cpp" />
     <ClCompile Include="src\CrashEngine\Scene\SceneSerializer.cpp" />
@@ -765,59 +765,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="src\CrashEngine\Renderer\Shaders\Atmosphere\clear_2d.comp" />
-    <None Include="src\CrashEngine\Renderer\Shaders\Atmosphere\clear_3d.comp" />
-    <None Include="src\CrashEngine\Renderer\Shaders\Atmosphere\compute_direct_irradiance.comp" />
-    <None Include="src\CrashEngine\Renderer\Shaders\Atmosphere\compute_indirect_irradiance.comp" />
-    <None Include="src\CrashEngine\Renderer\Shaders\Atmosphere\compute_multiple_scattering.comp" />
-    <None Include="src\CrashEngine\Renderer\Shaders\Atmosphere\compute_scattering_density.comp" />
-    <None Include="src\CrashEngine\Renderer\Shaders\Atmosphere\compute_single_scattering.comp" />
-    <None Include="src\CrashEngine\Renderer\Shaders\Atmosphere\compute_transmittance.comp" />
-    <None Include="src\CrashEngine\Renderer\Shaders\Atmosphere\constants.glsl" />
-    <None Include="src\CrashEngine\Renderer\Shaders\Atmosphere\cubemap.frag" />
-    <None Include="src\CrashEngine\Renderer\Shaders\Atmosphere\cubemap.vert" />
-    <None Include="src\CrashEngine\Renderer\Shaders\Atmosphere\irradiance_functions.glsl" />
-    <None Include="src\CrashEngine\Renderer\Shaders\Atmosphere\mesh.frag" />
-    <None Include="src\CrashEngine\Renderer\Shaders\Atmosphere\mesh.vert" />
-    <None Include="src\CrashEngine\Renderer\Shaders\Atmosphere\reflection_map.frag" />
-    <None Include="src\CrashEngine\Renderer\Shaders\Atmosphere\reflection_map.vert" />
-    <None Include="src\CrashEngine\Renderer\Shaders\Atmosphere\rendering_functions.glsl" />
-    <None Include="src\CrashEngine\Renderer\Shaders\Atmosphere\scattering_functions.glsl" />
-    <None Include="src\CrashEngine\Renderer\Shaders\Atmosphere\transmittance_functions.glsl" />
-    <None Include="src\CrashEngine\Renderer\Shaders\Atmosphere\uniforms.glsl" />
-    <None Include="src\CrashEngine\Renderer\Shaders\Atmosphere\utility.glsl" />
-    <None Include="src\CrashEngine\Renderer\Shaders\background.frag" />
-    <None Include="src\CrashEngine\Renderer\Shaders\background.vert" />
-    <None Include="src\CrashEngine\Renderer\Shaders\Basic.frag" />
-    <None Include="src\CrashEngine\Renderer\Shaders\Basic.vert" />
-    <None Include="src\CrashEngine\Renderer\Shaders\Basic3D.frag" />
-    <None Include="src\CrashEngine\Renderer\Shaders\Basic3D.vert" />
-    <None Include="src\CrashEngine\Renderer\Shaders\blur.frag" />
-    <None Include="src\CrashEngine\Renderer\Shaders\blurTest.frag" />
-    <None Include="src\CrashEngine\Renderer\Shaders\brdf.frag" />
-    <None Include="src\CrashEngine\Renderer\Shaders\brightness.frag" />
-    <None Include="src\CrashEngine\Renderer\Shaders\computeTest.comp" />
-    <None Include="src\CrashEngine\Renderer\Shaders\cubemap.vert" />
-    <None Include="src\CrashEngine\Renderer\Shaders\deferred.frag" />
-    <None Include="src\CrashEngine\Renderer\Shaders\depthMap.frag" />
-    <None Include="src\CrashEngine\Renderer\Shaders\depthMap.vert" />
-    <None Include="src\CrashEngine\Renderer\Shaders\equirectangularToCubemap.frag" />
-    <None Include="src\CrashEngine\Renderer\Shaders\fxaa.frag" />
-    <None Include="src\CrashEngine\Renderer\Shaders\GammaHDR.frag" />
-    <None Include="src\CrashEngine\Renderer\Shaders\gbuffer.frag" />
-    <None Include="src\CrashEngine\Renderer\Shaders\irradiance.frag" />
-    <None Include="src\CrashEngine\Renderer\Shaders\lines.frag" />
-    <None Include="src\CrashEngine\Renderer\Shaders\lines.geom" />
-    <None Include="src\CrashEngine\Renderer\Shaders\lines.vert" />
-    <None Include="src\CrashEngine\Renderer\Shaders\mixbloom.frag" />
-    <None Include="src\CrashEngine\Renderer\Shaders\pbr.frag" />
-    <None Include="src\CrashEngine\Renderer\Shaders\pbr.vert" />
-    <None Include="src\CrashEngine\Renderer\Shaders\prefilter.frag" />
-    <None Include="src\CrashEngine\Renderer\Shaders\ssao.frag" />
-    <None Include="src\CrashEngine\Renderer\Shaders\ssaoBlur.frag" />
-    <None Include="src\CrashEngine\Renderer\Shaders\TexBasic.frag" />
-    <None Include="src\CrashEngine\Renderer\Shaders\Text.frag" />
-    <None Include="src\CrashEngine\Renderer\Shaders\Text.vert" />
     <None Include="vendor\assimp\include\assimp\config.h.in" />
   </ItemGroup>
   <ItemGroup>
