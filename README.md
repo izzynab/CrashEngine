@@ -18,7 +18,7 @@ Crash engine is using libraries:
 
  ## Getting started
  Use `git clone --recursive https://github.com/izzynab/CrashEngine` to clone this repository.If the repository was cloned non-recursively previously, use `git submodule update --init` to clone the necessary submodules.
- Fenerate project solution using GenerateProjects.bat file. 
+ Generate projects and solution using GenerateProjects.bat file. 
  #### Features of Crash Engine
   - pbr pipeline
   - cubemaps
