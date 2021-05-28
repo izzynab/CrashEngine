@@ -172,6 +172,20 @@ namespace CrashEngine {
 			out << YAML::EndMap; // Mesh
 		}
 
+		if (entity.HasComponent<CameraComponent>())
+		{
+			out << YAML::Key << "CameraComponent";
+			out << YAML::BeginMap; // TransformComponent
+
+			auto& camera = entity.GetComponent<CameraComponent>();
+			out << YAML::Key << "Primary" << YAML::Value << camera.Primary;
+			out << YAML::Key << "Draw Frustum" << YAML::Value << camera.DrawFrustum;
+
+			out << YAML::Key << "Rotation" << YAML::Value << camera.Camera->Rotation;
+			out << YAML::Key << "Position" << YAML::Value << camera.Camera->Position;
+
+			out << YAML::EndMap; // TransformComponent
+		}
 
 		out << YAML::EndMap; // Entity
 	}
@@ -318,7 +332,7 @@ namespace CrashEngine {
 				}
 				else
 				{
-					deserializedEntity = m_Scene->CreateMesh(name);
+					//deserializedEntity = m_Scene->CreateMesh(name);
 				}
 			
 				auto transformComponent = entity["TransformComponent"];
@@ -329,8 +343,25 @@ namespace CrashEngine {
 					tc.Translation = transformComponent["Translation"].as<glm::vec3>();
 					tc.Rotation = transformComponent["Rotation"].as<glm::vec3>();
 					tc.Scale = transformComponent["Scale"].as<glm::vec3>();
-				}
 
+					auto cameraComponent = entity["CameraComponent"];
+					if (cameraComponent)
+					{
+						// Entities always have transforms
+						CameraComponent camera;
+
+						camera.Primary = cameraComponent["Primary"].as<bool>();
+						camera.DrawFrustum = cameraComponent["Draw Frustum"].as<bool>();
+
+						//camera.Camera->Rotation = cameraComponent["Rotation"].as<glm::vec3>();
+						//camera.Camera->Position = cameraComponent["Position"].as<glm::vec3>();
+
+						camera.Camera->UpdatePosition(cameraComponent["Position"].as<glm::vec3>(), tc.Translation);
+						camera.Camera->UpdateRotation(cameraComponent["Rotation"].as<glm::vec3>(), tc.Translation);
+
+						deserializedEntity.AddComponent<CameraComponent>(camera);
+					}
+				}
 			}
 		}
 

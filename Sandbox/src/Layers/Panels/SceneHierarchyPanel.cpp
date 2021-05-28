@@ -298,9 +298,11 @@ namespace CrashEngine {
 		DrawComponent<TransformComponent>("Transform", entity, [](auto& component)
 			{
 				DrawVec3Control("Translation", component.Translation);
+
 				glm::vec3 rotation = glm::degrees(component.Rotation);
 				DrawVec3Control("Rotation", rotation);
 				component.Rotation = glm::radians(rotation);
+
 				DrawVec3Control("Scale", component.Scale, 1.0f);
 			});
 
@@ -318,10 +320,14 @@ namespace CrashEngine {
 
 		DrawComponent<CameraComponent>("Camera", entity, [](auto& component)
 			{	
-				glm::vec3 rotation = component.Camera->Rotation;
+				/*glm::vec3 rotation = component.Camera->Rotation;
 				DrawVec3Control("Rotation", rotation);
-				component.Camera->UpdateRotation(rotation);
+				component.Camera->UpdateRotation(rotation);*/
 
+				glm::vec3 rotation = glm::degrees(component.Camera->Rotation);
+				DrawVec3Control("Rotation", rotation);
+				component.Camera->UpdateRotation(glm::radians(rotation));
+				//component.Camera->Rotation = glm::radians(rotation);
 				
 				glm::vec3 position = component.Camera->Position;
 				DrawVec3Control("Position", position);

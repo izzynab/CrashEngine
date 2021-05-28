@@ -10,11 +10,17 @@ namespace CrashEngine {
 		SceneCamera();
 		virtual ~SceneCamera() = default;
 
-		void UpdateRotation(glm::vec3 rotation);
-		void UpdatePosition(glm::vec3 position);
+		void UpdateRotation(glm::vec3 cameraRotation);
+		void UpdateRotation(glm::vec3 cameraRotation, glm::vec3 entityRotation);
+
+		void UpdatePosition(glm::vec3 cameraPosition);
+		void UpdatePosition(glm::vec3 cameraPosition, glm::vec3 entityPosition);
 
 		glm::vec3 Rotation = glm::vec3(1.f, 0.f, 0.f);
 		glm::vec3 Position = glm::vec3(0.f, 0.f, 0.f);
+
+		glm::vec3 entityRotation = glm::vec3(1.f, 0.f, 0.f);
+		glm::vec3 entityPosition = glm::vec3(0.f, 0.f, 0.f);
 	};
 
 }

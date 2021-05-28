@@ -38,7 +38,7 @@ namespace CrashEngine {
 		EnvironmentPanel.reset(new SceneEnvironmentPanel(renderProperties->GetScene()));
 
 		SceneSerializer serializer(renderProperties->GetScene());
-		serializer.Deserialize("C:/EngineDev/CrashEngine/Models/Scenes/jd.crash");
+		//serializer.Deserialize("C:/EngineDev/CrashEngine/Models/Scenes/jd.crash");
 
 
 		//---------------------Test space--------------------------------------------------------
@@ -82,7 +82,7 @@ namespace CrashEngine {
 			}
 		}
 
-		Application::Get().GetDebugger().DrawFrustum(renderProperties->GetCamera(0).get());
+		//Application::Get().GetDebugger().DrawFrustum(renderProperties->GetCamera(0).get());
 
 		if(!viewName.empty()) editorCameraController->OnUpdate(ts);
 

@@ -1763,6 +1763,9 @@
       <Filter>src\CrashEngine\Scene</Filter>
     </ClInclude>
     <ClInclude Include="src\CrashEngine\Events\WindowEvent.h" />
+    <ClInclude Include="MeshDrawer.h">
+      <Filter>src\CrashEngine\Debug</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\CrashEngine\Core\Application.cpp">
@@ -1908,6 +1911,9 @@
     </ClCompile>
     <ClCompile Include="src\CrashEngine\PostProcess\SSAO.cpp">
       <Filter>src\CrashEngine\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="MeshDrawer.cpp">
+      <Filter>src\CrashEngine\Debug</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

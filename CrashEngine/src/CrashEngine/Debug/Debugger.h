@@ -2,6 +2,7 @@
 
 #include "LinesDrawer.h"
 #include "PointsDrawer.h"
+#include "MeshDrawer.h"
 
 namespace CrashEngine {
 	class Debugger
@@ -26,9 +27,15 @@ namespace CrashEngine {
 		inline void DrawUpdatePoint(glm::vec3 pos, glm::vec3 color, float size, PointType type) { debugPoints->DrawUpdatePoint(pos, color, size, type); }
 		inline void ClearUpdatePoints() { debugPoints->ClearUpdatePoints(); }
 		inline void AddPoint(glm::vec3 pos, glm::vec3 color, float size, PointType type) { debugPoints->AddPoint(pos, color, size, type); }
+
+		inline Shader& GetPointsShader() { return *debugPoints->shader; }
+		inline void DrawUpdateMesh();
+		inline void ClearUpdateMeshes();
+		inline void AddMesh();
 	private:
 		std::shared_ptr<DebugLine> debugLines;
 		std::shared_ptr<DebugPoint> debugPoints;
+		std::shared_ptr<DebugMesh> debugMeshes;
 	};
 }
 

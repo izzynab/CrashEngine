@@ -8,23 +8,44 @@ namespace CrashEngine {
 
 	}
 
-	void SceneCamera::UpdateRotation(glm::vec3 rotation)
+	void SceneCamera::UpdateRotation(glm::vec3 cameraRotation)
 	{
-		Rotation = rotation;
+		Rotation = cameraRotation;
 
-		glm::vec3 direction;
-		direction.x = cos(glm::radians(rotation.x)) * cos(glm::radians(rotation.y));
-		direction.y = sin(glm::radians(rotation.y));
-		direction.z = sin(glm::radians(rotation.x)) * cos(glm::radians(rotation.y));
-	
-		SetRotation(glm::normalize(direction));
+		/*glm::vec3 direction;
+		direction.x = cos(glm::radians(cameraRotation.x)) * cos(glm::radians(cameraRotation.y));
+		direction.y = sin(glm::radians(cameraRotation.y));
+		direction.z = sin(glm::radians(cameraRotation.x)) * cos(glm::radians(cameraRotation.y));*/
+
+		SetRotation(cameraRotation);
 	}
 
-	void SceneCamera::UpdatePosition(glm::vec3 position)
+	void SceneCamera::UpdateRotation(glm::vec3 cameraRotation, glm::vec3 entityRotation)
 	{
-		Position = position;
+		Rotation = cameraRotation;
 
-		SetPosition(position);
+		/*glm::vec3 direction;
+		direction.x = cos(glm::radians(cameraRotation.x)) * cos(glm::radians(cameraRotation.y));
+		direction.y = sin(glm::radians(cameraRotation.y));
+		direction.z = sin(glm::radians(cameraRotation.x)) * cos(glm::radians(cameraRotation.y));*/
+	
+		SetRotation(cameraRotation + entityRotation);
+		//SetRotation(glm::normalize(direction));
+	}
+
+	void SceneCamera::UpdatePosition(glm::vec3 cameraPosition)
+	{
+		Position = cameraPosition;
+
+		SetPosition(cameraPosition + entityPosition);
+	}
+
+	void SceneCamera::UpdatePosition(glm::vec3 cameraPosition, glm::vec3 entityPosition)
+	{
+		entityPosition = entityPosition;
+		Position = cameraPosition;
+
+		SetPosition(cameraPosition + entityPosition);
 	}
 
 }

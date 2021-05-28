@@ -149,6 +149,7 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="MeshDrawer.h" />
     <ClInclude Include="src\Crash.h" />
     <ClInclude Include="src\CrashEngine\Core\Application.h" />
     <ClInclude Include="src\CrashEngine\Core\Core.h" />
@@ -709,6 +710,7 @@
     <ClInclude Include="vendor\glm\glm\vector_relational.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="MeshDrawer.cpp" />
     <ClCompile Include="src\CrashEngine\Core\Application.cpp" />
     <ClCompile Include="src\CrashEngine\Core\Layer.cpp" />
     <ClCompile Include="src\CrashEngine\Core\LayerStack.cpp" />
