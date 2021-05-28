@@ -1,6 +1,7 @@
 .vs/
 **/bin/
 !vendor/premake/bin/
+!CrashEngine/vendor/assimp/bin/
 bin-int/
 
 *.user
