@@ -1,7 +1,7 @@
 # CrashEngine
  
 Hello.
-This is my personal game engine Project.I have been working on this project since 2019.
+This is my personal game engine Project.I have been working on this project since august 2020.
 Crash Engine is written in C++ using OpenGL libraries.
 Engine is based on on the first episodes of The Cherno's Hazel Engine series.
 Crash engine is using libraries:
