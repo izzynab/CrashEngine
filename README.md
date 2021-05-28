@@ -19,7 +19,6 @@ Crash engine is using libraries:
  ## Getting started
  Use `git clone --recursive https://github.com/izzynab/CrashEngine` to clone this repository.If the repository was cloned non-recursively previously, use `git submodule update --init` to clone the necessary submodules.
  Fenerate project solution using GenerateProjects.bat file. 
- You also need to copy from "CrashEngine\vendor\assimp\bin\Debug-windows-x86_64\Assimp\folder with assimp.lib" file assimp.lib to "CrashEngine\vendor\assimp\bin\Debug-windows-x86_64\Assimp\". Maybe i will fix it.
  #### Features of Crash Engine
   - pbr pipeline
   - cubemaps
