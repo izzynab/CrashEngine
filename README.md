@@ -33,6 +33,7 @@ Crash engine is using libraries:
  #### To do 
   - CSM/PCSS
   - Atmospheric Scattering 
+  - Assets browser
   - Point lights with deffered rendering
   - god rays
   - mouse picking objects from scene
