@@ -38,7 +38,7 @@ namespace CrashEngine {
 		EnvironmentPanel.reset(new SceneEnvironmentPanel(renderProperties->GetScene()));
 
 		SceneSerializer serializer(renderProperties->GetScene());
-		//serializer.Deserialize("C:/EngineDev/CrashEngine/Models/Scenes/jd.crash");
+		//serializer.Deserialize("C:/EngineDev/CrashEngine/Scenes/jd.crash");
 
 
 		//---------------------Test space--------------------------------------------------------

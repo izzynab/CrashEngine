@@ -11,7 +11,7 @@ namespace CrashEngine {
 
 	enum class PointType
 	{
-		Cube,Sphere
+		Cube,Sphere,Camera
 	};
 
 	struct Point

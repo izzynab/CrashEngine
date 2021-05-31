@@ -141,9 +141,6 @@
     <ClInclude Include="src\CrashEngine\Debug\LinesDrawer.h">
       <Filter>src\CrashEngine\Debug</Filter>
     </ClInclude>
-    <ClInclude Include="src\CrashEngine\Debug\MeshDrawer.h">
-      <Filter>src\CrashEngine\Debug</Filter>
-    </ClInclude>
     <ClInclude Include="src\CrashEngine\Debug\PointsDrawer.h">
       <Filter>src\CrashEngine\Debug</Filter>
     </ClInclude>
@@ -1788,9 +1785,6 @@
       <Filter>src\CrashEngine\Debug</Filter>
     </ClCompile>
     <ClCompile Include="src\CrashEngine\Debug\LinesDrawer.cpp">
-      <Filter>src\CrashEngine\Debug</Filter>
-    </ClCompile>
-    <ClCompile Include="src\CrashEngine\Debug\MeshDrawer.cpp">
       <Filter>src\CrashEngine\Debug</Filter>
     </ClCompile>
     <ClCompile Include="src\CrashEngine\Debug\PointsDrawer.cpp">
