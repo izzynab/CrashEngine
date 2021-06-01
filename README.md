@@ -35,19 +35,19 @@ Crash engine is using libraries:
   - Instanced rendering(for debug lines, points and not only)
   - CSM/PCSS
   - Atmospheric Scattering 
-  - Assets browser
+  - Assets/Content browser
   - Point lights with deffered rendering
   - god rays
   - mouse picking objects from scene
   - terrain generator
  
  #### Long term goals
-  - C# scripts and improve Entity system
+  - C# scripts and Entity hierarchy system
+  - Runtime
   - Animation
   - Particle System
   - Physics engine
   - Audio engine
-  - Game exe app
   - Port to DX12
 
 ![image](https://user-images.githubusercontent.com/47477184/120243346-a3c5c780-c267-11eb-91ea-eb3ce4b1e077.png)
