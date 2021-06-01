@@ -103,7 +103,6 @@ namespace CrashEngine {
     Cube::Cube()
     {
         cubeVA.reset(VertexArray::Create());
-       // cubeIB.reset(IndexBuffer::Create(&indices[0], indices.size()));
 
         std::shared_ptr<VertexBuffer> cubeVB;
         cubeVB.reset(VertexBuffer::Create(&vertices[0], vertices.size() * sizeof(float)));
@@ -116,7 +115,6 @@ namespace CrashEngine {
         cubeVB->SetLayout(layout1);
 
         cubeVA->AddVertexBuffer(cubeVB);
-        //cubeVA->SetIndexBuffer(cubeIB);
         
     }
 
@@ -124,6 +122,11 @@ namespace CrashEngine {
     {
         //cubeVA->Bind();
         Renderer::SubmitDebug(cubeVA,36);
+    }
+
+    void Cube::RenderInstancedCube(uint32_t amount)
+    {
+        Renderer::SubmitInstanced(cubeVA, 36, amount);
     }
 
 

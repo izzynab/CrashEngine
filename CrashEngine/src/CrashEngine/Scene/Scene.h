@@ -31,6 +31,7 @@ namespace CrashEngine {
 		Entity CreateEntity(const std::string& name = std::string());
 		Entity CreateMesh(const std::string& name = std::string());
 		Entity CreateMesh(const std::string path, std::shared_ptr<Material> material, const std::string& name);
+		Entity CreateInsancedMeshes(const std::string& name = std::string());
 		Entity CreateLight(const std::string& name = std::string());
 
 		void DestroyEntity(Entity entity);

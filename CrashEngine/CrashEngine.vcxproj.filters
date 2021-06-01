@@ -1918,5 +1918,7 @@
     <None Include="vendor\assimp\include\assimp\config.h.in">
       <Filter>vendor\assimp\include\assimp</Filter>
     </None>
+    <None Include="src\CrashEngine\Renderer\Shaders\Instanced3D.vert" />
+    <None Include="src\CrashEngine\Renderer\Shaders\Instanced3D.frag" />
   </ItemGroup>
 </Project>

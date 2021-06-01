@@ -38,7 +38,7 @@ namespace CrashEngine {
 		EnvironmentPanel.reset(new SceneEnvironmentPanel(renderProperties->GetScene()));
 
 		SceneSerializer serializer(renderProperties->GetScene());
-		//serializer.Deserialize("C:/EngineDev/CrashEngine/Scenes/jd.crash");
+		//serializer.Deserialize("C:/EngineDev/CrashEngine/Scenes/basic.crash");
 
 
 		//---------------------Test space--------------------------------------------------------
@@ -65,6 +65,12 @@ namespace CrashEngine {
 		QuadShader->Bind();
 		QuadShader->SetUniformInt("tex", 0);
 
+
+		for (int y = 0; y < 100; y++)
+		{
+			Application::Get().GetDebugger().AddPoint(glm::vec3(0, y*3, 0), glm::vec3(0), glm::vec3(1, 1, 0), 1, PointType::Cube);
+		}
+		
 	}
 
 	void Editor::OnUpdate(Timestep ts)
@@ -83,6 +89,7 @@ namespace CrashEngine {
 		}
 
 		//Application::Get().GetDebugger().DrawFrustum(renderProperties->GetCamera(0).get());
+		//CE_INFO("Size of vec4: {0} Size of mat4: {1}", sizeof(glm::vec4), sizeof(glm::mat4));
 
 		if(!viewName.empty()) editorCameraController->OnUpdate(ts);
 

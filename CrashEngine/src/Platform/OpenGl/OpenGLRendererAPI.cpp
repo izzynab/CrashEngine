@@ -50,6 +50,11 @@ namespace CrashEngine {
 		glDrawArrays(GL_TRIANGLES, 0, trianglesNumber);
 	}
 
+	void OpenGLRendererAPI::DrawInstancedTriangles(const std::shared_ptr<VertexArray>& vertexArray, unsigned int trianglesNumber, unsigned int amount)
+	{
+		glDrawArraysInstanced(GL_TRIANGLES, 0, trianglesNumber, amount);
+	}
+
 	void OpenGLRendererAPI::DrawLine(const std::shared_ptr<VertexArray>& vertexArray,int count, float width)
 	{
 		glEnable(GL_BLEND);

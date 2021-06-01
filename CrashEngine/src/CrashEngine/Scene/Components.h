@@ -56,5 +56,8 @@ namespace CrashEngine {
 		CameraComponent(const CameraComponent&) = default;
 	};
 
+	struct InstanedMeshes
+	{
 
+	};
 }

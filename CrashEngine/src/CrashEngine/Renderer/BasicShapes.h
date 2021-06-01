@@ -26,10 +26,11 @@ namespace CrashEngine {
         Cube();
 
 		void RenderCube();
+        void RenderInstancedCube(uint32_t amount);
 
+        inline std::shared_ptr<VertexArray>& GetVertexArray() { return cubeVA; }
 	protected:
 		unsigned int cubeVAO = 0;
-		unsigned int indexCount = 0;
 
         std::vector<float> vertices = {
             // back face
@@ -76,9 +77,7 @@ namespace CrashEngine {
             -1.0f,  1.0f,  1.0f,  0.0f,  1.0f,  0.0f, 0.0f, 0.0f  // bottom-left        
         };
 
-
 		std::shared_ptr<VertexArray> cubeVA;
-		std::shared_ptr<IndexBuffer> cubeIB;
 	};
 
     class Quad

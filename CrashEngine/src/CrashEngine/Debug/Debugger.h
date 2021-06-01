@@ -23,9 +23,9 @@ namespace CrashEngine {
 		inline void AddGrid(const float gridSize = 60.f) { return debugLines->AddGrid(gridSize); }
 
 		inline Shader& GetPointsShader() { return *debugPoints->shader; }
-		inline void DrawUpdatePoint(glm::vec3 pos, glm::vec3 color, float size, PointType type) { debugPoints->DrawUpdatePoint(pos, color, size, type); }
+		inline void DrawUpdatePoint(glm::vec3 pos, glm::vec3 rot, glm::vec3 color, float size, PointType type) { debugPoints->DrawUpdatePoint(pos,rot, color, size, type); }
 		inline void ClearUpdatePoints() { debugPoints->ClearUpdatePoints(); }
-		inline void AddPoint(glm::vec3 pos, glm::vec3 color, float size, PointType type) { debugPoints->AddPoint(pos, color, size, type); }
+		inline void AddPoint(glm::vec3 pos, glm::vec3 rot, glm::vec3 color, float size, PointType type) { debugPoints->AddPoint(pos,rot, color, size, type); }
 
 	private:
 		std::shared_ptr<DebugLine> debugLines;

@@ -20,6 +20,8 @@ namespace CrashEngine {
 		static void SubmitDebug(const std::shared_ptr<VertexArray>& vertexArray, unsigned int trianglesNumber);
 		static void SubmitLine(const std::shared_ptr<VertexArray>& vertexArray, int count, float width);
 
+		static void SubmitInstanced(const std::shared_ptr<VertexArray>& vertexArray, unsigned int trianglesNumber, unsigned int amount);
+
 		inline static RendererAPI::API GetAPI() { return RendererAPI::GetAPI(); }
 	};
 

@@ -148,6 +148,13 @@ namespace CrashEngine {
 		RenderCommand::DrawTriangles(vertexArray, trianglesNumber);
 	}
 
+	void Renderer::SubmitInstanced(const std::shared_ptr<VertexArray>& vertexArray, unsigned int trianglesNumber, unsigned int amount)
+	{
+		vertexArray->Bind();
+		RenderCommand::DrawInstancedTriangles(vertexArray, trianglesNumber, amount);
+
+	}
+
 	void Renderer::SubmitLine(const std::shared_ptr<VertexArray>& vertexArray, int count, float width)
 	{
 		vertexArray->Bind();

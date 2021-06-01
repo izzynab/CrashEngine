@@ -11,10 +11,10 @@ namespace CrashEngine {
 	void Debugger::Begin()
 	{
 		debugLines.reset(new DebugLine());
-
 		debugLines->AddGrid(60);
 
 		debugPoints.reset(new DebugPoint());
+		//debugPoints->Begin();
 	}
 
 	Debugger* Debugger::Create()

@@ -1,0 +1,137 @@
+Scene: Untitled
+Filepath: C:\EngineDev\CrashEngine\Scenes\basic.crash
+Entities:
+  - Entity: 12837192831273
+    TagComponent:
+      Tag: floor
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [69.8730011, 1, 65.7170944]
+    Mesh:
+      Directory: C:\EngineDev\CrashEngine\Assets\Basic Shapes\cube.obj
+      Material:
+        Name: default_material
+        Albedo:
+          path: ""
+          albedo use: false
+          albedo color: [0.602678537, 0.602672517, 0.602672517, 0]
+          albedo load: false
+        Metallic:
+          path: ""
+          metallic use: false
+          metallic color: 0.486999989
+          metallic load: false
+        Roughness:
+          path: ""
+          roughness use: false
+          roughness color: 0.926999986
+          roughness load: false
+        Normal:
+          path: ""
+        Ao:
+          path: ""
+  - Entity: 12837192831273
+    TagComponent:
+      Tag: sphere
+    TransformComponent:
+      Translation: [-5.50336504, 4.00477171, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    Mesh:
+      Directory: C:\EngineDev\CrashEngine\Assets\Basic Shapes\sphere.obj
+      Material:
+        Name: default_material
+        Albedo:
+          path: ""
+          albedo use: false
+          albedo color: [1, 0, 0, 0]
+          albedo load: false
+        Metallic:
+          path: ""
+          metallic use: false
+          metallic color: 1
+          metallic load: false
+        Roughness:
+          path: ""
+          roughness use: false
+          roughness color: 0.0850000009
+          roughness load: false
+        Normal:
+          path: ""
+        Ao:
+          path: ""
+  - Entity: 12837192831273
+    TagComponent:
+      Tag: cube 2
+    TransformComponent:
+      Translation: [3.5498991, 7.55841255, -13.1726532]
+      Rotation: [0, 0, 0]
+      Scale: [8.50596714, 6.57998419, 1]
+    Mesh:
+      Directory: C:\EngineDev\CrashEngine\Assets\Basic Shapes\cube.obj
+      Material:
+        Name: default_material
+        Albedo:
+          path: ""
+          albedo use: false
+          albedo color: [0.433035731, 0.404037803, 0.404037803, 0]
+          albedo load: false
+        Metallic:
+          path: ""
+          metallic use: false
+          metallic color: 0.5
+          metallic load: false
+        Roughness:
+          path: ""
+          roughness use: false
+          roughness color: 0.5
+          roughness load: false
+        Normal:
+          path: ""
+        Ao:
+          path: ""
+  - Entity: 12837192831273
+    TagComponent:
+      Tag: cube 1
+    TransformComponent:
+      Translation: [-38.485714, 17.3318405, 0]
+      Rotation: [0, 0, 0.438106507]
+      Scale: [1, 19.2945652, 23.7907162]
+    Mesh:
+      Directory: C:\EngineDev\CrashEngine\Assets\Basic Shapes\cube.obj
+      Material:
+        Name: default_material
+        Albedo:
+          path: ""
+          albedo use: false
+          albedo color: [0.611607134, 0.611600995, 0.611600995, 0]
+          albedo load: false
+        Metallic:
+          path: ""
+          metallic use: false
+          metallic color: 0.5
+          metallic load: false
+        Roughness:
+          path: ""
+          roughness use: false
+          roughness color: 0.5
+          roughness load: false
+        Normal:
+          path: ""
+        Ao:
+          path: ""
+Directional light:
+  rotation: [0.925024509, 0.52359879, 0]
+  color: [1, 1, 1]
+  intensity: 22.4360008
+Sky light:
+  directory: C:\EngineDev\CrashEngine\Assets\Textures\hdr\14-Hamarikyu_Bridge_B_3k.hdr
+Bloom:
+  blur: true
+  threshold: 1.63199997
+  softthreshold: 0.225999996
+SSAO:
+  radius: 0.5
+  bias: 0.179000005
+  power: 3

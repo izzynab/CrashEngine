@@ -106,7 +106,13 @@ namespace CrashEngine {
 
 		}
 
-		
+		auto instancedview = m_Registry.view<TransformComponent, InstanedMeshes>();
+
+		for (auto entity : instancedview)
+		{
+			//todo: implement instanced mesh render
+
+		}
 	}
 
 	void Scene::DepthRender(Shader* shader)
@@ -124,7 +130,7 @@ namespace CrashEngine {
 
 			mod.Draw(shader,false);
 		}
-
+		//todo: add isntanced meshes render pass
 
 	}
 
@@ -165,6 +171,12 @@ namespace CrashEngine {
 
 	template<>
 	void Scene::OnComponentAdded<PointLight>(Entity entity, PointLight& component)
+	{
+
+	}
+
+	template<>
+	void Scene::OnComponentAdded<InstanedMeshes>(Entity entity, InstanedMeshes& component)
 	{
 
 	}
