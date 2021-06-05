@@ -14,6 +14,7 @@ namespace CrashEngine {
 		debugLines->AddGrid(60);
 
 		debugPoints.reset(new DebugPoint());
+		//debugPoints->Begin();
 	}
 
 	Debugger* Debugger::Create()
@@ -26,10 +27,4 @@ namespace CrashEngine {
 		debugLines->OnUpdate(camera);
 		debugPoints->OnUpdate(camera);
 	}
-
-	void Debugger::OnFirstFrame()
-	{
-		debugPoints->OnFirstFrame();
-	}
-
 }
