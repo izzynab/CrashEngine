@@ -15,7 +15,6 @@ namespace CrashEngine {
 	void Renderer::BeginScene()
 	{
 		Application::Get().GetDebugger().ClearUpdateLines();
-		Application::Get().GetDebugger().ClearUpdatePoints();
 	}
 
 	void Renderer::RenderScene(std::shared_ptr<RenderProperties>& renderProperties, std::vector<std::shared_ptr<Framebuffer>>& renderFramebuffers, Timestep ts)
@@ -133,7 +132,6 @@ namespace CrashEngine {
 		renderFramebuffers.push_back(Framebuffer::Create(spec));
 
 		renderProperties->AddView(width, height, name);
-	
 	}
 
 	void Renderer::Submit(const std::shared_ptr<VertexArray>& vertexArray, bool strip)

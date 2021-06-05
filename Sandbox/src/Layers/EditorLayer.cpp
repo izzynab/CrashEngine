@@ -26,7 +26,7 @@ namespace CrashEngine {
 		FramebufferSpecification spec;
 		spec.Height = Application::Get().GetWindow().GetHeight();
 		spec.Width = Application::Get().GetWindow().GetWidth();
- 
+
 		renderProperties.reset(new RenderProperties());
 
 		Renderer::AddView(Application::Get().GetWindow().GetWidth(), Application::Get().GetWindow().GetHeight(), "Main", renderProperties, framebuffers);
@@ -68,9 +68,10 @@ namespace CrashEngine {
 
 		for (int y = 0; y < 100; y++)
 		{
-			Application::Get().GetDebugger().AddPoint(glm::vec3(0, y*3, 0), glm::vec3(0), glm::vec3(1, 1, 0), 1, PointType::Cube);
+			//Application::Get().GetDebugger().AddPoint(glm::vec3(0, y*3, 0), glm::vec3(0), glm::vec3(1, 1, 0), 1, PointType::Cube);
 		}
 		
+		Application::Get().GetDebugger().OnFirstFrame();//todo: make it actually first frame not end of constructor of editor layer
 	}
 
 	void Editor::OnUpdate(Timestep ts)
@@ -84,17 +85,22 @@ namespace CrashEngine {
 			if (camera.get<CameraComponent>(entity).DrawFrustum == true)
 			{
 				Application::Get().GetDebugger().DrawFrustum(camera.get<CameraComponent>(entity).Camera.get());
-				//CE_TRACE("Camera frustum draw call: {0}", camera.get<TagComponent>(entity).Tag);
 			}
 		}
 
 		//Application::Get().GetDebugger().DrawFrustum(renderProperties->GetCamera(0).get());
 		//CE_INFO("Size of vec4: {0} Size of mat4: {1}", sizeof(glm::vec4), sizeof(glm::mat4));
 
+		for (int y = 0; y < 100; y++)
+		{
+			Application::Get().GetDebugger().DrawUpdatePoint(glm::vec3(y * 3, 0, 0), glm::vec3(0), glm::vec3(1, 0, 0), 1, PointType::Cube);
+		}
+
+
 		if(!viewName.empty()) editorCameraController->OnUpdate(ts);
 
 		Renderer::RenderScene(renderProperties, framebuffers,ts);
-
+		
 		Renderer::EndScene();
 
 		//-----------Test render----------------------
