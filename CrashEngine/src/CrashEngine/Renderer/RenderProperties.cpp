@@ -47,12 +47,12 @@ namespace CrashEngine {
 		};
 
 		m_MatrixUB.reset(UniformBuffer::Create(uniformLayout, 0));
-		m_MatrixUB->linkShader(deferredShader->GetID(), "Matrices");
-		m_MatrixUB->linkShader(GBufferShader->GetID(), "Matrices");
-		m_MatrixUB->linkShader(m_ActiveScene->ssao->GetShaderID(), "Matrices");
-		m_MatrixUB->linkShader(m_ActiveScene->skyLight->GetSkyShader()->GetID(), "Matrices");
-		m_MatrixUB->linkShader(Application::Get().GetDebugger().GetLinesShader().GetID(), "Matrices");
-		m_MatrixUB->linkShader(Application::Get().GetDebugger().GetPointsShader().GetID(), "Matrices");
+		//m_MatrixUB->linkShader(deferredShader->GetID(), "Matrices");
+		//m_MatrixUB->linkShader(GBufferShader->GetID(), "Matrices");
+		//m_MatrixUB->linkShader(m_ActiveScene->ssao->GetShaderID(), "Matrices");
+		//m_MatrixUB->linkShader(m_ActiveScene->skyLight->GetSkyShader()->GetID(), "Matrices");
+		//m_MatrixUB->linkShader(Application::Get().GetDebugger().GetLinesShader().GetID(), "Matrices");
+		//m_MatrixUB->linkShader(Application::Get().GetDebugger().GetPointsShader().GetID(), "Matrices");
 
 		//glm::mat4 projection = m_ActiveScene->GetActiveCamera().GetProjectionMatrix();
 		//m_MatrixUB->setData("projection", glm::value_ptr(projection));
