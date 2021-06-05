@@ -15,7 +15,6 @@ namespace CrashEngine {
 	void Renderer::BeginScene()
 	{
 		Application::Get().GetDebugger().ClearUpdateLines();
-		Application::Get().GetDebugger().ClearUpdatePoints();
 	}
 
 	void Renderer::RenderScene(std::shared_ptr<RenderProperties>& renderProperties, std::vector<std::shared_ptr<Framebuffer>>& renderFramebuffers, Timestep ts)
@@ -30,7 +29,7 @@ namespace CrashEngine {
 
 			auto DefferedFramebuffer = renderProperties->GetDefferedFramebuffer(i);
 			auto camera = renderProperties->GetCamera(i);
-			auto renderFramebuffer = renderFramebuffers[i];
+			std::shared_ptr<Framebuffer> renderFramebuffer = renderFramebuffers[i];
 
 			if (camera->ScreenWidth <= 0 || camera->ScreenHeight <= 0)
 			{
@@ -142,7 +141,7 @@ namespace CrashEngine {
 		RenderCommand::DrawIndexed(vertexArray, strip);
 	}
 
-	void Renderer::SubmitDebug(const std::shared_ptr<VertexArray>& vertexArray, unsigned int trianglesNumber)
+	void Renderer::Submit(const std::shared_ptr<VertexArray>& vertexArray, unsigned int trianglesNumber)
 	{
 		vertexArray->Bind();
 		RenderCommand::DrawTriangles(vertexArray, trianglesNumber);
@@ -152,7 +151,12 @@ namespace CrashEngine {
 	{
 		vertexArray->Bind();
 		RenderCommand::DrawInstancedTriangles(vertexArray, trianglesNumber, amount);
+	}
 
+	void Renderer::SubmitInstanced(const std::shared_ptr<VertexArray>& vertexArray, unsigned int amount, bool strip)
+	{
+		vertexArray->Bind();
+		RenderCommand::DrawInstancedIndexed(vertexArray, amount, strip);
 	}
 
 	void Renderer::SubmitLine(const std::shared_ptr<VertexArray>& vertexArray, int count, float width)

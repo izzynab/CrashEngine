@@ -99,6 +99,10 @@ namespace CrashEngine {
         Renderer::Submit(SphereVA,true);
     }
 
+    void Sphere::RenderInstancedSphere(uint32_t amount)
+    {
+        Renderer::SubmitInstanced(SphereVA, true, amount);
+    }
 
     Cube::Cube()
     {
@@ -121,7 +125,7 @@ namespace CrashEngine {
     void Cube::RenderCube()
     {
         //cubeVA->Bind();
-        Renderer::SubmitDebug(cubeVA,36);
+        Renderer::Submit(cubeVA,(unsigned int)36);
     }
 
     void Cube::RenderInstancedCube(uint32_t amount)
@@ -151,7 +155,7 @@ namespace CrashEngine {
     void Quad::RenderQuad()
     {
         QuadVA->Bind();
-        Renderer::SubmitDebug(QuadVA,6);
+        Renderer::Submit(QuadVA, (unsigned int)6);
         QuadVA->Unbind();
     }
 }

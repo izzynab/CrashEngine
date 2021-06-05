@@ -17,10 +17,12 @@ namespace CrashEngine {
 		static void AddView(float width,float height, std::string name,std::shared_ptr<RenderProperties>& renderProperties, std::vector<std::shared_ptr<Framebuffer>>& renderFramebuffers);
 
 		static void Submit(const std::shared_ptr<VertexArray>& vertexArray, bool strip = false);
-		static void SubmitDebug(const std::shared_ptr<VertexArray>& vertexArray, unsigned int trianglesNumber);
+		static void Submit(const std::shared_ptr<VertexArray>& vertexArray, unsigned int trianglesNumber);
+		//static void SubmitDebug(const std::shared_ptr<VertexArray>& vertexArray, unsigned int trianglesNumber);
 		static void SubmitLine(const std::shared_ptr<VertexArray>& vertexArray, int count, float width);
 
 		static void SubmitInstanced(const std::shared_ptr<VertexArray>& vertexArray, unsigned int trianglesNumber, unsigned int amount);
+		static void SubmitInstanced(const std::shared_ptr<VertexArray>& vertexArray, unsigned int amount, bool strip = false);
 
 		inline static RendererAPI::API GetAPI() { return RendererAPI::GetAPI(); }
 	};

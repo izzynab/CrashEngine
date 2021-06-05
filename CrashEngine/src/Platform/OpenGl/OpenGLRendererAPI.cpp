@@ -35,14 +35,7 @@ namespace CrashEngine {
 
 	void OpenGLRendererAPI::DrawIndexed(const std::shared_ptr<VertexArray>& vertexArray, bool strip)
 	{
-		if (strip)
-		{
-			glDrawElements(GL_TRIANGLE_STRIP, vertexArray->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, nullptr);
-		}
-		else
-		{
-			glDrawElements(GL_TRIANGLES, vertexArray->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, nullptr);
-		}
+		glDrawElements(strip ? GL_TRIANGLE_STRIP : GL_TRIANGLES, vertexArray->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, nullptr);
 	}
 
 	void OpenGLRendererAPI::DrawTriangles(const std::shared_ptr<VertexArray>& vertexArray, unsigned int trianglesNumber)
@@ -53,6 +46,11 @@ namespace CrashEngine {
 	void OpenGLRendererAPI::DrawInstancedTriangles(const std::shared_ptr<VertexArray>& vertexArray, unsigned int trianglesNumber, unsigned int amount)
 	{
 		glDrawArraysInstanced(GL_TRIANGLES, 0, trianglesNumber, amount);
+	}
+
+	void OpenGLRendererAPI::DrawInstancedIndexed(const std::shared_ptr<VertexArray>& vertexArray, unsigned int amount, bool strip)
+	{
+		glDrawElementsInstanced(strip ? GL_TRIANGLE_STRIP : GL_TRIANGLES, vertexArray->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, nullptr, amount);
 	}
 
 	void OpenGLRendererAPI::DrawLine(const std::shared_ptr<VertexArray>& vertexArray,int count, float width)

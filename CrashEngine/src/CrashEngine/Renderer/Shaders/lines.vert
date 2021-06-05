@@ -7,8 +7,6 @@ layout (std140) uniform Matrices
     mat4 view;
 };
 
-uniform mat4 model;
-
 uniform vec3 color;
 uniform float lineWidth;
 
@@ -20,7 +18,7 @@ void main()
     v_col = vec4(color,1);
     v_line_width = lineWidth;
 
-    vec4 position = projection * view * model * vec4(a_Position, 1.0);
+    vec4 position = projection * view * vec4(a_Position, 1.0);
     gl_Position = position;
 }
 

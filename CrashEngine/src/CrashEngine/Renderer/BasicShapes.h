@@ -11,7 +11,9 @@ namespace CrashEngine {
 		Sphere();
 
 		void RenderSphere();
+        void RenderInstancedSphere(uint32_t amount);
 
+        inline std::shared_ptr<VertexArray>& GetVertexArray() { return SphereVA; }
 	private:
 		unsigned int sphereVAO = 0;
 		unsigned int indexCount = 0;

@@ -9,13 +9,14 @@ namespace CrashEngine {
 		instancedShader = Shader::Create("Instanced3D.vert", "Instanced3D.frag");
 		shader = Shader::Create("Basic3D.vert", "Basic3D.frag");
 		cube.reset(new Cube());
-		//sphere.reset(new Sphere());
+		sphere.reset(new Sphere());	
 	}
 
 	void DebugPoint::OnUpdate(Camera& camera)
 	{			
 		instancedShader->Bind();
-		cube->RenderInstancedCube(CubesNumber);
+		cube->RenderInstancedCube(cubeDetails.Number);
+		sphere->RenderInstancedSphere(sphereDetails.Number);//todo: why sphere debug points dont work
 
 		int size = points.size();
 		for (int i = 0; i < size; i++)
@@ -27,7 +28,15 @@ namespace CrashEngine {
 				* rotation
 				* glm::scale(glm::mat4(1.0f), glm::vec3(points.front().size));
 			shader->SetUniformMat4("model", model);
-			cube->RenderCube();
+			switch (points.front().type)
+			{
+			case PointType::Cube:
+				cube->RenderCube();
+				break;
+			case PointType::Sphere:
+				sphere->RenderSphere();
+				break;
+			}
 
 			points.pop();
 		}
@@ -35,9 +44,9 @@ namespace CrashEngine {
 
 	void DebugPoint::OnFirstFrame()
 	{
-		if (colors.empty() || matrices.empty())return;
+		if (cubeDetails.colors.empty() || cubeDetails.matrices.empty())return;
 		std::shared_ptr<VertexBuffer> ColorVB;
-		ColorVB.reset(VertexBuffer::Create(glm::value_ptr(colors[0]), colors.size() * sizeof(glm::vec4)));
+		ColorVB.reset(VertexBuffer::Create(glm::value_ptr(cubeDetails.colors[0]), cubeDetails.colors.size() * sizeof(glm::vec4)));
 
 		BufferLayout layout2 = {
 			{ ShaderDataType::Float4, "aColor"},
@@ -47,7 +56,7 @@ namespace CrashEngine {
 		cube->GetVertexArray()->AddInstancedVertexBuffer(ColorVB, 3);
 
 		std::shared_ptr<VertexBuffer> MatrixVB;
-		MatrixVB.reset(VertexBuffer::Create(glm::value_ptr(matrices[0]), matrices.size() * sizeof(glm::mat4)));
+		MatrixVB.reset(VertexBuffer::Create(glm::value_ptr(cubeDetails.matrices[0]), cubeDetails.matrices.size() * sizeof(glm::mat4)));
 
 		BufferLayout layout1 = {
 			{ ShaderDataType::Mat4, "aInstanceMatrix" },
@@ -55,6 +64,29 @@ namespace CrashEngine {
 		MatrixVB->SetLayout(layout1);
 
 		cube->GetVertexArray()->AddInstancedVertexBuffer(MatrixVB, 4);
+
+
+
+		if (sphereDetails.colors.empty() || sphereDetails.matrices.empty())return;
+		std::shared_ptr<VertexBuffer> ColorVBs;
+		ColorVBs.reset(VertexBuffer::Create(glm::value_ptr(sphereDetails.colors[0]), sphereDetails.colors.size() * sizeof(glm::vec4)));
+
+		BufferLayout layout4 = {
+			{ ShaderDataType::Float4, "aColor"},
+		};
+		ColorVBs->SetLayout(layout4);
+
+		sphere->GetVertexArray()->AddInstancedVertexBuffer(ColorVBs, 3);
+
+		std::shared_ptr<VertexBuffer> MatrixVBs;
+		MatrixVBs.reset(VertexBuffer::Create(glm::value_ptr(sphereDetails.matrices[0]), sphereDetails.matrices.size() * sizeof(glm::mat4)));
+
+		BufferLayout layout3 = {
+			{ ShaderDataType::Mat4, "aInstanceMatrix" },
+		};
+		MatrixVBs->SetLayout(layout3);
+
+		sphere->GetVertexArray()->AddInstancedVertexBuffer(MatrixVBs, 4);
 	}
 
 	void DebugPoint::DrawUpdatePoint(glm::vec3 position, glm::vec3 rotation, glm::vec3 color, float size, PointType type)
@@ -66,16 +98,35 @@ namespace CrashEngine {
 
 	void DebugPoint::AddPoint(glm::vec3 position, glm::vec3 rotation, glm::vec3 color, float size, PointType type)
 	{
-		CubesNumber++;
+		switch (type)
+		{
+		case PointType::Cube:
+			cubeDetails.Number++;
 
-		colors.push_back(glm::vec4(color,1));
+			cubeDetails.colors.push_back(glm::vec4(color, 1));
 
-		glm::mat4 rot = glm::toMat4(glm::quat(rotation));
+			glm::mat4 rot = glm::toMat4(glm::quat(rotation));
 
-		glm::mat4 model =  glm::translate(glm::mat4(1.0f), position)
-			* rot
-			* glm::scale(glm::mat4(1.0f), glm::vec3(size));
+			glm::mat4 model = glm::translate(glm::mat4(1.0f), position)
+				* rot
+				* glm::scale(glm::mat4(1.0f), glm::vec3(size));
 
-		matrices.push_back(model);
+			cubeDetails.matrices.push_back(model);
+			break;
+		case PointType::Sphere:
+			sphereDetails.Number++;
+
+			sphereDetails.colors.push_back(glm::vec4(color, 1));
+
+			glm::mat4 rots = glm::toMat4(glm::quat(rotation));
+
+			glm::mat4 models = glm::translate(glm::mat4(1.0f), position)
+				* rots
+				* glm::scale(glm::mat4(1.0f), glm::vec3(size));
+
+			sphereDetails.matrices.push_back(models);
+			break;
+		}
+
 	}
 }

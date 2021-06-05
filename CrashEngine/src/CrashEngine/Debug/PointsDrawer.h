@@ -17,17 +17,25 @@ namespace CrashEngine {
 		Cube,Sphere,Camera
 	};
 
-	struct Point
-	{
-		glm::vec3 position;
-		glm::vec3 rotation;
-		glm::vec3 color;
-		float size;
-		PointType type;
-	};
-
 	class DebugPoint
 	{
+		struct Point
+		{
+			glm::vec3 position;
+			glm::vec3 rotation;
+			glm::vec3 color;
+			float size;
+			PointType type;
+		};
+
+		struct InstancedPointsDetails
+		{
+			std::vector<glm::mat4> matrices;
+			std::vector<glm::vec4> colors;
+
+			int Number = 0;
+		};
+
 	public:
 		DebugPoint();
 
@@ -40,14 +48,11 @@ namespace CrashEngine {
 		void AddPoint(glm::vec3 position, glm::vec3 rotation, glm::vec3 color, float size, PointType type);
 
 	private:
-		//int UpdatePointsNumber = 0;
-		int CubesNumber = 0;
-
-		//std::shared_ptr<Sphere> sphere;
+		std::shared_ptr<Sphere> sphere;
 		std::shared_ptr<Cube> cube;
 
-		std::vector<glm::mat4> matrices;
-		std::vector<glm::vec4> colors;
+		InstancedPointsDetails cubeDetails;
+		InstancedPointsDetails sphereDetails;
 
 		Shader* instancedShader;
 		Shader* shader;
@@ -55,7 +60,7 @@ namespace CrashEngine {
 		glm::mat4 view = glm::mat4(1);
 		glm::mat4 projection = glm::mat4(1);
 
-		std::queue<Point> points;
+		std::queue<Point> points;//todo: maybe use hash map to find has any value of point changed
 	};
 
 }

@@ -60,6 +60,7 @@ namespace CrashEngine {
 		DebugLine();
 
 		void OnUpdate(Camera& camera);
+		void OnFirstFrame();
 
 		void DrawUpdateLine(glm::vec3 startVec, glm::vec3 endVec, glm::vec3 color , float width);
 
@@ -76,10 +77,7 @@ namespace CrashEngine {
 		Shader* shader;
 
 	private:
-		//std::shared_ptr<Line> UpdateLine;
-
 		std::vector<Line> lines;
-
 		std::vector<LinesSet> linesSet;
 
 		int UpdateLinesNumber = 0;

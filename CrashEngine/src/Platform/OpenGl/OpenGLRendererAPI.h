@@ -22,6 +22,7 @@ namespace CrashEngine {
 		virtual void DrawLine(const std::shared_ptr<VertexArray>& vertexArray, int count, float width) override;
 
 		virtual void DrawInstancedTriangles(const std::shared_ptr<VertexArray>& vertexArray, unsigned int trianglesNumber, unsigned int amount) override;
+		virtual void DrawInstancedIndexed(const std::shared_ptr<VertexArray>& vertexArray, unsigned int amount, bool strip) override;
 
 		virtual void BindTexture(const unsigned int& texture, unsigned int textureNr) override;
 		virtual void BindCubemap(const unsigned int& texture, unsigned int textureNr) override;

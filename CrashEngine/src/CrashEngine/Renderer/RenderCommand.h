@@ -47,6 +47,10 @@ namespace CrashEngine {
 			s_RendererAPI->DrawInstancedTriangles(vertexArray, trianglesNumber, amount);
 		}
 		
+		inline static void DrawInstancedIndexed(const std::shared_ptr<VertexArray>& vertexArray, unsigned int amount, bool strip)
+		{
+			s_RendererAPI->DrawInstancedIndexed(vertexArray, amount, strip);
+		}
 
 		inline static void DrawLine(const std::shared_ptr<VertexArray>& vertexArray, int count, float width)
 		{
