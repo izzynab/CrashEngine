@@ -22,7 +22,7 @@ namespace CrashEngine {
 		inline void AddLine(glm::vec3 startVec, glm::vec3 endVec, glm::vec3 color = glm::vec3(0.1f, 0.1f, 0.9f), float width = 3.f) { return debugLines->AddLine(startVec, endVec, color, width); }
 		inline void AddGrid(const float gridSize = 60.f) { return debugLines->AddGrid(gridSize); }
 
-		inline void DrawUpdatePoint(glm::vec3 position, glm::vec3 rotation, glm::vec3 color, float size, PointType type) { debugPoints->DrawUpdatePoint(position, rotation, color, size, type); }
+		inline void DrawUpdatePoint(glm::vec3 position, glm::vec3 rotation = glm::vec3(0), glm::vec3 color = glm::vec3(1), float size = 1, PointType type = PointType::Cube) { debugPoints->DrawUpdatePoint(position, rotation, color, size, type); }
 		inline void AddPoint(glm::vec3 position, glm::vec3 rotation, glm::vec3 color, float size, PointType type) { debugPoints->AddPoint(position, rotation, color, size, type); }
 
 	private:

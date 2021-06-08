@@ -16,7 +16,7 @@ namespace CrashEngine {
 	{			
 		instancedShader->Bind();
 		cube->RenderInstancedCube(cubeDetails.Number);
-		sphere->RenderInstancedSphere(sphereDetails.Number);//todo: why sphere debug points dont work
+		//sphere->RenderInstancedSphere(sphereDetails.Number);//todo: fix sphere points
 
 		int size = points.size();
 		for (int i = 0; i < size; i++)

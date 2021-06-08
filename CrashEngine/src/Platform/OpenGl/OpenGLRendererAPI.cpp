@@ -53,14 +53,14 @@ namespace CrashEngine {
 		glDrawElementsInstanced(strip ? GL_TRIANGLE_STRIP : GL_TRIANGLES, vertexArray->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, nullptr, amount);
 	}
 
-	void OpenGLRendererAPI::DrawLine(const std::shared_ptr<VertexArray>& vertexArray, float width)
+	void OpenGLRendererAPI::DrawLine(const std::shared_ptr<VertexArray>& vertexArray, int count, float width)
 	{
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		
 		glLineWidth(width);
 
-		glDrawArrays(GL_LINES, 0, 2);
+		glDrawArrays(GL_LINES, 0, count);
 		glDisable(GL_BLEND);
 	}
 

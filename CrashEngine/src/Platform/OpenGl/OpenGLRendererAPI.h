@@ -19,7 +19,7 @@ namespace CrashEngine {
 
 		virtual void DrawIndexed(const std::shared_ptr<VertexArray>& vertexArray, bool strip) override;
 		virtual void DrawTriangles(const std::shared_ptr<VertexArray>& vertexArray, unsigned int trianglesNumber) override;
-		virtual void DrawLine(const std::shared_ptr<VertexArray>& vertexArray, float width) override;
+		virtual void DrawLine(const std::shared_ptr<VertexArray>& vertexArray, int count, float width) override;
 
 		virtual void DrawInstancedTriangles(const std::shared_ptr<VertexArray>& vertexArray, unsigned int trianglesNumber, unsigned int amount) override;
 		virtual void DrawInstancedIndexed(const std::shared_ptr<VertexArray>& vertexArray, unsigned int amount, bool strip) override;

@@ -65,13 +65,6 @@ namespace CrashEngine {
 		QuadShader->Bind();
 		QuadShader->SetUniformInt("tex", 0);
 
-
-		for (int y = 0; y < 100; y++)
-		{
-			//Application::Get().GetDebugger().AddPoint(glm::vec3(0, y*3, 0), glm::vec3(0), glm::vec3(1, 1, 0), 1, PointType::Sphere);
-			Application::Get().GetDebugger().AddPoint(glm::vec3(y * 3, 0, 0), glm::vec3(0), glm::vec3(1, 1, 0), 1, PointType::Cube);
-		}
-		
 		Application::Get().GetDebugger().OnFirstFrame();//todo: make it actually first frame not end of constructor of editor layer
 	}
 
@@ -89,12 +82,11 @@ namespace CrashEngine {
 			}
 		}
 
-		//Application::Get().GetDebugger().DrawFrustum(renderProperties->GetCamera(0).get());
-		//CE_INFO("Size of vec4: {0} Size of mat4: {1}", sizeof(glm::vec4), sizeof(glm::mat4));
+		Application::Get().GetDebugger().DrawFrustum(renderProperties->GetCamera(0).get());
 
 
 		Application::Get().GetDebugger().DrawUpdateLine(glm::vec3(0), glm::vec3(10));
-
+		Application::Get().GetDebugger().DrawUpdatePoint(glm::vec3(0));
 
 		if(!viewName.empty()) editorCameraController->OnUpdate(ts);
 

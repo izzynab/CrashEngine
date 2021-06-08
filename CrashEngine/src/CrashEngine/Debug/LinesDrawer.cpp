@@ -22,10 +22,23 @@ namespace CrashEngine {
 			shader->Bind();
 			shader->SetUniformVec3("color", lines[i].color);
 			shader->SetUniformVec2("u_viewport_size", glm::vec2(camera.ScreenWidth, camera.ScreenHeight));
-			shader->SetUniformVec2("u_aa_radius", glm::vec2(0.5, 0.5));
+			shader->SetUniformVec2("u_aa_radius", glm::vec2(0, 0));
 			shader->SetUniformFloat("lineWidth", lines[i].width);
 
 			Renderer::SubmitLine(lines[i].VAO, 2, lines[i].width);
+		}
+
+		int size = updateLines.size();
+		for (int i = 0; i < size; i++)
+		{
+			shader->Bind();
+			shader->SetUniformVec3("color", updateLines.front().color);
+			shader->SetUniformVec2("u_viewport_size", glm::vec2(camera.ScreenWidth, camera.ScreenHeight));
+			shader->SetUniformVec2("u_aa_radius", glm::vec2(0, 0));
+			shader->SetUniformFloat("lineWidth", updateLines.front().width);
+
+			Renderer::SubmitLine(updateLines.front().VAO, 2, updateLines.front().width);
+			updateLines.pop();
 		}
 
 		for (int i = 0; i < linesSet.size(); i++)
@@ -33,7 +46,7 @@ namespace CrashEngine {
 			shader->Bind();
 			shader->SetUniformVec3("color", linesSet[i].color);
 			shader->SetUniformVec2("u_viewport_size", glm::vec2(camera.ScreenWidth, camera.ScreenHeight));
-			shader->SetUniformVec2("u_aa_radius", glm::vec2(0.5, 0.5));
+			shader->SetUniformVec2("u_aa_radius", glm::vec2(0.1, 0.1));
 			shader->SetUniformFloat("lineWidth", linesSet[i].width);
 
 			Renderer::SubmitLine(linesSet[i].VAO, linesSet[i].NumberOfLines*2, linesSet[i].width);
@@ -47,9 +60,29 @@ namespace CrashEngine {
 
 	void DebugLine::DrawUpdateLine(glm::vec3 startVec, glm::vec3 endVec, glm::vec3 color, float width)
 	{
-		UpdateLinesNumber++;
+		Line line;
+		line.vertices.push_back(startVec.x);
+		line.vertices.push_back(startVec.y);
+		line.vertices.push_back(startVec.z);
 
-		AddLine(startVec, endVec, color, width);
+		line.vertices.push_back(endVec.x);
+		line.vertices.push_back(endVec.y);
+		line.vertices.push_back(endVec.z);
+
+		line.VAO.reset(VertexArray::Create());
+		line.VBO.reset(VertexBuffer::Create(&line.vertices[0], line.vertices.size() * sizeof(float)));
+
+		BufferLayout layout1 = {
+			{ ShaderDataType::Float3, "aPosition" },
+		};
+		line.VBO->SetLayout(layout1);
+
+		line.VAO->AddVertexBuffer(line.VBO);
+
+		line.width = width;
+		line.color = color;
+
+		updateLines.push(line);
 	}
 
 	void DebugLine::DrawFrustum(Camera& camera)
@@ -96,11 +129,6 @@ namespace CrashEngine {
 		DrawUpdateLine(frustumCorners[2], frustumCorners[6], glm::vec3(0.8f, 0.8f, 0.8f), 1.f);
 	}
 
-	void DebugLine::ClearUpdateLines()
-	{
-		lines.erase(lines.end()- UpdateLinesNumber, lines.end());
-		UpdateLinesNumber = 0;
-	}
 
 	void DebugLine::AddLine(glm::vec3 startVec, glm::vec3 endVec, glm::vec3 color, float width)
 	{

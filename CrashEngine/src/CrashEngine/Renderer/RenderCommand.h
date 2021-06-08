@@ -57,9 +57,9 @@ namespace CrashEngine {
 			s_RendererAPI->DrawInstancedLine(vertexArray, width, amount);
 		}
 
-		inline static void DrawLine(const std::shared_ptr<VertexArray>& vertexArray, float width)
+		inline static void DrawLine(const std::shared_ptr<VertexArray>& vertexArray, int count, float width)
 		{
-			s_RendererAPI->DrawLine(vertexArray, width);
+			s_RendererAPI->DrawLine(vertexArray,count, width);
 		}
 
 		inline static void BindTexture(const uint32_t& texture,uint32_t textureNr)

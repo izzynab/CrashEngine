@@ -66,19 +66,17 @@ namespace CrashEngine {
 
 		void DrawFrustum(Camera& camera);
 
-		void ClearUpdateLines();
-
 		void AddLine(glm::vec3 startVec, glm::vec3 endVec, glm::vec3 color , float width);
 		
 		void AddGrid(const float gridSize);
 	public:
-		glm::mat4 view = glm::mat4(1);
-		glm::mat4 projection = glm::mat4(1);
 		Shader* shader;
 
 	private:
 		std::vector<Line> lines;
 		std::vector<LinesSet> linesSet;
+
+		std::queue<Line> updateLines;
 
 		int UpdateLinesNumber = 0;
 	};
