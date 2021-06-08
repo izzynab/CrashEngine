@@ -57,9 +57,6 @@ namespace CrashEngine {
 		Shader* instancedShader;
 		Shader* shader;
 
-		glm::mat4 view = glm::mat4(1);
-		glm::mat4 projection = glm::mat4(1);
-
 		std::queue<Point> points;//todo: maybe use hash map to find has any value of point changed
 	};
 

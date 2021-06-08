@@ -26,10 +26,11 @@ namespace CrashEngine {
 
 		virtual void DrawIndexed(const std::shared_ptr<VertexArray>& vertexArray, bool strip) = 0;
 		virtual void DrawTriangles(const std::shared_ptr<VertexArray>& vertexArray, unsigned int trianglesNumber) = 0;
-		virtual void DrawLine(const std::shared_ptr<VertexArray>& vertexArray, int count, float width) = 0;
+		virtual void DrawLine(const std::shared_ptr<VertexArray>& vertexArray,  float width) = 0;
 
 		virtual void DrawInstancedTriangles(const std::shared_ptr<VertexArray>& vertexArray, unsigned int trianglesNumber, unsigned int amount) = 0;
 		virtual void DrawInstancedIndexed(const std::shared_ptr<VertexArray>& vertexArray, unsigned int amount, bool strip) = 0;
+		virtual void DrawInstancedLine(const std::shared_ptr<VertexArray>& vertexArray,  float width, int amount) = 0;
 
 		virtual void BindTexture(const unsigned int& texture, unsigned int textureNr) = 0;
 		virtual void BindCubemap(const unsigned int& texture, unsigned int textureNr) = 0;
