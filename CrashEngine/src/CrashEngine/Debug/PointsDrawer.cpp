@@ -16,7 +16,7 @@ namespace CrashEngine {
 	{			
 		instancedShader->Bind();
 		cube->RenderInstancedCube(cubeDetails.Number);
-		sphere->RenderInstancedSphere(sphereDetails.Number);//todo: why sphere debug points dont work
+		//sphere->RenderInstancedSphere(sphereDetails.Number);//todo: not working
 
 		int size = points.size();
 		for (int i = 0; i < size; i++)
@@ -44,49 +44,52 @@ namespace CrashEngine {
 
 	void DebugPoint::OnFirstFrame()
 	{
-		if (cubeDetails.colors.empty() || cubeDetails.matrices.empty())return;
-		std::shared_ptr<VertexBuffer> ColorVB;
-		ColorVB.reset(VertexBuffer::Create(glm::value_ptr(cubeDetails.colors[0]), cubeDetails.colors.size() * sizeof(glm::vec4)));
+		if (!(cubeDetails.colors.empty() || cubeDetails.matrices.empty()))
+		{
+			std::shared_ptr<VertexBuffer> ColorVB;
+			ColorVB.reset(VertexBuffer::Create(glm::value_ptr(cubeDetails.colors[0]), cubeDetails.colors.size() * sizeof(glm::vec4)));
 
-		BufferLayout layout2 = {
-			{ ShaderDataType::Float4, "aColor"},
-		};
-		ColorVB->SetLayout(layout2);
+			BufferLayout layout2 = {
+				{ ShaderDataType::Float4, "aColor"},
+			};
+			ColorVB->SetLayout(layout2);
 
-		cube->GetVertexArray()->AddInstancedVertexBuffer(ColorVB, 3);
+			cube->GetVertexArray()->AddInstancedVertexBuffer(ColorVB, 3);
 
-		std::shared_ptr<VertexBuffer> MatrixVB;
-		MatrixVB.reset(VertexBuffer::Create(glm::value_ptr(cubeDetails.matrices[0]), cubeDetails.matrices.size() * sizeof(glm::mat4)));
+			std::shared_ptr<VertexBuffer> MatrixVB;
+			MatrixVB.reset(VertexBuffer::Create(glm::value_ptr(cubeDetails.matrices[0]), cubeDetails.matrices.size() * sizeof(glm::mat4)));
 
-		BufferLayout layout1 = {
-			{ ShaderDataType::Mat4, "aInstanceMatrix" },
-		};
-		MatrixVB->SetLayout(layout1);
+			BufferLayout layout1 = {
+				{ ShaderDataType::Mat4, "aInstanceMatrix" },
+			};
+			MatrixVB->SetLayout(layout1);
 
-		cube->GetVertexArray()->AddInstancedVertexBuffer(MatrixVB, 4);
+			cube->GetVertexArray()->AddInstancedVertexBuffer(MatrixVB, 4);
+		}
+		
 
+		if (!(sphereDetails.colors.empty() || sphereDetails.matrices.empty()))
+		{
+			std::shared_ptr<VertexBuffer> ColorVB;
+			ColorVB.reset(VertexBuffer::Create(glm::value_ptr(sphereDetails.colors[0]), sphereDetails.colors.size() * sizeof(glm::vec4)));
 
+			BufferLayout layout2 = {
+				{ ShaderDataType::Float4, "aColor"},
+			};
+			ColorVB->SetLayout(layout2);
 
-		if (sphereDetails.colors.empty() || sphereDetails.matrices.empty())return;
-		std::shared_ptr<VertexBuffer> ColorVBs;
-		ColorVBs.reset(VertexBuffer::Create(glm::value_ptr(sphereDetails.colors[0]), sphereDetails.colors.size() * sizeof(glm::vec4)));
+			sphere->GetVertexArray()->AddInstancedVertexBuffer(ColorVB, 3);
 
-		BufferLayout layout4 = {
-			{ ShaderDataType::Float4, "aColor"},
-		};
-		ColorVBs->SetLayout(layout4);
+			std::shared_ptr<VertexBuffer> MatrixVB;
+			MatrixVB.reset(VertexBuffer::Create(glm::value_ptr(sphereDetails.matrices[0]), sphereDetails.matrices.size() * sizeof(glm::mat4)));
 
-		sphere->GetVertexArray()->AddInstancedVertexBuffer(ColorVBs, 3);
+			BufferLayout layout1 = {
+				{ ShaderDataType::Mat4, "aInstanceMatrix" },
+			};
+			MatrixVB->SetLayout(layout1);
 
-		std::shared_ptr<VertexBuffer> MatrixVBs;
-		MatrixVBs.reset(VertexBuffer::Create(glm::value_ptr(sphereDetails.matrices[0]), sphereDetails.matrices.size() * sizeof(glm::mat4)));
-
-		BufferLayout layout3 = {
-			{ ShaderDataType::Mat4, "aInstanceMatrix" },
-		};
-		MatrixVBs->SetLayout(layout3);
-
-		sphere->GetVertexArray()->AddInstancedVertexBuffer(MatrixVBs, 4);
+			sphere->GetVertexArray()->AddInstancedVertexBuffer(MatrixVB, 4);
+		}
 	}
 
 	void DebugPoint::DrawUpdatePoint(glm::vec3 position, glm::vec3 rotation, glm::vec3 color, float size, PointType type)

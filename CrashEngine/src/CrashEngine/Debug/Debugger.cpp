@@ -30,6 +30,7 @@ namespace CrashEngine {
 	void Debugger::OnFirstFrame()
 	{
 		debugPoints->OnFirstFrame();
+		debugLines->OnFirstFrame();
 	}
 
 }
