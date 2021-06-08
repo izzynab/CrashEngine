@@ -15,10 +15,11 @@ namespace CrashEngine {
 
         inline std::shared_ptr<VertexArray>& GetVertexArray() { return SphereVA; }
 	private:
+		unsigned int sphereVAO = 0;
+		unsigned int indexCount = 0;
+
 		std::shared_ptr<VertexArray> SphereVA;
 		std::shared_ptr<IndexBuffer> SphereIB;
-
-        unsigned int indexCount = 0;
 	};
 
 	class Cube
@@ -31,6 +32,8 @@ namespace CrashEngine {
 
         inline std::shared_ptr<VertexArray>& GetVertexArray() { return cubeVA; }
 	protected:
+		unsigned int cubeVAO = 0;
+
         std::vector<float> vertices = {
             // back face
            -1.0f, -1.0f, -1.0f,  0.0f,  0.0f, -1.0f, 0.0f, 0.0f, // bottom-left
@@ -87,6 +90,9 @@ namespace CrashEngine {
         void RenderQuad();
 
     private:
+        unsigned int sphereVAO = 0;
+        unsigned int indexCount = 0;
+
         std::vector<float> vertices = {
             // positions        // texture Coords
             -1.0f,  1.0f, 0.0f, 0.0f, 1.0f,
@@ -99,5 +105,6 @@ namespace CrashEngine {
         };
 
         std::shared_ptr<VertexArray> QuadVA;
+        std::shared_ptr<IndexBuffer> QuadIB;
     };
 }

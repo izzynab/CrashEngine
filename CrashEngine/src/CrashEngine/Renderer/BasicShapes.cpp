@@ -101,7 +101,7 @@ namespace CrashEngine {
 
     void Sphere::RenderInstancedSphere(uint32_t amount)
     {
-        Renderer::SubmitInstancedIndexed(SphereVA, true, amount);
+        Renderer::SubmitInstanced(SphereVA, true, amount);
     }
 
     Cube::Cube()
@@ -137,6 +137,7 @@ namespace CrashEngine {
     Quad::Quad()
     {
         QuadVA.reset(VertexArray::Create());
+        //cubeIB.reset(IndexBuffer::Create(&indices[0], indices.size()));
 
         std::shared_ptr<VertexBuffer> QuadVB;
         QuadVB.reset(VertexBuffer::Create(&vertices[0], vertices.size() * sizeof(float)));

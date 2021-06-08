@@ -14,7 +14,7 @@ namespace CrashEngine {
 
 	void Renderer::BeginScene()
 	{
-		
+		Application::Get().GetDebugger().ClearUpdateLines();
 	}
 
 	void Renderer::RenderScene(std::shared_ptr<RenderProperties>& renderProperties, std::vector<std::shared_ptr<Framebuffer>>& renderFramebuffers, Timestep ts)
@@ -153,22 +153,16 @@ namespace CrashEngine {
 		RenderCommand::DrawInstancedTriangles(vertexArray, trianglesNumber, amount);
 	}
 
-	void Renderer::SubmitInstancedIndexed(const std::shared_ptr<VertexArray>& vertexArray, unsigned int amount, bool strip)
+	void Renderer::SubmitInstanced(const std::shared_ptr<VertexArray>& vertexArray, unsigned int amount, bool strip)
 	{
 		vertexArray->Bind();
 		RenderCommand::DrawInstancedIndexed(vertexArray, amount, strip);
 	}
 
-	void Renderer::SubmitInstancedLine(const std::shared_ptr<VertexArray>& vertexArray, float width, int amount)
+	void Renderer::SubmitLine(const std::shared_ptr<VertexArray>& vertexArray, int count, float width)
 	{
 		vertexArray->Bind();
-		RenderCommand::DrawInstancedLine(vertexArray, width,amount);
-	}
-
-	void Renderer::SubmitLine(const std::shared_ptr<VertexArray>& vertexArray,  float width)
-	{
-		vertexArray->Bind();
-		RenderCommand::DrawLine(vertexArray, width);
+		RenderCommand::DrawLine(vertexArray,count, width);
 	}
 
 	/*void Renderer::DrawModel(Model* model, Shader* shader)
