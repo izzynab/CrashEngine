@@ -107,7 +107,6 @@
     <ClInclude Include="include\assimp\version.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="include\assimp\.editorconfig" />
     <None Include="include\assimp\config.h.in" />
   </ItemGroup>
 </Project>

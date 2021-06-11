@@ -16,6 +16,8 @@
 #include <GLFW/glfw3.h>
 #include <glad/glad.h>
 
+#include "ImGuiFileDialog.h"
+
 namespace CrashEngine {
 
 	ImGuiLayer::ImGuiLayer()
@@ -219,6 +221,8 @@ namespace CrashEngine {
 	void ImGuiLayer::WindowMetrics()
 	{
 		ImGui::ShowMetricsWindow();
+
+		//ImGuiFileDialog::Instance();
 		
 	}
 

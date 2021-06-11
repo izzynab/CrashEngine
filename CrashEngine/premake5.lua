@@ -43,6 +43,7 @@ project "CrashEngine"
 		"%{IncludeDir.entt}",
 		"%{IncludeDir.yaml_cpp}",
 		"%{IncludeDir.ImGuizmo}",
+		"%{IncludeDir.ImGuiFileDialog}",
 	}
 
 	links 

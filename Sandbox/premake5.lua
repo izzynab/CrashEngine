@@ -28,7 +28,7 @@ project "Sandbox"
 		"%{IncludeDir.stb}",
 		"%{IncludeDir.assimp}",
 		"%{IncludeDir.ImGuizmo}",
-
+		"%{IncludeDir.ImGuiFileDialog}",
 
 	}
 

@@ -8,6 +8,8 @@
 #include "ImGuizmo.h"
 #include "CrashEngine/Math/Math.h"
 
+//#include "ImGuiFileDialog/ImGuiFileDialog.h"
+
 
 namespace CrashEngine {
 
@@ -82,11 +84,11 @@ namespace CrashEngine {
 			}
 		}
 
-		Application::Get().GetDebugger().DrawFrustum(renderProperties->GetCamera(0).get());
+		//Application::Get().GetDebugger().DrawFrustum(renderProperties->GetCamera(0).get());
 
-		Application::Get().GetDebugger().DrawUpdateLine(glm::vec3(0), glm::vec3(10));
+		//Application::Get().GetDebugger().DrawUpdateLine(glm::vec3(0), glm::vec3(10));
 		
-		Application::Get().GetDebugger().DrawUpdatePoint(glm::vec3(0));
+		//Application::Get().GetDebugger().DrawUpdatePoint(glm::vec3(0));
 
 		if(!viewName.empty()) editorCameraController->OnUpdate(ts);
 
