@@ -263,7 +263,6 @@ namespace CrashEngine {
 		{
 			if (ImGui::MenuItem("Camera"))
 			{
-				//todo:change scene camera system
 				if (!m_SelectionContext.HasComponent<CameraComponent>())
 					m_SelectionContext.AddComponent<CameraComponent>();
 				else
@@ -284,7 +283,9 @@ namespace CrashEngine {
 					}
 				}
 				else
+				{
 					CE_CORE_ERROR("This entity already has the Mesh Component!");
+				}
 
 				
 				ImGui::CloseCurrentPopup();
@@ -325,14 +326,14 @@ namespace CrashEngine {
 				DrawVec3Control("Rotation", rotation);
 				component.Camera->UpdateRotation(rotation);*/
 
-				glm::vec3 rotation = glm::degrees(component.Camera->Rotation);
+				/*glm::vec3 rotation = glm::degrees(component.Camera->Rotation);
 				DrawVec3Control("Rotation", rotation);
 				component.Camera->UpdateRotation(glm::radians(rotation));
 				//component.Camera->Rotation = glm::radians(rotation);
 				
 				glm::vec3 position = component.Camera->Position;
 				DrawVec3Control("Position", position);
-				component.Camera->UpdatePosition(position);
+				component.Camera->UpdatePosition(position);*/
 
 
 				ImGui::Checkbox("Primary", &component.Primary); 

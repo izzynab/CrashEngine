@@ -7,7 +7,8 @@
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/quaternion.hpp>
 
-#include "SceneCamera.h"
+#include "CrashEngine/Renderer/Camera.h"
+//#include "SceneCamera.h"
 #include "CrashEngine/Renderer/Texture.h"
 
 namespace CrashEngine {
@@ -45,13 +46,13 @@ namespace CrashEngine {
 
 	struct CameraComponent
 	{
-		std::shared_ptr<SceneCamera> Camera;
+		std::shared_ptr<Camera> camera;
 		bool Primary = true; 
 		bool DrawFrustum = false;
 
 		CameraComponent()
 		{
-			Camera.reset(new SceneCamera());
+			camera.reset(new Camera(glm::vec3(0.f),800,800));
 		}
 		CameraComponent(const CameraComponent&) = default;
 	};

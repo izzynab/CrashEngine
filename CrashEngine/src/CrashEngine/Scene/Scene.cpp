@@ -113,6 +113,7 @@ namespace CrashEngine {
 			//todo: implement instanced mesh render
 
 		}
+
 	}
 
 	void Scene::DepthRender(Shader* shader)
@@ -155,9 +156,7 @@ namespace CrashEngine {
 	template<>
 	void Scene::OnComponentAdded<CameraComponent>(Entity entity, CameraComponent& component)
 	{
-		//todo: better scene camera managment
-		component.Camera->SetSize(1000, 1000);
-		component.Camera->SetPosition(glm::vec3(0));
+
 	}
 
 	template<>

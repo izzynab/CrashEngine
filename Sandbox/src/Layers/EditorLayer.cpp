@@ -40,7 +40,7 @@ namespace CrashEngine {
 		EnvironmentPanel.reset(new SceneEnvironmentPanel(renderProperties->GetScene()));
 
 		SceneSerializer serializer(renderProperties->GetScene());
-		//serializer.Deserialize("C:/EngineDev/CrashEngine/Scenes/basic.crash");
+		//serializer.Deserialize("C:/EngineDev/CrashEngine/Scenes/test.crash");
 
 
 		//---------------------Test space--------------------------------------------------------
@@ -74,14 +74,20 @@ namespace CrashEngine {
 	{
 		Renderer::BeginScene();
 
-		auto camera = renderProperties->GetScene()->m_Registry.view<TagComponent,CameraComponent>();
-
-		for (auto entity : camera)
+		auto cameraview = renderProperties->GetScene()->m_Registry.view<TransformComponent, CameraComponent>();
+		//todo: make better camera transform managing
+		for (auto entity : cameraview)
 		{
-			if (camera.get<CameraComponent>(entity).DrawFrustum == true)
+			if (cameraview.get<CameraComponent>(entity).DrawFrustum == true)
 			{
-				Application::Get().GetDebugger().DrawFrustum(camera.get<CameraComponent>(entity).Camera.get());
+				Application::Get().GetDebugger().DrawFrustum(cameraview.get<CameraComponent>(entity).camera.get());
 			}
+
+			auto& camera = cameraview.get<CameraComponent>(entity);
+			auto& transform = cameraview.get<TransformComponent>(entity);
+
+			camera.camera->SetPosition(transform.Translation);
+			camera.camera->SetRotation(glm::radians(transform.Rotation));
 		}
 
 		//Application::Get().GetDebugger().DrawFrustum(renderProperties->GetCamera(0).get());
@@ -152,7 +158,7 @@ namespace CrashEngine {
 				if (ImGui::MenuItem("Save")) 
 				{
 					std::optional<std::string> filepath = renderProperties->GetScene()->filepath;
-					if (filepath)
+					if (filepath > " ")
 					{
 						SceneSerializer serializer(renderProperties->GetScene());
 						serializer.Serialize(filepath.value());
