@@ -26,7 +26,6 @@ namespace CrashEngine {
 
 		for (int i = 0; i < renderProperties->GetViewsNumber(); i++)
 		{
-
 			auto DefferedFramebuffer = renderProperties->GetDefferedFramebuffer(i);
 			auto camera = renderProperties->GetCamera(i);
 			std::shared_ptr<Framebuffer> renderFramebuffer = renderFramebuffers[i];
@@ -112,7 +111,7 @@ namespace CrashEngine {
 			//-----------Debug lines---------------------
 			renderFramebuffer->Bind();
 			//auto& camera = camera;
-			Application::Get().GetDebugger().OnUpdate(*camera);
+			Application::Get().GetDebugger().OnUpdate(*camera, (i == renderProperties->GetViewsNumber() - 1) ? true : false);
 			renderFramebuffer->Unbind();
 
 		}

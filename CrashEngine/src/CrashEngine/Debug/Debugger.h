@@ -13,12 +13,13 @@ namespace CrashEngine {
 
 		void Begin();
 
-		void OnUpdate(Camera& camera);
+		void OnUpdate(Camera& camera, bool erasePoints = true);
 
 		void OnFirstFrame();
 
 		inline void DrawUpdateLine(glm::vec3 startVec, glm::vec3 endVec, glm::vec3 color = glm::vec3(0.1f, 0.1f, 0.9f), float width = 3.f) { return debugLines->DrawUpdateLine(startVec, endVec, color, width); }
 		inline void DrawFrustum(Camera* camera) { debugLines->DrawFrustum(*camera); }
+		inline void DrawFrustum(const glm::mat4& projection, const glm::mat4& view) { debugLines->DrawFrustum(projection, view); }
 		inline void AddLine(glm::vec3 startVec, glm::vec3 endVec, glm::vec3 color = glm::vec3(0.1f, 0.1f, 0.9f), float width = 3.f) { return debugLines->AddLine(startVec, endVec, color, width); }
 		inline void AddGrid(const float gridSize = 60.f) { return debugLines->AddGrid(gridSize); }
 

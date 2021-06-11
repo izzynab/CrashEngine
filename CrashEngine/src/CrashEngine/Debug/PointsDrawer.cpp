@@ -12,23 +12,23 @@ namespace CrashEngine {
 		sphere.reset(new Sphere());	
 	}
 
-	void DebugPoint::OnUpdate(Camera& camera)
+	void DebugPoint::OnUpdate(Camera& camera, bool erasePoints)
 	{			
 		instancedShader->Bind();
 		cube->RenderInstancedCube(cubeDetails.Number);
 		//sphere->RenderInstancedSphere(sphereDetails.Number);//todo: fix sphere points
-
+		
 		int size = points.size();
 		for (int i = 0; i < size; i++)
 		{
 			shader->Bind();
-			shader->SetUniformVec3("color", points.front().color);
-			glm::mat4 rotation = glm::toMat4(glm::quat(points.front().rotation));
-			glm::mat4 model = glm::translate(glm::mat4(1.0f), points.front().position)
+			shader->SetUniformVec3("color", points[i].color);
+			glm::mat4 rotation = glm::toMat4(glm::quat(points[i].rotation));
+			glm::mat4 model = glm::translate(glm::mat4(1.0f), points[i].position)
 				* rotation
-				* glm::scale(glm::mat4(1.0f), glm::vec3(points.front().size));
+				* glm::scale(glm::mat4(1.0f), glm::vec3(points[i].size));
 			shader->SetUniformMat4("model", model);
-			switch (points.front().type)
+			switch (points[i].type)
 			{
 			case PointType::Cube:
 				cube->RenderCube();
@@ -37,9 +37,11 @@ namespace CrashEngine {
 				sphere->RenderSphere();
 				break;
 			}
-
-			points.pop();
+		
+			if(erasePoints)points.pop_front();
 		}
+
+		
 	}
 
 	void DebugPoint::OnFirstFrame()
@@ -93,7 +95,7 @@ namespace CrashEngine {
 	{
 		Point point{ position,rotation,color,size,type };
 
-		points.push(point);
+		points.push_back(point);
 	}
 
 	void DebugPoint::AddPoint(glm::vec3 position, glm::vec3 rotation, glm::vec3 color, float size, PointType type)

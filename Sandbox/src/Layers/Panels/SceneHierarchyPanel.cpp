@@ -263,6 +263,7 @@ namespace CrashEngine {
 		{
 			if (ImGui::MenuItem("Camera"))
 			{
+				//todo:change scene camera system
 				if (!m_SelectionContext.HasComponent<CameraComponent>())
 					m_SelectionContext.AddComponent<CameraComponent>();
 				else

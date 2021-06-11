@@ -59,12 +59,13 @@ namespace CrashEngine {
 	public:
 		DebugLine();
 
-		void OnUpdate(Camera& camera);
+		void OnUpdate(Camera& camera, bool erasePoints);
 		void OnFirstFrame();
 
 		void DrawUpdateLine(glm::vec3 startVec, glm::vec3 endVec, glm::vec3 color , float width);
 
 		void DrawFrustum(Camera& camera);
+		void DrawFrustum(const glm::mat4& projection,const glm::mat4& view);
 
 		void AddLine(glm::vec3 startVec, glm::vec3 endVec, glm::vec3 color , float width);
 		
@@ -76,7 +77,7 @@ namespace CrashEngine {
 		std::vector<Line> lines;
 		std::vector<LinesSet> linesSet;
 
-		std::queue<Line> updateLines;
+		std::deque<Line> updateLines;
 
 		int UpdateLinesNumber = 0;
 	};

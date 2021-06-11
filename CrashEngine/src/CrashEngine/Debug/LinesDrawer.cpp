@@ -15,7 +15,7 @@ namespace CrashEngine {
 		shader = Shader::Create("lines.vert", "lines.frag","lines.geom");
 	}
 
-	void DebugLine::OnUpdate(Camera& camera)
+	void DebugLine::OnUpdate(Camera& camera, bool erasePoints)
 	{
 		for (int i = 0; i < lines.size(); i++)
 		{
@@ -38,7 +38,8 @@ namespace CrashEngine {
 			shader->SetUniformFloat("lineWidth", updateLines.front().width);
 
 			Renderer::SubmitLine(updateLines.front().VAO, 2, updateLines.front().width);
-			updateLines.pop();
+
+			if (erasePoints)updateLines.pop_front();
 		}
 
 		for (int i = 0; i < linesSet.size(); i++)
@@ -82,12 +83,18 @@ namespace CrashEngine {
 		line.width = width;
 		line.color = color;
 
-		updateLines.push(line);
+		updateLines.push_back(line);
 	}
 
 	void DebugLine::DrawFrustum(Camera& camera)
 	{
-		glm::mat4 inv = glm::inverse(camera.GetProjectionMatrix() * camera.GetViewMatrix());
+		//glm::mat4 inv = glm::inverse(camera.GetProjectionMatrix() * camera.GetViewMatrix());
+		DrawFrustum(camera.GetProjectionMatrix(), camera.GetViewMatrix());
+	}
+
+	void DebugLine::DrawFrustum(const glm::mat4& projection,const glm::mat4& view)
+	{
+		glm::mat4 inv = glm::inverse(projection * view);
 
 		glm::vec4 f[8u] =
 		{
@@ -117,12 +124,12 @@ namespace CrashEngine {
 		DrawUpdateLine(frustumCorners[0], frustumCorners[2], glm::vec3(0.8f, 0.8f, 0.8f), 1.f);
 		DrawUpdateLine(frustumCorners[3], frustumCorners[1], glm::vec3(0.8f, 0.8f, 0.8f), 1.f);
 		DrawUpdateLine(frustumCorners[3], frustumCorners[2], glm::vec3(0.8f, 0.8f, 0.8f), 1.f);
-																						  
+
 		DrawUpdateLine(frustumCorners[4], frustumCorners[5], glm::vec3(0.8f, 0.8f, 0.8f), 1.f);
 		DrawUpdateLine(frustumCorners[4], frustumCorners[6], glm::vec3(0.8f, 0.8f, 0.8f), 1.f);
 		DrawUpdateLine(frustumCorners[7], frustumCorners[5], glm::vec3(0.8f, 0.8f, 0.8f), 1.f);
 		DrawUpdateLine(frustumCorners[7], frustumCorners[6], glm::vec3(0.8f, 0.8f, 0.8f), 1.f);
-																						  
+
 		DrawUpdateLine(frustumCorners[0], frustumCorners[4], glm::vec3(0.8f, 0.8f, 0.8f), 1.f);
 		DrawUpdateLine(frustumCorners[1], frustumCorners[5], glm::vec3(0.8f, 0.8f, 0.8f), 1.f);
 		DrawUpdateLine(frustumCorners[3], frustumCorners[7], glm::vec3(0.8f, 0.8f, 0.8f), 1.f);

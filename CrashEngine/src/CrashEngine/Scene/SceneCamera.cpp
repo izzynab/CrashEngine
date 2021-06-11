@@ -17,7 +17,7 @@ namespace CrashEngine {
 		direction.y = sin(glm::radians(cameraRotation.y));
 		direction.z = sin(glm::radians(cameraRotation.x)) * cos(glm::radians(cameraRotation.y));*/
 
-		SetRotation(cameraRotation);
+		SetRotation(glm::normalize(cameraRotation));
 	}
 
 	void SceneCamera::UpdateRotation(glm::vec3 cameraRotation, glm::vec3 entityRotation)

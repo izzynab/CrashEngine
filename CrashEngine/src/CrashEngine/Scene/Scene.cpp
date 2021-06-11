@@ -155,7 +155,9 @@ namespace CrashEngine {
 	template<>
 	void Scene::OnComponentAdded<CameraComponent>(Entity entity, CameraComponent& component)
 	{
-		//component.Camera.SetViewportSize(m_ViewportWidth, m_ViewportHeight);
+		//todo: better scene camera managment
+		component.Camera->SetSize(1000, 1000);
+		component.Camera->SetPosition(glm::vec3(0));
 	}
 
 	template<>

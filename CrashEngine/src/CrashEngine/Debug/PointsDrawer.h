@@ -39,13 +39,14 @@ namespace CrashEngine {
 	public:
 		DebugPoint();
 
-		void OnUpdate(Camera& camera);
+		void OnUpdate(Camera& camera,bool erasePoints);
 
 		void OnFirstFrame();
 
 		void DrawUpdatePoint(glm::vec3 position, glm::vec3 rotation, glm::vec3 color, float size, PointType type);
 
 		void AddPoint(glm::vec3 position, glm::vec3 rotation, glm::vec3 color, float size, PointType type);
+
 
 	private:
 		std::shared_ptr<Sphere> sphere;
@@ -57,7 +58,7 @@ namespace CrashEngine {
 		Shader* instancedShader;
 		Shader* shader;
 
-		std::queue<Point> points;//todo: maybe use hash map to find has any value of point changed
+		std::deque<Point> points;//todo: maybe use hash map to find has any value of point changed
 	};
 
 }

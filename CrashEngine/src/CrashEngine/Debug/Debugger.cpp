@@ -21,10 +21,10 @@ namespace CrashEngine {
 		return new Debugger();
 	}
 
-	void Debugger::OnUpdate(Camera& camera)
+	void Debugger::OnUpdate(Camera& camera, bool erasePoints)
 	{
-		debugLines->OnUpdate(camera);
-		debugPoints->OnUpdate(camera);
+		debugLines->OnUpdate(camera, erasePoints);
+		debugPoints->OnUpdate(camera, erasePoints);
 	}
 
 	void Debugger::OnFirstFrame()
