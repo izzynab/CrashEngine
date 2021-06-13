@@ -94,7 +94,7 @@ namespace CrashEngine {
 			if (entity.HasComponent<Mesh>())
 			{
 				auto& component = entity.GetComponent<Mesh>();
-				MaterialPanel->SetEntity(&component);
+				MaterialPanel->SetEntity(component);
 
 				CE_CORE_WARN("selected mesh entity");
 			}
@@ -280,6 +280,7 @@ namespace CrashEngine {
 						Mesh& mesh = Mesh(filepath.value());
 						mesh.directory = filepath.value();
 						m_SelectionContext.AddComponent<Mesh>(mesh);
+						MaterialPanel->SetEntity(mesh);
 					}
 				}
 				else

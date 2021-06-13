@@ -19,9 +19,10 @@ namespace CrashEngine {
 		roughness_loaded = texcreator->CreateTexture(200, 200, glm::vec3(0.2, 0.2, 0.2));
 	}
 
-	void MaterialPanel::SetEntity(Mesh* mesh)
+	void MaterialPanel::SetEntity(Mesh& mesh)
 	{
-		m_Mesh = mesh;
+		//std::make_shared<Mesh>(mesh);
+		m_Mesh = std::make_shared<Mesh>(mesh);
 
 		if(m_Mesh->material->albedaLoad)albedo_loaded = m_Mesh->material->albedo;
 		else albedo_loaded = texcreator->CreateTexture(200, 200, glm::vec3(0.2, 0.2, 0.2));

@@ -10,11 +10,13 @@ project "ImGuiFileDialog"
     {
         "ImGuiFileDialog.cpp",
         "ImGuiFileDialog.h",
+        "ImGuiFileDialogConfig.h",
+        "dirent/dirent.h"
     }
 
-	includedirs
-	{
-		""
+    includedirs
+	{	
+		
 	}
 
     filter "system:windows"

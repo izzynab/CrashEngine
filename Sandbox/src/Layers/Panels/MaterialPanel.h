@@ -10,12 +10,12 @@ namespace CrashEngine {
 	public:
 		MaterialPanel();
 
-		void SetEntity(Mesh* mesh);
+		void SetEntity(Mesh& mesh);
 
 		void OnImGuiRender();
 
 	private:
-		Mesh* m_Mesh = NULL;
+		std::shared_ptr<Mesh> m_Mesh;
 
 		std::shared_ptr<Texture2D> albedo_loaded;
 		std::shared_ptr<Texture2D> metallic_loaded;

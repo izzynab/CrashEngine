@@ -3,7 +3,7 @@ Filepath: C:\EngineDev\CrashEngine\Scenes\test.crash
 Entities:
   - Entity: 12837192831273
     TagComponent:
-      Tag: Empty Entity
+      Tag: camera
     TransformComponent:
       Translation: [3.0999999, 7.80000019, 0]
       Rotation: [0.8779006, 2.56563401, 0.0698131695]
@@ -34,8 +34,98 @@ Entities:
     CameraComponent:
       Primary: true
       Draw Frustum: true
+  - Entity: 12837192831273
+    TagComponent:
+      Tag: Empty Entity
+    TransformComponent:
+      Translation: [0, 3.33664036, 6.48318529]
+      Rotation: [0, 0, 0]
+      Scale: [15.1167183, 0.301124454, 16.6591339]
+    Mesh:
+      Directory: C:\EngineDev\CrashEngine\Assets\Basic Shapes\cube.obj
+      Material:
+        Name: default_material
+        Albedo:
+          path: ""
+          albedo use: false
+          albedo color: [0.200000003, 0.200000003, 0.200000003, 0]
+          albedo load: false
+        Metallic:
+          path: ""
+          metallic use: false
+          metallic color: 0.5
+          metallic load: false
+        Roughness:
+          path: ""
+          roughness use: false
+          roughness color: 0.5
+          roughness load: false
+        Normal:
+          path: ""
+        Ao:
+          path: ""
+  - Entity: 12837192831273
+    TagComponent:
+      Tag: Empty Entity
+    TransformComponent:
+      Translation: [6.88923073, 6.41673708, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    Mesh:
+      Directory: C:\EngineDev\CrashEngine\Assets\Basic Shapes\sphere.obj
+      Material:
+        Name: default_material
+        Albedo:
+          path: ""
+          albedo use: false
+          albedo color: [0.200000003, 0.200000003, 0.200000003, 0]
+          albedo load: false
+        Metallic:
+          path: ""
+          metallic use: false
+          metallic color: 0.5
+          metallic load: false
+        Roughness:
+          path: ""
+          roughness use: false
+          roughness color: 0.5
+          roughness load: false
+        Normal:
+          path: ""
+        Ao:
+          path: ""
+  - Entity: 12837192831273
+    TagComponent:
+      Tag: Empty Entity
+    TransformComponent:
+      Translation: [-7.87664509, 5.60757828, 11.3679571]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    Mesh:
+      Directory: C:\EngineDev\CrashEngine\Assets\Basic Shapes\sphere.obj
+      Material:
+        Name: default_material
+        Albedo:
+          path: ""
+          albedo use: false
+          albedo color: [0.200000003, 0.200000003, 0.200000003, 0]
+          albedo load: false
+        Metallic:
+          path: ""
+          metallic use: false
+          metallic color: 0.5
+          metallic load: false
+        Roughness:
+          path: ""
+          roughness use: false
+          roughness color: 0.5
+          roughness load: false
+        Normal:
+          path: ""
+        Ao:
+          path: ""
 Directional light:
-  rotation: [0, 0, 0]
+  rotation: [2.18166161, 1.4486233, 0]
   color: [1, 1, 1]
   intensity: 50
 Sky light:

@@ -54,6 +54,7 @@ project "CrashEngine"
 		"assimp",
 		"yaml-cpp",
 		"opengl32.lib",
+	
 		
 	}
 	

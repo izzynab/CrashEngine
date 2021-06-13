@@ -40,7 +40,7 @@ namespace CrashEngine {
 		EnvironmentPanel.reset(new SceneEnvironmentPanel(renderProperties->GetScene()));
 
 		SceneSerializer serializer(renderProperties->GetScene());
-		//serializer.Deserialize("C:/EngineDev/CrashEngine/Scenes/test.crash");
+		serializer.Deserialize("C:/EngineDev/CrashEngine/Scenes/test.crash");
 
 
 		//---------------------Test space--------------------------------------------------------
@@ -87,7 +87,14 @@ namespace CrashEngine {
 			auto& transform = cameraview.get<TransformComponent>(entity);
 
 			camera.camera->SetPosition(transform.Translation);
-			camera.camera->SetRotation(glm::radians(transform.Rotation));
+
+			glm::vec3 direction;
+			direction.x = cos(-transform.Rotation.y) * cos(transform.Rotation.z);
+			direction.y = sin(transform.Rotation.z);
+			direction.z = sin(-transform.Rotation.y) * cos(transform.Rotation.z);
+			//todo: fix scene camera rotation
+			camera.camera->SetRotation(glm::normalize(direction));
+
 		}
 
 		//Application::Get().GetDebugger().DrawFrustum(renderProperties->GetCamera(0).get());
