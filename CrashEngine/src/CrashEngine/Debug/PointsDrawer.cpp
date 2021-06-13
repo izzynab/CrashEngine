@@ -22,13 +22,13 @@ namespace CrashEngine {
 		for (int i = 0; i < size; i++)
 		{
 			shader->Bind();
-			shader->SetUniformVec3("color", points[i].color);
-			glm::mat4 rotation = glm::toMat4(glm::quat(points[i].rotation));
-			glm::mat4 model = glm::translate(glm::mat4(1.0f), points[i].position)
+			shader->SetUniformVec3("color", points.front().color);
+			glm::mat4 rotation = glm::toMat4(glm::quat(points.front().rotation));
+			glm::mat4 model = glm::translate(glm::mat4(1.0f), points.front().position)
 				* rotation
-				* glm::scale(glm::mat4(1.0f), glm::vec3(points[i].size));
+				* glm::scale(glm::mat4(1.0f), glm::vec3(points.front().size));
 			shader->SetUniformMat4("model", model);
-			switch (points[i].type)
+			switch (points.front().type)
 			{
 			case PointType::Cube:
 				cube->RenderCube();

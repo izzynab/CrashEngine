@@ -89,12 +89,12 @@ namespace CrashEngine {
 	void DebugLine::DrawFrustum(Camera& camera)
 	{
 		//glm::mat4 inv = glm::inverse(camera.GetProjectionMatrix() * camera.GetViewMatrix());
-		DrawFrustum(camera.GetProjectionMatrix(), camera.GetViewMatrix());
+		DrawFrustum(camera.GetProjectionMatrix() * camera.GetViewMatrix());
 	}
 
-	void DebugLine::DrawFrustum(const glm::mat4& projection,const glm::mat4& view)
+	void DebugLine::DrawFrustum(const glm::mat4& projectionView)
 	{
-		glm::mat4 inv = glm::inverse(projection * view);
+		glm::mat4 inv = glm::inverse(projectionView);
 
 		glm::vec4 f[8u] =
 		{

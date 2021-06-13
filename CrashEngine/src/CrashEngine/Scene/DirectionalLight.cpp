@@ -121,7 +121,7 @@ namespace CrashEngine
 				glm::vec4 corner = glm::vec4(frustumCorners[i],1);
 				corner = lightView * corner;
 
-				//frustumCorners[i] = lightView * glm::vec4(frustumCorners[i],1);
+				frustumCorners[i] = lightView * glm::vec4(frustumCorners[i],1);
 
 				minX = glm::min(minX, corner.x);
 				maxX = glm::max(maxX, corner.x);
@@ -137,35 +137,11 @@ namespace CrashEngine
 
 			mCascadeWorldViewProj[i] = glm::ortho(minX, maxX, minY, maxY, 0.f, distz);
 
-			//near face
-			/*Application::Get().GetDebugger().DrawUpdateLine(frustumCorners[0], frustumCorners[1]);
-			Application::Get().GetDebugger().DrawUpdateLine(frustumCorners[2], frustumCorners[3]);
-			Application::Get().GetDebugger().DrawUpdateLine(frustumCorners[0], frustumCorners[2]);
-			Application::Get().GetDebugger().DrawUpdateLine(frustumCorners[1], frustumCorners[3]);
-
-			//far face
-			Application::Get().GetDebugger().DrawUpdateLine(frustumCorners[4], frustumCorners[5]);
-			Application::Get().GetDebugger().DrawUpdateLine(frustumCorners[6], frustumCorners[7]);
-			Application::Get().GetDebugger().DrawUpdateLine(frustumCorners[4], frustumCorners[6]);
-			Application::Get().GetDebugger().DrawUpdateLine(frustumCorners[5], frustumCorners[7]);
-
-			//connection
-			Application::Get().GetDebugger().DrawUpdateLine(frustumCorners[0], frustumCorners[4]);
-			Application::Get().GetDebugger().DrawUpdateLine(frustumCorners[1], frustumCorners[5]);
-			Application::Get().GetDebugger().DrawUpdateLine(frustumCorners[2], frustumCorners[6]);
-			Application::Get().GetDebugger().DrawUpdateLine(frustumCorners[3], frustumCorners[7]);
-
-
-			Application::Get().GetDebugger().DrawUpdatePoint(centroid, glm::vec3(0.7f, 0.2f, 0.4f), 1.f, PointType::Sphere);
-			Application::Get().GetDebugger().DrawUpdatePoint(lightPosition, glm::vec3(0.9f, 0.2f, 0.1f), 1.f, PointType::Cube);*/
-
-			//CE_CORE_TRACE("minX: {0} maxX: {1}", minX, maxX);
-			//CE_CORE_TRACE("minY: {0} maxY: {1}", minY, maxY);
-			//CE_CORE_TRACE("minZ: {0} maxZ: {1}", minZ, maxZ);
 		}
 
-
-
+		Application::Get().GetDebugger().DrawFrustum(mCascadeWorldViewProj[0]);
+		Application::Get().GetDebugger().DrawFrustum(mCascadeWorldViewProj[1]);
+		Application::Get().GetDebugger().DrawFrustum(mCascadeWorldViewProj[2]);
 
 		//-------------------------------------------------
 		depthMapShader->Bind();
