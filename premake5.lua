@@ -32,6 +32,7 @@ group "Dependencies"
 	include "CrashEngine/vendor/imgui"
 	include "CrashEngine/vendor/assimp"
 	include "CrashEngine/vendor/yaml-cpp"
+	include "CrashEngine/vendor/ImGuiFileDialog"
 group ""
 
 

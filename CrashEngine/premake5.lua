@@ -53,6 +53,7 @@ project "CrashEngine"
 		"ImGui",
 		"assimp",
 		"yaml-cpp",
+		"ImGuiFileDialog",
 		"opengl32.lib",
 	
 		

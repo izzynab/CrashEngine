@@ -781,6 +781,9 @@
     <ProjectReference Include="vendor\yaml-cpp\yaml-cpp.vcxproj">
       <Project>{88F1A057-74BE-FB62-9DD7-E90A890331F1}</Project>
     </ProjectReference>
+    <ProjectReference Include="vendor\ImGuiFileDialog\ImGuiFileDialog.vcxproj">
+      <Project>{D061270B-3CED-94CF-45FE-17C4B108F1CF}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
