@@ -39,23 +39,23 @@ namespace CrashEngine
 	void DirectionalLight::DrawCSM(Camera* camera,Shader*defferedShader)
 	{
 		//todo: make shadows
+		glm::vec3 rot = glm::vec3(
+			glm::cos(rotation.x) * glm::sin(rotation.y),
+			glm::sin(rotation.x) * glm::sin(rotation.y),
+			glm::cos(rotation.y));
 
 		glm::vec3 up = glm::vec3(0.0f, 1.f, 0.0f);
 		glm::vec3 right = glm::vec3(1.0f, 0.f, 0.0f);
 
 		float fov = camera->fov;
 		float AspectRatio = camera->ScreenWidth / camera->ScreenHeight;
-		float AspectRatio1 = camera->ScreenHeight / camera->ScreenWidth;
-		float tanHalfHFOV = tanf(glm::radians(fov / 2.0f));
-		float tanHalfVFOV = tanf(glm::radians((fov * AspectRatio1) / 2.0f));
+		//float AspectRatio1 = camera->ScreenHeight / camera->ScreenWidth;
+		//float tanHalfHFOV = tanf(glm::radians(fov / 2.0f));
+		//float tanHalfVFOV = tanf(glm::radians((fov * AspectRatio1) / 2.0f));
 
-
-		glm::vec3 rot = glm::vec3(
-			glm::cos(rotation.x) * glm::sin(rotation.y),
-			glm::sin(rotation.x) * glm::sin(rotation.y),
-			glm::cos(rotation.y));
-
+		//which should i choose?
 		glm::mat4 projViewMatix = camera->GetProjectionMatrix() * camera->GetViewMatrix();
+		//glm::mat4 projViewMatix = camera->GetViewMatrix() * camera->GetProjectionMatrix();
 
 		//glm::mat4 lightView = glm::lookAt(camera->GetPosition() + rot,camera->GetPosition(),up);
 
@@ -139,32 +139,17 @@ namespace CrashEngine
 
 		}
 
-		Application::Get().GetDebugger().DrawFrustum(mCascadeWorldViewProj[0]);
-		Application::Get().GetDebugger().DrawFrustum(mCascadeWorldViewProj[1]);
-		Application::Get().GetDebugger().DrawFrustum(mCascadeWorldViewProj[2]);
-
-		//-------------------------------------------------
-		depthMapShader->Bind();
-		depthMapShader->SetUniformFloat("near_plane", near_plane);
-		depthMapShader->SetUniformFloat("far_plane", far_plane);
-
-		glm::mat4 lightProjection = glm::ortho(-size, size, -size, size, near_plane, far_plane);
-
-		//glm::mat4 lightSpaceMatrix = lightProjection *lightView;
-		//------------------------------------------------
-
 
 		for (int i = 0; i < 3; i++)
 		{
 			glm::mat4 lightSpaceMatrix =  mCascadeWorldViewProj[i];
 
+			defferedShader->Bind();
+			defferedShader->SetUniformMat4("lightSpaceMatrix[" + std::to_string(i) + "]", lightSpaceMatrix);
+			defferedShader->SetUniformFloat("cascadeEndClipSpace[" + std::to_string(i) + "]", m_cascadeEnd[i + 1]);
 			
 			depthMapShader->Bind();
 			depthMapShader->SetUniformMat4("lightSpaceMatrix", lightSpaceMatrix);
-
-			defferedShader->Bind();
-			defferedShader->SetUniformMat4("lightSpaceMatrix[" + std::to_string(i) + "]", lightSpaceMatrix);
-			defferedShader->SetUniformFloat("cascadeEndClipSpace[" + std::to_string(i) + "]", m_cascadeEnd[i+1]);
 
 			RenderCommand::SetViewport(1024, 1024);
 			depthFramebuffer->Bind();
@@ -176,6 +161,10 @@ namespace CrashEngine
 		}
 		depthFramebuffer->Unbind();
 
+
+		//Application::Get().GetDebugger().DrawFrustum(mCascadeWorldViewProj[0]);
+		//Application::Get().GetDebugger().DrawFrustum(mCascadeWorldViewProj[1]);
+		//Application::Get().GetDebugger().DrawFrustum(mCascadeWorldViewProj[2]);
 	}
 
 }

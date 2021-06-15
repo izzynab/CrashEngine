@@ -11,19 +11,19 @@
 //#include "CrashEngine/Renderer/RenderProperties.h"
 
 #include "ImGuizmo.h"
+#include "ImGuiFileDialog.h"
+#include "IconsFontAwesome5.h"
 
 // TEMPORARY
 #include <GLFW/glfw3.h>
 #include <glad/glad.h>
-
-#include "ImGuiFileDialog.h"
 
 namespace CrashEngine {
 
 	ImGuiLayer::ImGuiLayer()
 		: Layer("ImGuiLayer")
 	{
-		
+
 	}
 
 	ImGuiLayer::~ImGuiLayer()
@@ -36,6 +36,8 @@ namespace CrashEngine {
 		IMGUI_CHECKVERSION();
 		ImGui::CreateContext();
 		ImGuiIO& io = ImGui::GetIO(); (void)io;
+		//io.Fonts->AddFontDefault();
+		io.Fonts->AddFontFromFileTTF("../fonts/arial.ttf", 16.0f);
 
 		io.IniFilename = "imgui.ini";
 		io.IniSavingRate = 1;
@@ -47,9 +49,23 @@ namespace CrashEngine {
 		//io.ConfigFlags |= ImGuiConfigFlags_ViewportsNoTaskBarIcons;
 		//io.ConfigFlags |= ImGuiConfigFlags_ViewportsNoMerge;
 
-		// Setup Dear ImGui style
-		//ImGui::StyleColorsDark();
-		//ImGui::StyleColorsClassic();
+		//setup ImGuiFileDialogIcons
+		static const ImWchar icons_ranges[] = { ICON_MIN_FA, ICON_MAX_FA, 0 };
+		ImFontConfig icons_config; icons_config.MergeMode = true; icons_config.PixelSnapH = true;
+		io.Fonts->AddFontFromFileTTF("../fonts/" FONT_ICON_FILE_NAME_FAS, 16.0f, &icons_config, icons_ranges);
+
+		ImGuiFileDialog::Instance()->SetExtentionInfos(".cpp", ImVec4(1, 1, 1, 0.9), ICON_FA_FILE);
+		ImGuiFileDialog::Instance()->SetExtentionInfos(".h", ImVec4(1, 1, 1, 0.9), ICON_FA_FILE);
+		ImGuiFileDialog::Instance()->SetExtentionInfos(".hpp", ImVec4(1, 1, 1, 0.9), ICON_FA_FILE);
+
+		ImGuiFileDialog::Instance()->SetExtentionInfos(".obj", ImVec4(1, 1, 1, 0.9), ICON_FA_CUBE);
+		ImGuiFileDialog::Instance()->SetExtentionInfos(".fbx", ImVec4(1, 1, 1, 0.9), ICON_FA_CUBE);
+		
+		ImGuiFileDialog::Instance()->SetExtentionInfos(".crash", ImVec4(1, 1, 1, 0.9), ICON_FA_ARCHWAY);
+
+		ImGuiFileDialog::Instance()->SetExtentionInfos(".jpg", ImVec4(1, 1, 1, 0.9), ICON_FA_FILE_IMAGE);
+		ImGuiFileDialog::Instance()->SetExtentionInfos(".png", ImVec4(1, 1, 1, 0.9), ICON_FA_FILE_IMAGE);
+		ImGuiFileDialog::Instance()->SetExtentionInfos(".tga", ImVec4(1, 1, 1, 0.9), ICON_FA_FILE_IMAGE);
 
         auto& colors = ImGui::GetStyle().Colors;
         colors[ImGuiCol_WindowBg] = ImVec4{ 0.1f, 0.105f, 0.11f, 1.0f };
@@ -221,14 +237,31 @@ namespace CrashEngine {
 	void ImGuiLayer::WindowMetrics()
 	{
 		ImGui::ShowMetricsWindow();
-
-		ImGuiFileDialog::Instance();
 		
 	}
 
 	void ImGuiLayer::OnImGuiRender()
 	{
+		//ImGui::Text(ICON_FA_PAINT_BRUSH "  Paint");
 
+		ImGuiFileDialog::Instance()->OpenDialog("ChooseFileDlgKey", "Content Browser", ".h,.cpp,.crash,.obj,.png","../Content", "");
+
+		// display
+		if (ImGuiFileDialog::Instance()->Display("ChooseFileDlgKey"))
+		{
+			// action if OK
+			if (ImGuiFileDialog::Instance()->IsOk())
+			{
+				std::string filePathName = ImGuiFileDialog::Instance()->GetFilePathName();
+				std::string filePath = ImGuiFileDialog::Instance()->GetCurrentPath();
+				// action
+				CE_INFO("{0}  {1}", filePathName, filePath);
+				//todo: make content browser
+			}
+
+			// close
+			ImGuiFileDialog::Instance()->Close();
+		}
 		
 
 	}

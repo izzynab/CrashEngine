@@ -40,7 +40,7 @@ namespace CrashEngine {
 		EnvironmentPanel.reset(new SceneEnvironmentPanel(renderProperties->GetScene()));
 
 		SceneSerializer serializer(renderProperties->GetScene());
-		serializer.Deserialize("C:/EngineDev/CrashEngine/Scenes/test.crash");
+		serializer.Deserialize("C:/EngineDev/CrashEngine/Content/Scenes/test.crash");
 
 
 		//---------------------Test space--------------------------------------------------------
@@ -230,9 +230,10 @@ namespace CrashEngine {
 				continue;
 			}
 
-			ImGui::Begin(renderProperties->GetViewName(i).c_str(), &renderProperties->views[i].isOpen);
+			ImGuiWindowFlags flags = ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse;
+			ImGui::Begin(renderProperties->GetViewName(i).c_str(), &renderProperties->views[i].isOpen, flags);
 
-			ImVec2 CurrentWindowView = ImVec2(ImGui::GetWindowWidth(), ImGui::GetWindowHeight() - 40);
+			ImVec2 CurrentWindowView = ImVec2(ImGui::GetWindowContentRegionMax().x, ImGui::GetWindowContentRegionMax().y - 20);
 			renderProperties->GetCamera(i)->SetSize(CurrentWindowView.y, CurrentWindowView.x);
 
 			ImVec2 imageSize = ImVec2(framebuffers[i]->GetSpecification().Width, framebuffers[i]->GetSpecification().Height);
@@ -333,8 +334,7 @@ namespace CrashEngine {
 		{
 			imguilayer->WindowMetrics();
 
-	}
-		
+		}
 
 		ImGui::SliderInt("shadow", &deferred, 0, 2);
 		ImGui::Image((void*)renderProperties->GetScene()->directionalLight->depthMap[deferred]->GetRendererID(), ImVec2(400, 400), ImVec2(0, 1), ImVec2(1, 0));
