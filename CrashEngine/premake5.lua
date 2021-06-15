@@ -43,7 +43,6 @@ project "CrashEngine"
 		"%{IncludeDir.entt}",
 		"%{IncludeDir.yaml_cpp}",
 		"%{IncludeDir.ImGuizmo}",
-		"%{IncludeDir.ImGuiFileDialog}",
 	}
 
 	links 
@@ -53,9 +52,7 @@ project "CrashEngine"
 		"ImGui",
 		"assimp",
 		"yaml-cpp",
-		"ImGuiFileDialog",
 		"opengl32.lib",
-	
 		
 	}
 	

@@ -11,7 +11,6 @@
 //#include "CrashEngine/Renderer/RenderProperties.h"
 
 #include "ImGuizmo.h"
-#include "ImGuiFileDialog.h"
 #include "IconsFontAwesome5.h"
 
 // TEMPORARY
@@ -49,23 +48,10 @@ namespace CrashEngine {
 		//io.ConfigFlags |= ImGuiConfigFlags_ViewportsNoTaskBarIcons;
 		//io.ConfigFlags |= ImGuiConfigFlags_ViewportsNoMerge;
 
-		//setup ImGuiFileDialogIcons
 		static const ImWchar icons_ranges[] = { ICON_MIN_FA, ICON_MAX_FA, 0 };
 		ImFontConfig icons_config; icons_config.MergeMode = true; icons_config.PixelSnapH = true;
 		io.Fonts->AddFontFromFileTTF("../fonts/" FONT_ICON_FILE_NAME_FAS, 16.0f, &icons_config, icons_ranges);
 
-		ImGuiFileDialog::Instance()->SetExtentionInfos(".cpp", ImVec4(1, 1, 1, 0.9), ICON_FA_FILE);
-		ImGuiFileDialog::Instance()->SetExtentionInfos(".h", ImVec4(1, 1, 1, 0.9), ICON_FA_FILE);
-		ImGuiFileDialog::Instance()->SetExtentionInfos(".hpp", ImVec4(1, 1, 1, 0.9), ICON_FA_FILE);
-
-		ImGuiFileDialog::Instance()->SetExtentionInfos(".obj", ImVec4(1, 1, 1, 0.9), ICON_FA_CUBE);
-		ImGuiFileDialog::Instance()->SetExtentionInfos(".fbx", ImVec4(1, 1, 1, 0.9), ICON_FA_CUBE);
-		
-		ImGuiFileDialog::Instance()->SetExtentionInfos(".crash", ImVec4(1, 1, 1, 0.9), ICON_FA_ARCHWAY);
-
-		ImGuiFileDialog::Instance()->SetExtentionInfos(".jpg", ImVec4(1, 1, 1, 0.9), ICON_FA_FILE_IMAGE);
-		ImGuiFileDialog::Instance()->SetExtentionInfos(".png", ImVec4(1, 1, 1, 0.9), ICON_FA_FILE_IMAGE);
-		ImGuiFileDialog::Instance()->SetExtentionInfos(".tga", ImVec4(1, 1, 1, 0.9), ICON_FA_FILE_IMAGE);
 
         auto& colors = ImGui::GetStyle().Colors;
         colors[ImGuiCol_WindowBg] = ImVec4{ 0.1f, 0.105f, 0.11f, 1.0f };
@@ -150,119 +136,11 @@ namespace CrashEngine {
 
 	}
 
-	void ImGuiLayer::Dockspace(std::shared_ptr<RenderProperties>& renderProperties, std::vector<std::shared_ptr<Framebuffer>> framebuffers)
-	{
-		bool s = true;
-		bool* show = &s;
-
-		static bool opt_fullscreen_persistant = true;
-		bool opt_fullscreen = opt_fullscreen_persistant;
-		static ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_None;
-
-		// We are using the ImGuiWindowFlags_NoDocking flag to make the parent window not dockable into,
-		// because it would be confusing to have two docking targets within each others.
-		ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoDocking;
-		if (opt_fullscreen)
-		{
-			ImGuiViewport* viewport = ImGui::GetMainViewport();
-			ImGui::SetNextWindowPos(viewport->WorkPos);
-			ImGui::SetNextWindowSize(viewport->WorkSize);
-			ImGui::SetNextWindowViewport(viewport->ID);
-			ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
-			ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
-			window_flags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
-			window_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
-		}
-
-		// When using ImGuiDockNodeFlags_PassthruCentralNode, DockSpace() will render our background 
-		// and handle the pass-thru hole, so we ask Begin() to not render a background.
-		if (dockspace_flags & ImGuiDockNodeFlags_PassthruCentralNode)
-			window_flags |= ImGuiWindowFlags_NoBackground;
-
-		// Important: note that we proceed even if Begin() returns false (aka window is collapsed).
-		// This is because we want to keep our DockSpace() active. If a DockSpace() is inactive,
-		// all active windows docked into it will lose their parent and become undocked.
-		// We cannot preserve the docking relationship between an active window and an inactive docking, otherwise
-		// any change of dockspace/settings would lead to windows being stuck in limbo and never being visible.
-		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
-		ImGui::Begin("DockSpace", show, window_flags);
-		ImGui::PopStyleVar();
-
-		if (opt_fullscreen)
-		{
-			ImGui::PopStyleVar(2);
-		}	
-
-		ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
-		ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
-
-		
-	}
-
-	void ImGuiLayer::MainMenu()
-	{
-		if (ImGui::BeginMainMenuBar())
-		{
-
-			if (ImGui::BeginMenu("Tools"))
-			{
-				ImGui::MenuItem("Style editor", NULL, &EditorStyleEnabled);
-				ImGui::MenuItem("Menu", NULL, &MenuEnabled);
-				ImGui::MenuItem("Window metrices", NULL, &WindowMetricsEnabled);
-
-				ImGui::EndMenu();
-			}
-
-			ImGui::EndMainMenuBar();
-		}
-
-	}
-
-	void ImGuiLayer::StyleEditor()
-	{
-		ImGui::Begin("Style Editor");
-		ImGui::ShowStyleEditor();
-		ImGuiStyle& style = ImGui::GetStyle();
-		ImGui::End();
-	}
-
-	void ImGuiLayer::Menu()
-	{
-        //ImGui::Begin("Menu");
-		ImGui::ShowDemoWindow();
-        //ImGui::End();
-		
-	}
-
-	void ImGuiLayer::WindowMetrics()
-	{
-		ImGui::ShowMetricsWindow();
-		
-	}
-
 	void ImGuiLayer::OnImGuiRender()
 	{
 		//ImGui::Text(ICON_FA_PAINT_BRUSH "  Paint");
 
-		ImGuiFileDialog::Instance()->OpenDialog("ChooseFileDlgKey", "Content Browser", ".h,.cpp,.crash,.obj,.png","../Content", "");
 
-		// display
-		if (ImGuiFileDialog::Instance()->Display("ChooseFileDlgKey"))
-		{
-			// action if OK
-			if (ImGuiFileDialog::Instance()->IsOk())
-			{
-				std::string filePathName = ImGuiFileDialog::Instance()->GetFilePathName();
-				std::string filePath = ImGuiFileDialog::Instance()->GetCurrentPath();
-				// action
-				CE_INFO("{0}  {1}", filePathName, filePath);
-				//todo: make content browser
-			}
-
-			// close
-			ImGuiFileDialog::Instance()->Close();
-		}
-		
 
 	}
 

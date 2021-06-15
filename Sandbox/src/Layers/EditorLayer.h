@@ -19,6 +19,7 @@
 #include "Panels/SceneHierarchyPanel.h"
 #include "Panels/SceneEnvironmentPanel.h"
 #include "Panels/MaterialPanel.h"
+#include "Panels/ContentBrowserPanel.h"
 
 
 
@@ -37,15 +38,16 @@ namespace CrashEngine {
 		void OnEvent(CrashEngine::Event& event) override;
 
 	private:
-		std::shared_ptr<ImGuiLayer> imguilayer;
-		std::shared_ptr <SceneHierarchyPanel> HierarchyPanel;
-		std::shared_ptr <SceneEnvironmentPanel> EnvironmentPanel;
+		//std::shared_ptr<ImGuiLayer> imguilayer;
+		std::shared_ptr <SceneHierarchyPanel> m_HierarchyPanel;
+		std::shared_ptr <SceneEnvironmentPanel> m_EnvironmentPanel;
+		std::shared_ptr <ContentBrowserPanel> m_ContentBrowserPanel;
+		
+		std::shared_ptr<RenderProperties> m_RenderProperties;
 
-		std::shared_ptr<RenderProperties> renderProperties;
-
-		std::shared_ptr<Sphere> sphere;
-		std::shared_ptr<Cube> cube;
-		std::shared_ptr<Quad> quad;
+		std::shared_ptr<Sphere> m_Sphere;
+		std::shared_ptr<Cube> m_Cube;
+		std::shared_ptr<Quad> m_Quad;
 
 		Shader* QuadShader;
 
@@ -61,15 +63,13 @@ namespace CrashEngine {
 		int gizmoType = 7;
 		std::string viewName;
 		bool isCursorVisible = true;
+		bool WindowMetricsEnabled = false;
 
 		//----------------test--------------------
 
 		int view = 0;
 		int deferred = 0;
-		bool metrics = false;
-		bool forward = false;
 		bool csm = false;
-
 
 		std::shared_ptr<Texture2D> testTexture;
 		ComputeShader* compShader;

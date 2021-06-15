@@ -24,7 +24,6 @@ IncludeDir["assimp"]	= "%{wks.location}/CrashEngine/vendor/assimp/include"
 IncludeDir["entt"]		= "%{wks.location}/CrashEngine/vendor/entt/include"
 IncludeDir["yaml_cpp"] = "%{wks.location}/CrashEngine/vendor/yaml-cpp/include"
 IncludeDir["ImGuizmo"] = "%{wks.location}/CrashEngine/vendor/ImGuizmo"
-IncludeDir["ImGuiFileDialog"] = "%{wks.location}/CrashEngine/vendor/ImGuiFileDialog"
 
 group "Dependencies"
 	include "CrashEngine/vendor/GLFW"
@@ -32,7 +31,6 @@ group "Dependencies"
 	include "CrashEngine/vendor/imgui"
 	include "CrashEngine/vendor/yaml-cpp"
 	include "CrashEngine/vendor/assimp"
-	include "CrashEngine/vendor/ImGuiFileDialog"
 group ""
 
 

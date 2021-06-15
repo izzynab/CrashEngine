@@ -42,13 +42,11 @@ namespace CrashEngine {
 
 		if (m_Mesh->material)
 		{
-			const ImGuiTreeNodeFlags treeNodeFlags = ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_AllowItemOverlap | ImGuiTreeNodeFlags_FramePadding;
-			bool material = ImGui::TreeNodeEx(m_Mesh->material->name.c_str(), treeNodeFlags);
+			//const ImGuiTreeNodeFlags treeNodeFlags = ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_AllowItemOverlap | ImGuiTreeNodeFlags_FramePadding;
+			//bool material = ImGui::TreeNodeEx(m_Mesh->material->name.c_str(), treeNodeFlags);
 
-			if (material)
+			if (true)
 			{
-				ImGui::NewLine();
-				ImGui::Separator();
 				ImGui::Text("Albedo Texture");
 
 				if (ImGui::ImageButton((void*)albedo_loaded->GetRendererID(), ImVec2(200, 200)))
@@ -177,11 +175,7 @@ namespace CrashEngine {
 
 				}
 
-
-
-				
-
-				ImGui::TreePop();
+				//ImGui::TreePop();
 			}
 
 		}

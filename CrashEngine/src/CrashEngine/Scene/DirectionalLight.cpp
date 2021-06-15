@@ -49,9 +49,9 @@ namespace CrashEngine
 
 		float fov = camera->fov;
 		float AspectRatio = camera->ScreenWidth / camera->ScreenHeight;
-		//float AspectRatio1 = camera->ScreenHeight / camera->ScreenWidth;
-		//float tanHalfHFOV = tanf(glm::radians(fov / 2.0f));
-		//float tanHalfVFOV = tanf(glm::radians((fov * AspectRatio1) / 2.0f));
+		float AspectRatio1 = camera->ScreenHeight / camera->ScreenWidth;
+		float tanHalfHFOV = tanf(glm::radians(fov / 2.0f));
+		float tanHalfVFOV = tanf(glm::radians((fov * AspectRatio1) / 2.0f));
 
 		//which should i choose?
 		glm::mat4 projViewMatix = camera->GetProjectionMatrix() * camera->GetViewMatrix();

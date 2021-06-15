@@ -111,10 +111,13 @@ namespace CrashEngine {
 
 		if (opened)
 		{
+			//todo: make actual components here
 			ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanAvailWidth;
-			bool opened = ImGui::TreeNodeEx((void*)9817239, flags, "Components");
+			bool opened = ImGui::TreeNodeEx((void*)9817239, flags, "Components should be here");
 			if (opened)
+			{
 				ImGui::TreePop();
+			}
 			ImGui::TreePop();
 		}
 
