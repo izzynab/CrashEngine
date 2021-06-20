@@ -40,9 +40,11 @@ Crash engine is using libraries:
   - god rays
   - mouse picking objects from scene
   - terrain generator
+  - good hierarchy/components system
+  - optimized assets loader(each asset should be loaded to engine once and other things)
  
  #### Long term goals
-  - C# scripts and Entity hierarchy system
+  - C# scripts
   - Runtime
   - Animation
   - Particle System
