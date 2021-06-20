@@ -42,6 +42,7 @@ Crash engine is using libraries:
   - terrain generator
   - good hierarchy/components system
   - optimized assets loader(each asset should be loaded to engine once and other things)
+  - improve loading times(khronos forum site)
  
  #### Long term goals
   - C# scripts
