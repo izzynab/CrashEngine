@@ -32,17 +32,20 @@ Crash engine is using libraries:
   - Scene Serialization
 
  #### To do 
+  - Content browser   
+  - optimized assets loader(each asset should be loaded to engine once and other things)
+  - improve loading times(khronos forum site)
+
+  - good hierarchy/components system
+
   - Instanced rendering(for debug lines, points and not only)
   - CSM/PCSS
   - Atmospheric Scattering 
-  - Assets/Content browser
   - Point lights with deffered rendering
   - god rays
+ 
   - mouse picking objects from scene
   - terrain generator
-  - good hierarchy/components system
-  - optimized assets loader(each asset should be loaded to engine once and other things)
-  - improve loading times(khronos forum site)
  
  #### Long term goals
   - C# scripts
