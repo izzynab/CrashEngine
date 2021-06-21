@@ -74,7 +74,7 @@ namespace CrashEngine {
 		Renderer::BeginScene();
 
 		auto cameraview = m_RenderProperties->GetScene()->m_Registry.view<TransformComponent, CameraComponent>();
-		//todo: make better camera transform managing
+		//todo: make better camera transform managing | distinguish between world and self rotation | learn how spherical coordinates work
 		for (auto entity : cameraview)
 		{
 			if (cameraview.get<CameraComponent>(entity).DrawFrustum == true)
@@ -350,7 +350,8 @@ namespace CrashEngine {
 				//editorCameraController = m_RenderProperties->GetCameraController(view);
 			}
 
-			ImGui::SliderFloat("Camera Speed", &editorCameraController->m_CameraSpeed, 1.f, 100.f);
+			//ImGuiSliderFlags flags = ImGuiSliderFlags_None;
+			ImGui::SliderFloat("Camera Speed", &editorCameraController->m_CameraSpeed, 1.f, 200.f);
 
 			ImGui::SliderInt("shadow", &deferred, 0, 2);
 			ImGui::Image((void*)m_RenderProperties->GetScene()->directionalLight->depthMap[deferred]->GetRendererID(), ImVec2(400, 400), ImVec2(0, 1), ImVec2(1, 0));
@@ -372,7 +373,7 @@ namespace CrashEngine {
 
 	void Editor::OnEvent(CrashEngine::Event& event)
 	{
-		editorCameraController->OnEvent(event);
+		if (!viewName.empty())editorCameraController->OnEvent(event);
 
 		//EventDispatcher dispatcher(event);
 		//dispatcher.Dispatch<KeyPressedEvent>();
@@ -416,7 +417,7 @@ namespace CrashEngine {
 
 		for (int i = 0; i < m_RenderProperties->GetViewsNumber(); i++)
 		{
-			if (m_RenderProperties->IsViewActive(i))//todo: this doesnt work
+			if (m_RenderProperties->IsViewActive(i))
 			{
 				if (event.GetEventType() == EventType::MouseButtonPressed)
 				{

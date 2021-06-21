@@ -22,7 +22,6 @@ namespace CrashEngine {
 	ImGuiLayer::ImGuiLayer()
 		: Layer("ImGuiLayer")
 	{
-
 	}
 
 	ImGuiLayer::~ImGuiLayer()
@@ -50,7 +49,7 @@ namespace CrashEngine {
 
 		static const ImWchar icons_ranges[] = { ICON_MIN_FA, ICON_MAX_FA, 0 };
 		ImFontConfig icons_config; icons_config.MergeMode = true; icons_config.PixelSnapH = true;
-		io.Fonts->AddFontFromFileTTF("../fonts/" FONT_ICON_FILE_NAME_FAS, 16.0f, &icons_config, icons_ranges);
+		io.Fonts->AddFontFromFileTTF("../fonts/" FONT_ICON_FILE_NAME_FAS, 100.0f, &icons_config, icons_ranges);
 
 
         auto& colors = ImGui::GetStyle().Colors;
@@ -138,10 +137,17 @@ namespace CrashEngine {
 
 	void ImGuiLayer::OnImGuiRender()
 	{
-		//ImGui::Text(ICON_FA_PAINT_BRUSH "  Paint");
+		//ImGuiIO& io = ImGui::GetIO();
+		//ImFontAtlas* atlas = io.Fonts;
+		//ImGui::ShowFontAtlas(atlas);
 
+		//ImFont* font = atlas->Fonts[i];
+		//ImGui::PushID(font);
+		//ImGui::DebugNodeFont(font);
+		//ImGui::PopID();
 
-
+		//ImGui::ShowStyleEditor();
+		//ImGui::ShowDemoWindow();
 	}
 
 }

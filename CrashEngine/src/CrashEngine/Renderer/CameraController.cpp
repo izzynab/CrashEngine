@@ -106,8 +106,8 @@ namespace CrashEngine {
 
 	bool CameraController::OnMouseScrolled(MouseScrolledEvent& e)
 	{
-		m_CameraSpeed -= e.GetYOffset() * 0.25f;
-		if (m_CameraSpeed >= 100.f) m_CameraSpeed = 100.f;
+		m_CameraSpeed += e.GetYOffset() * (0.1f * m_CameraSpeed);
+		if (m_CameraSpeed >= 200.f) m_CameraSpeed = 200.f;
 		if (m_CameraSpeed <= 1.f) m_CameraSpeed = 1.f;
 		return false;
 	}
