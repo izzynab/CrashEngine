@@ -38,7 +38,7 @@ Crash engine is using libraries:
 
   - good hierarchy/components system
 
-  - Instanced rendering(for debug lines, points and not only)
+  - Instanced rendering
   - CSM/PCSS
   - Atmospheric Scattering 
   - Point lights with deffered rendering
