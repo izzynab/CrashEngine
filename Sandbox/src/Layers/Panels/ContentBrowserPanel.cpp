@@ -10,7 +10,7 @@
 
 namespace CrashEngine {
 
-	static const std::filesystem::path m_AssetPath = "..\\Content";
+	static const std::filesystem::path m_AssetPath = "Content"; 
 
 	ContentBrowserPanel::ContentBrowserPanel()
 		: m_CurrentDirectory(m_AssetPath)

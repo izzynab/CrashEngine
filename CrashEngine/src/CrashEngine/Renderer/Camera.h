@@ -12,7 +12,7 @@ namespace CrashEngine {
 	{
 	public:
 		Camera() = default;
-		Camera(glm::vec3 position, float width, float height);
+		Camera(glm::vec3 position, float width, float height,float nearPlane = 0.1f, float farPlane = 1500.f);
 		~Camera();
 
 		void SetProjection(glm::mat4& projection) { m_ProjectionMatrix = projection; }
@@ -36,6 +36,8 @@ namespace CrashEngine {
 	public:
 		float fov = 45.f;
 		float ScreenWidth = 800, ScreenHeight = 800;
+		float nearPlane;
+		float farPlane;
 
 	private:
 		glm::mat4 m_ProjectionMatrix;

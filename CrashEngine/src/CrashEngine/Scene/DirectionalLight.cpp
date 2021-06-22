@@ -4,6 +4,7 @@
 #include "CrashEngine/Renderer/RenderCommand.h"
 #include "CrashEngine/Core/Defines.h"
 
+#include "CrashEngine/Scene/Scene.h"
 #include "CrashEngine/Core/Application.h"
 
 
@@ -36,9 +37,9 @@ namespace CrashEngine
 	}
 
 
-	void DirectionalLight::DrawCSM(Camera* camera,Shader*defferedShader)
+	void DirectionalLight::DrawCSM(Camera* camera,Shader*defferedShader, std::shared_ptr<Scene>& m_ActiveScene)
 	{
-		//todo: make shadows
+		//normalized rotation vector(Spherical coordinate)
 		glm::vec3 rot = glm::vec3(
 			glm::cos(rotation.x) * glm::sin(rotation.y),
 			glm::sin(rotation.x) * glm::sin(rotation.y),
@@ -49,98 +50,74 @@ namespace CrashEngine
 
 		float fov = camera->fov;
 		float AspectRatio = camera->ScreenWidth / camera->ScreenHeight;
-		float AspectRatio1 = camera->ScreenHeight / camera->ScreenWidth;
-		float tanHalfHFOV = tanf(glm::radians(fov / 2.0f));
-		float tanHalfVFOV = tanf(glm::radians((fov * AspectRatio1) / 2.0f));
 
-		//which should i choose?
-		glm::mat4 projViewMatix = camera->GetProjectionMatrix() * camera->GetViewMatrix();
-		//glm::mat4 projViewMatix = camera->GetViewMatrix() * camera->GetProjectionMatrix();
+		glm::mat4 cameraProjView = camera->GetProjectionMatrix() * camera->GetViewMatrix();
+		
+		std::array<glm::vec3,8> frustumCorners = CalculateFrustumCoreners(cameraProjView);
 
-		//glm::mat4 lightView = glm::lookAt(camera->GetPosition() + rot,camera->GetPosition(),up);
-
-		for (int i = 0; i < 3; i++)
+		//calculate frustum center and distance from near to far plane of the frustum
+		float maxZ = -std::numeric_limits<float>::max();
+		float minZ = std::numeric_limits<float>::max();
+		glm::vec3 frustumCenter = glm::vec3(0);
+		for (int i = 0; i < 8; i++)
 		{
-			float dmaxZ = -std::numeric_limits<float>::max();
-			float dminZ = std::numeric_limits<float>::max();
-
-			glm::vec3 centroid = glm::vec3(0);
-
-			float xn = m_cascadeEnd[i] * tanHalfHFOV;
-			float xf = m_cascadeEnd[i + 1] * tanHalfHFOV;
-			float yn = m_cascadeEnd[i] * tanHalfVFOV;
-			float yf = m_cascadeEnd[i + 1] * tanHalfVFOV;
-
-			glm::vec3 frustumCorners[8] = {
-				// near face
-				glm::vec3(xn, yn, m_cascadeEnd[i]),
-				glm::vec3(-xn, yn, m_cascadeEnd[i]),
-				glm::vec3(xn, -yn, m_cascadeEnd[i]),
-				glm::vec3(-xn, -yn, m_cascadeEnd[i]),
-
-				// far face
-				glm::vec3(xf, yf, m_cascadeEnd[i + 1]),
-				glm::vec3(-xf, yf, m_cascadeEnd[i + 1]),
-				glm::vec3(xf, -yf, m_cascadeEnd[i + 1]),
-				glm::vec3(-xf, -yf, m_cascadeEnd[i + 1])
-			};
-
-			for (int i = 0; i < 8; i++)
-			{
-				centroid += frustumCorners[i];
-				dminZ = glm::min(dminZ, frustumCorners[i].z);
-				dmaxZ = glm::max(dmaxZ, frustumCorners[i].z);
-			}
-
-			centroid = centroid / 8.f;
-
-
-
-			// Go back from the centroid up to max.z - min.z in the direction of light
-			glm::vec3 lightDirection = rot;
-			//glm::vec3 lightDirection = roatation;
-			float distance = dmaxZ - dminZ;
-			lightDirection *= distance;
-			glm::vec3 lightPosition = centroid;
-			lightPosition += lightDirection;
-
-			//float lightAngleX = (float)Math.toDegrees(Math.acos(lightDirection.z));
-			//float lightAngleY = (float)Math.toDegrees(Math.asin(lightDirection.x));
-			//float lightAngleZ = 0;
-			glm::mat4 lightView = glm::lookAt(lightPosition, rot, up);
-
-			float minX = std::numeric_limits<float>::max();
-			float maxX = -std::numeric_limits<float>::max();
-			float minY = std::numeric_limits<float>::max();
-			float maxY = -std::numeric_limits<float>::max();
-			float minZ = std::numeric_limits<float>::max();
-			float maxZ = -std::numeric_limits<float>::max();
-
-			for (int i = 0; i < 8; i++)
-			{
-				glm::vec4 corner = glm::vec4(frustumCorners[i],1);
-				corner = lightView * corner;
-
-				frustumCorners[i] = lightView * glm::vec4(frustumCorners[i],1);
-
-				minX = glm::min(minX, corner.x);
-				maxX = glm::max(maxX, corner.x);
-
-				minY = glm::min(minY, corner.y);
-				maxY = glm::max(maxY, corner.y);
-
-				minZ = glm::min(minZ, corner.z);
-				maxZ = glm::max(maxZ, corner.z);
-			}
-
-			float distz = maxZ - minZ;;
-
-			mCascadeWorldViewProj[i] = glm::ortho(minX, maxX, minY, maxY, 0.f, distz);
-
+			frustumCenter += frustumCorners[i];
+			minZ = glm::min(minZ, frustumCorners[i].z);
+			maxZ = glm::max(maxZ, frustumCorners[i].z);
 		}
+		frustumCenter /= 8.f;
 
+		//calculate light relative to frustum position
+		glm::vec3 relativeLightPosition = rot;
+		float distance = maxZ - minZ;
+		relativeLightPosition *= distance;
+		glm::vec3 lightPosition = frustumCenter;
+		lightPosition += relativeLightPosition;
 
-		for (int i = 0; i < 3; i++)
+		//calculate light view matrix
+		float lightAngleX = glm::degrees(glm::acos(rot.z));
+		float lightAngleY = glm::degrees(glm::asin(rot.x));
+		float lightAngleZ = 0;
+		glm::vec3 lightCenter = glm::vec3(lightAngleX, lightAngleY, lightAngleZ);
+		glm::mat4 lightViewMatrix = glm::lookAt(lightPosition, lightCenter,up);
+
+		//calculate light projection matrix
+		float minX = std::numeric_limits<float>::max();
+		float maxX = -std::numeric_limits<float>::max();
+		float minY = std::numeric_limits<float>::max();
+		float maxY = -std::numeric_limits<float>::max();
+		minZ = std::numeric_limits<float>::max();
+		maxZ = -std::numeric_limits<float>::max();
+
+		for (int i = 0; i < 8; i++) {
+			glm::vec3 corner = frustumCorners[i];
+			glm::vec4 coords = glm::vec4(corner, 1);
+
+			//coords = coords * lightViewMatrix;
+			coords = lightViewMatrix * coords;
+
+			minX = glm::min(coords.x, minX);
+			maxX = glm::max(coords.x, maxX);
+			minY = glm::min(coords.y, minY);
+			maxY = glm::max(coords.y, maxY);
+			minZ = glm::min(coords.z, minZ);
+			maxZ = glm::max(coords.z, maxZ);
+		}
+		float distz = maxZ - minZ;
+
+		glm::mat4 lightProjectionMatrix = glm::ortho<float>(minX, maxX, minY, maxY, 0, distz);
+
+		//set mCascadeWorldViewProj
+		mCascadeWorldViewProj[0] = lightProjectionMatrix * lightViewMatrix;
+
+		//debug info
+		CE_INFO("{0}", distance);
+		Application::Get().GetDebugger().DrawFrustum(cameraProjView);
+		Application::Get().GetDebugger().DrawFrustum(mCascadeWorldViewProj[0]);
+		Application::Get().GetDebugger().DrawUpdatePoint(frustumCenter);
+		Application::Get().GetDebugger().DrawUpdatePoint(lightPosition, { 0,0,0 }, {1,1,0});
+
+		for (int i = 0; i < 1; i++)
 		{
 			glm::mat4 lightSpaceMatrix =  mCascadeWorldViewProj[i];
 
@@ -154,10 +131,10 @@ namespace CrashEngine
 			RenderCommand::SetViewport(1024, 1024);
 			depthFramebuffer->Bind();
 			depthFramebuffer->SetTexture(CE_TEXTURE_2D, depthMap[i]->GetRendererID(),0);
-			//depthFramebuffer->SetDepthTexture(CE_TEXTURE_2D, depthMap[0]->GetRendererID());
 			RenderCommand::SetClearColor(glm::vec4(0, 0.5, 0, 1));
 			RenderCommand::Clear();
-			//m_ActiveScene->DepthRender(depthMapShader);
+
+			m_ActiveScene->DepthRender(depthMapShader);
 		}
 		depthFramebuffer->Unbind();
 
@@ -165,6 +142,51 @@ namespace CrashEngine
 		//Application::Get().GetDebugger().DrawFrustum(mCascadeWorldViewProj[0]);
 		//Application::Get().GetDebugger().DrawFrustum(mCascadeWorldViewProj[1]);
 		//Application::Get().GetDebugger().DrawFrustum(mCascadeWorldViewProj[2]);
+	}
+
+	std::array<glm::vec3, 8> DirectionalLight::CalculateFrustumCoreners(glm::mat4 projViewMatrix)
+	{
+		glm::mat4 inv = glm::inverse(projViewMatrix);
+
+		glm::vec4 f[8u] =
+		{
+			// near face
+			{1, 1, -1, 1.f},
+			{-1, 1, -1, 1.f},
+			{1, -1, -1, 1.f},
+			{-1, -1, -1, 1.f},
+
+			// far face
+			{1, 1, 1, 1.f},
+			{-1, 1, 1 , 1.f},
+			{1, -1, 1 , 1.f},
+			{-1, -1,1, 1.f},
+		};
+
+		std::array<glm::vec3, 8> frustumCorners;
+		for (int i = 0; i < 8; i++)
+		{
+			glm::vec4 ff = inv * f[i];
+			frustumCorners[i].x = ff.x / ff.w;
+			frustumCorners[i].y = ff.y / ff.w;
+			frustumCorners[i].z = ff.z / ff.w;
+		}
+
+		return frustumCorners;
+	}
+
+	glm::vec3 DirectionalLight::CalculateFrustumCenter(glm::mat4 projViewMatrix)
+	{
+		std::array<glm::vec3, 8> frustumCorners = CalculateFrustumCoreners(projViewMatrix);
+		glm::vec3 frustumCenter = glm::vec3(0);
+
+		for (int i = 0; i < 8; i++)
+		{
+			frustumCenter += frustumCorners[i];
+		} 
+		frustumCenter /= 8.f;
+
+		return frustumCenter;
 	}
 
 }

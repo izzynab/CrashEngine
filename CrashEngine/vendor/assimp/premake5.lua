@@ -1,5 +1,5 @@
 project "assimp"
-  kind "SharedLib"
+  kind "StaticLib"
   language "C++"
   cppdialect "C++17"
   staticruntime "on"
@@ -7,14 +7,12 @@ project "assimp"
     targetdir ("bin/" .. outputdir .. "/%{prj.name}")
     objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
 
-
     files
     {
       "include/assimp/**.h",    
       "include/assimp/**.hpp",
       "include/assimp/**.inl",
       "include/assimp/**.in",
-
     }
 
     includedirs {
@@ -22,7 +20,7 @@ project "assimp"
       "contrib/irrXML",
       "contrib/zlib",
       "contrib/rapidjson/include",
-  }
+     }
 
     filter "system:windows"
         systemversion "latest"

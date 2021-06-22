@@ -39,7 +39,7 @@ namespace CrashEngine {
 		m_ContentBrowserPanel.reset(new ContentBrowserPanel());
 
 		SceneSerializer serializer(m_RenderProperties->GetScene());
-		serializer.Deserialize("C:/EngineDev/CrashEngine/Content/Scenes/test.crash");
+		serializer.Deserialize("C:/EngineDev/CrashEngine/Sandbox/Content/Scenes/jd.crash");
 
 
 		//---------------------Test space--------------------------------------------------------
@@ -199,7 +199,7 @@ namespace CrashEngine {
 			{
 				if (ImGui::MenuItem("Add view")) 
 				{
-					if(!m_RenderProperties->views.empty())Renderer::AddView(800, 800, "View " + std::to_string(m_RenderProperties->views.back().id), m_RenderProperties, framebuffers);
+					if(!m_RenderProperties->views.empty())Renderer::AddView(800, 800, "View " + std::to_string(m_RenderProperties->views.back().id), m_RenderProperties, framebuffers,false);
 					else Renderer::AddView(800, 800, "Main", m_RenderProperties, framebuffers);
 				}
 
@@ -250,6 +250,7 @@ namespace CrashEngine {
 			}
 
 			ImGuiWindowFlags flags = ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse;	
+
 			ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
 			ImGui::Begin(m_RenderProperties->GetViewName(i).c_str(), &m_RenderProperties->views[i].isOpen, flags);
 			ImGui::PopStyleVar();
@@ -271,7 +272,8 @@ namespace CrashEngine {
 			{
 				m_RenderProperties->SetViewActive(i, false);
 			}
-			if (viewName == m_RenderProperties->GetViewName(i))
+
+			if (m_RenderProperties->views.size() == 1 || viewName == m_RenderProperties->GetViewName(i))
 			{		
 				//Gizmos
 				auto& camera = m_RenderProperties->GetCamera(i);
@@ -357,10 +359,6 @@ namespace CrashEngine {
 			ImGui::Image((void*)m_RenderProperties->GetScene()->directionalLight->depthMap[deferred]->GetRendererID(), ImVec2(400, 400), ImVec2(0, 1), ImVec2(1, 0));
 			//ImGui::Image((void*)m_RenderProperties->GetDefferedFramebuffer()->GetColorAttachmentRendererID(deferred), ImVec2(400, 400), ImVec2(0, 1), ImVec2(1, 0));
 			//ImGui::Image((void*)debugFramebuffer->GetColorAttachmentRendererID(), ImVec2(secondCamera->ScreenWidth/3, secondCamera->ScreenHeight/3), ImVec2(0, 1), ImVec2(1, 0));
-
-			ImGui::SliderFloat("far_plane", &m_RenderProperties->GetScene()->directionalLight->far_plane, -10, 200);
-			ImGui::SliderFloat("near_plane", &m_RenderProperties->GetScene()->directionalLight->near_plane, -200, -10);
-			ImGui::SliderFloat("size", &m_RenderProperties->GetScene()->directionalLight->size, 0, 200);
 
 			ImGui::Checkbox("Use colors CSM", &csm);
 

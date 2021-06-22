@@ -59,12 +59,13 @@ namespace CrashEngine {
 
 	}
 
-	void RenderProperties::AddView(float width, float height, std::string name)
+	void RenderProperties::AddView(float width, float height, std::string name, bool drawDebugger)
 	{
 		allViews++;
 		view view;
 		view.name = name;
 		view.id = allViews;
+		view.drawDebugger = drawDebugger;
 
 		FramebufferSpecification spec;
 		spec.Height = height;
@@ -83,7 +84,8 @@ namespace CrashEngine {
 
 		glm::vec3 position = glm::vec3(1.0f,10.0f,1.0f);
 		std::shared_ptr<Camera> camera;
-		camera.reset(new Camera(position, width, height));
+		if(views.size() == 1)camera.reset(new Camera(position, width, height, 0.1f, 240.f));
+		else camera.reset(new Camera(position, width, height));
 
 		std::shared_ptr<CameraController> cameraController;
 		cameraController.reset(new CameraController(camera));

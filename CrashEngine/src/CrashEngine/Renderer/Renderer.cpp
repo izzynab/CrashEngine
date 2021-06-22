@@ -37,7 +37,7 @@ namespace CrashEngine {
 			}
 
 			//----------------shadows----------------
-			ActiveScene->directionalLight->DrawCSM(camera.get(), defferedShader.get());
+			ActiveScene->directionalLight->DrawCSM(camera.get(), defferedShader.get(), ActiveScene);
 			//----------------shadows----------------
 
 			DefferedFramebuffer->Resize(camera->ScreenWidth, camera->ScreenHeight);
@@ -111,7 +111,8 @@ namespace CrashEngine {
 			//-----------Debug lines---------------------
 			renderFramebuffer->Bind();
 			//auto& camera = camera;
-			Application::Get().GetDebugger().OnUpdate(*camera, (i == renderProperties->GetViewsNumber() - 1) ? true : false);
+			if(renderProperties->views[i].shouldDrawDebugger())Application::Get().GetDebugger().OnUpdate(*camera, (i == renderProperties->GetViewsNumber() - 1) ? true : false);
+			if (renderProperties->views[i].shouldDrawDebugger())Application::Get().GetDebugger().OnUpdate(*camera, true);
 			renderFramebuffer->Unbind();
 
 		}
@@ -122,7 +123,7 @@ namespace CrashEngine {
 	{
 	}
 
-	void Renderer::AddView(float width, float height, std::string name, std::shared_ptr<RenderProperties>& renderProperties, std::vector<std::shared_ptr<Framebuffer>>& renderFramebuffers)
+	void Renderer::AddView(float width, float height, std::string name, std::shared_ptr<RenderProperties>& renderProperties, std::vector<std::shared_ptr<Framebuffer>>& renderFramebuffers, bool drawDebugger)
 	{
 		FramebufferSpecification spec;
 		spec.Height = height;
@@ -130,7 +131,7 @@ namespace CrashEngine {
 
 		renderFramebuffers.push_back(Framebuffer::Create(spec));
 
-		renderProperties->AddView(width, height, name);
+		renderProperties->AddView(width, height, name, drawDebugger);
 	
 	}
 

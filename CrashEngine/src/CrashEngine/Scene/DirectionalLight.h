@@ -9,33 +9,30 @@
 
 namespace CrashEngine {
 
+	class Scene;
+
 	class DirectionalLight
 	{
 	public:
 		DirectionalLight();
 
-		void DrawCSM(Camera *camera, Shader* defferedShader);
+		void DrawCSM(Camera *camera, Shader* defferedShader, std::shared_ptr<Scene>& m_ActiveScene);
 
-	public:
-		glm::mat4 lightView;
-		glm::mat4 lightOrthoProj;
-
+	private:
+		std::array<glm::vec3,8> CalculateFrustumCoreners(glm::mat4 projViewMatrix);
+		glm::vec3 CalculateFrustumCenter(glm::mat4 projViewMatrix);
 	public:
 		glm::vec3 rotation = glm::vec3(0.f, 0.f, 0.f);
 		glm::vec3 color = glm::vec3(1,1,1);
 		float intensity = 50.f;
 
-		Shader* depthMapShader;
-
-
 		std::vector<std::shared_ptr<Texture2D>> depthMap;
 		std::shared_ptr<Framebuffer> depthFramebuffer;
 
-		float near_plane = -10.f, far_plane = 17.5f;
-		float size = 10.f;
 	private:
 		std::vector<float> m_cascadeEnd;	
 		std::vector<glm::mat4> mCascadeWorldViewProj;
 
+		Shader* depthMapShader;
 	};
 }

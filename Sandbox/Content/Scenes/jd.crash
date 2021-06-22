@@ -1,0 +1,77 @@
+Scene: Untitled
+Filepath: C:\EngineDev\CrashEngine\Sandbox\Content\Scenes\jd.crash
+Entities:
+  - Entity: 12837192831273
+    TagComponent:
+      Tag: Mesh
+    TransformComponent:
+      Translation: [0, 5.57007408, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    Mesh:
+      Directory: C:\EngineDev\CrashEngine\Sandbox\Content\Assets\sphere.obj
+      Material:
+        Name: default_material
+        Albedo:
+          path: ""
+          albedo use: false
+          albedo color: [0.200000003, 0.200000003, 0.200000003, 0]
+          albedo load: false
+        Metallic:
+          path: ""
+          metallic use: false
+          metallic color: 0.5
+          metallic load: false
+        Roughness:
+          path: ""
+          roughness use: false
+          roughness color: 0.5
+          roughness load: false
+        Normal:
+          path: ""
+        Ao:
+          path: ""
+  - Entity: 12837192831273
+    TagComponent:
+      Tag: Mesh
+    TransformComponent:
+      Translation: [0, 1.11147451, 0]
+      Rotation: [0, 0, 0]
+      Scale: [12.2440023, 1, 9.39317608]
+    Mesh:
+      Directory: C:\EngineDev\CrashEngine\Sandbox\Content\Assets\cube.obj
+      Material:
+        Name: default_material
+        Albedo:
+          path: ""
+          albedo use: false
+          albedo color: [0.200000003, 0.200000003, 0.200000003, 0]
+          albedo load: false
+        Metallic:
+          path: ""
+          metallic use: false
+          metallic color: 0.5
+          metallic load: false
+        Roughness:
+          path: ""
+          roughness use: false
+          roughness color: 0.5
+          roughness load: false
+        Normal:
+          path: ""
+        Ao:
+          path: ""
+Directional light:
+  rotation: [1.90240884, 1.71042275, 0]
+  color: [1, 1, 1]
+  intensity: 50
+Sky light:
+  directory: ""
+Bloom:
+  blur: true
+  threshold: 0.400000006
+  softthreshold: 0.100000001
+SSAO:
+  radius: 0.5
+  bias: 0.0250000004
+  power: 3

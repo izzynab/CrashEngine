@@ -22,12 +22,16 @@ namespace CrashEngine {
 			std::shared_ptr<Framebuffer> deferredframebuffer;
 			std::shared_ptr<Camera> camera;
 			std::shared_ptr<CameraController> cameraController;
+
+			bool drawDebugger = true;
+
+			inline bool shouldDrawDebugger() { return drawDebugger; }
 		};
 
 	public:
 		RenderProperties();
 
-		void AddView(float width, float height, std::string name);
+		void AddView(float width, float height, std::string name,bool drawDebugger);
 
 	private:
 		/*Currently active scene*/
@@ -66,7 +70,6 @@ namespace CrashEngine {
 		inline std::string GetViewName(uint32_t id) { return views[id].name; }
 		inline bool IsViewActive(uint32_t id) { return views[id].isViewActive; }
 		inline void SetViewActive(uint32_t id, bool isActive) { views[id].isViewActive = isActive; }
-
 	public:
 		std::vector<view> views;
 
