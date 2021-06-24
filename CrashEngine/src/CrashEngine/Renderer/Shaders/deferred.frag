@@ -21,7 +21,7 @@ uniform vec3 lightColor;
 
 uniform vec3 camPos;
 
-const int Cascades = 1;
+const int Cascades = 3;
 
 uniform sampler2D shadowMap[Cascades];
 
@@ -200,7 +200,7 @@ void main()
 
     for (int i = 0 ; i < Cascades ; i++) 
     {
-        //if (texture(normal,TexCoords).a <= cascadeEndClipSpace[i]) 
+        if (texture(normal,TexCoords).a <= cascadeEndClipSpace[i]) 
         {
             vec4 FragPosLightSpace = lightSpaceMatrix[i] * inverse(view) * vec4(texture(position,TexCoords).rgb, 1.0);
             float shadow = ShadowCalculation(FragPosLightSpace, i);   

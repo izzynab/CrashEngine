@@ -8,13 +8,18 @@
 #include <imgui/imgui.h>
 #include <imgui/imgui_internal.h>
 
+#include <libloaderapi.h>
+
 namespace CrashEngine {
 
-	static const std::filesystem::path m_AssetPath = "Content"; 
-
 	ContentBrowserPanel::ContentBrowserPanel()
-		: m_CurrentDirectory(m_AssetPath)
 	{
+		WCHAR buffer[MAX_PATH];
+		GetModuleFileNameW(NULL, buffer, MAX_PATH);
+
+		m_AssetPath = std::filesystem::path(buffer).parent_path().parent_path().parent_path().parent_path().string() + "\\Sandbox\\Content";
+		m_CurrentDirectory = m_AssetPath;
+		CE_CORE_INFO("Panel current path: {0}", m_AssetPath);
 	}
 
 	void ContentBrowserPanel::OnImGuiRender()
@@ -45,6 +50,10 @@ namespace CrashEngine {
 			}
 		}
 
+		//std::string currentPath = std::filesystem::current_path().string();
+		//CE_CORE_INFO("Panel current path: {0}",currentPath);
+
+
 		for (auto& it : std::filesystem::directory_iterator(m_CurrentDirectory))
 		{
 			if (it.is_directory())
@@ -65,6 +74,7 @@ namespace CrashEngine {
 				if (extension == ".png" || extension == ".jpg" || extension == ".tga");
 			}
 		}
+
 		ImGui::EndTable();
 		ImGui::End();
 	}

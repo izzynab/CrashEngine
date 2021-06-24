@@ -12,6 +12,8 @@
 
 #include "ImGuizmo.h"
 #include "IconsFontAwesome5.h"
+#include <libloaderapi.h>
+#include <filesystem>
 
 // TEMPORARY
 #include <GLFW/glfw3.h>
@@ -35,7 +37,13 @@ namespace CrashEngine {
 		ImGui::CreateContext();
 		ImGuiIO& io = ImGui::GetIO(); (void)io;
 		//io.Fonts->AddFontDefault();
-		io.Fonts->AddFontFromFileTTF("../fonts/arial.ttf", 16.0f);
+
+		WCHAR buffer[MAX_PATH];
+		GetModuleFileNameW(NULL, buffer, MAX_PATH);
+
+		std::filesystem::path fontsDirectory = std::filesystem::path(buffer).parent_path().parent_path().parent_path().parent_path().string() + "\\Fonts";
+		std::string fontsPath = fontsDirectory.string() + "\\arial.ttf";
+		io.Fonts->AddFontFromFileTTF(fontsPath.c_str() , 16.0f);
 
 		io.IniFilename = "imgui.ini";
 		io.IniSavingRate = 1;
@@ -49,8 +57,8 @@ namespace CrashEngine {
 
 		static const ImWchar icons_ranges[] = { ICON_MIN_FA, ICON_MAX_FA, 0 };
 		ImFontConfig icons_config; icons_config.MergeMode = true; icons_config.PixelSnapH = true;
-		io.Fonts->AddFontFromFileTTF("../fonts/" FONT_ICON_FILE_NAME_FAS, 100.0f, &icons_config, icons_ranges);
-
+		std::string iconsPath = fontsDirectory.string() + "\\" + FONT_ICON_FILE_NAME_FAS;
+		io.Fonts->AddFontFromFileTTF(iconsPath.c_str(), 100.0f, &icons_config, icons_ranges);
 
         auto& colors = ImGui::GetStyle().Colors;
         colors[ImGuiCol_WindowBg] = ImVec4{ 0.1f, 0.105f, 0.11f, 1.0f };
