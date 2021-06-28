@@ -32,6 +32,7 @@ namespace CrashEngine {
 
 	enum FilterParam
 	{
+		LINEAR_MIPMAP_LINEAR = 0x2703,
 		NEAREST = 0x2600,
 		LINEAR = 0x2601
 	};
@@ -50,7 +51,8 @@ namespace CrashEngine {
 		InternalFormat internalFormat = InternalFormat::RGBA8;
 		DataFormat DataFormat = DataFormat::RGBA;
 		WrapParam WrapParam = WrapParam::CLAMP_TO_EDGE;
-		FilterParam FilterParam = FilterParam::LINEAR;
+		FilterParam MinFilterParam = FilterParam::LINEAR;
+		FilterParam MagFilterParam = FilterParam::LINEAR;
 		Type type = Type::UNSIGNED_BYTE;
 	};
 

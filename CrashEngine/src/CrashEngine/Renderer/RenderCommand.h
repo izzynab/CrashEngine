@@ -17,6 +17,16 @@ namespace CrashEngine {
 			s_RendererAPI->Clear();
 		}
 
+		inline static void CullFront()
+		{
+			s_RendererAPI->CullFront();
+		}
+
+		inline static void CullBack()
+		{
+			s_RendererAPI->CullBack();
+		}
+
 		inline static double GetTime()
 		{
 			return s_RendererAPI->GetTime();
@@ -25,6 +35,11 @@ namespace CrashEngine {
 		inline static void Enable(int nr)
 		{
 			s_RendererAPI->Enable(nr);
+		}
+
+		inline static void Disable(int nr)
+		{
+			s_RendererAPI->Disable(nr);
 		}
 
 		inline static void DepthFunc(int nr)

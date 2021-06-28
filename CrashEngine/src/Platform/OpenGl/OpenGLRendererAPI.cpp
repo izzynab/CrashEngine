@@ -18,6 +18,15 @@ namespace CrashEngine {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	}
 
+	void OpenGLRendererAPI::CullFront()
+	{
+		glCullFace(GL_FRONT);
+	}
+	void OpenGLRendererAPI::CullBack()
+	{
+		glCullFace(GL_BACK);
+	}
+
 	double OpenGLRendererAPI::GetTime()
 	{
 		return glfwGetTime();
@@ -26,6 +35,11 @@ namespace CrashEngine {
 	void OpenGLRendererAPI::Enable(int nr)
 	{
 		glEnable(nr);
+	}
+
+	void OpenGLRendererAPI::Disable(int nr)
+	{
+		glDisable(nr);
 	}
 
 	void OpenGLRendererAPI::DepthFunc(int nr)

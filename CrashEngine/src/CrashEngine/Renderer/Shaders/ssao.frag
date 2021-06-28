@@ -3,6 +3,8 @@ out vec4 FragColor;
 
 in vec2 TexCoords;
 
+uniform int ssaoON;
+
 uniform sampler2D gPosition;
 uniform sampler2D gNormal;
 uniform sampler2D texNoise;
@@ -62,5 +64,6 @@ void main()
     }
     occlusion = 1.0 - (occlusion / kernelSize);
     occlusion = pow(occlusion,power);
-    FragColor = vec4(occlusion,occlusion,occlusion,1.f);
+    if(ssaoON == 1) FragColor = vec4(occlusion,occlusion,occlusion,1.f);
+    else FragColor = vec4(1,1,1,1.f);
 }

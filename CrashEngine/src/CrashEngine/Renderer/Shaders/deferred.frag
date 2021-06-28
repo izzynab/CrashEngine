@@ -21,7 +21,7 @@ uniform vec3 lightColor;
 
 uniform vec3 camPos;
 
-const int Cascades = 3;
+const int Cascades = 4;
 
 uniform sampler2D shadowMap[Cascades];
 
@@ -196,11 +196,17 @@ void main()
 
     vec3 ambient = (kD * diffuse + specular) * ao;
         
+    float dst = texture(normal,TexCoords).a;
 
-
-    for (int i = 0 ; i < Cascades ; i++) 
-    {
-        if (texture(normal,TexCoords).a <= cascadeEndClipSpace[i]) 
+    if (dst <= cascadeEndClipSpace[0]) 
+        {
+            vec4 FragPosLightSpace = lightSpaceMatrix[0] * inverse(view) * vec4(texture(position,TexCoords).rgb, 1.0);
+            float shadow = ShadowCalculation(FragPosLightSpace, 0);   
+            if(shadow == 1) Lo = vec3(0);
+        }
+    for (int i = 1 ; i < Cascades ; i++) 
+    {      
+        if (dst <= cascadeEndClipSpace[i] && dst >= cascadeEndClipSpace[i-1]) 
         {
             vec4 FragPosLightSpace = lightSpaceMatrix[i] * inverse(view) * vec4(texture(position,TexCoords).rgb, 1.0);
             float shadow = ShadowCalculation(FragPosLightSpace, i);   
@@ -213,7 +219,7 @@ void main()
 
     for (int i = 0 ; i < Cascades ; i++) 
     {
-        if (texture(normal,TexCoords).a <= cascadeEndClipSpace[i]) 
+        if (texture(normal,TexCoords).a <= cascadeEndClipSpace[i])
         {
         if(csmColor == 1)
         {

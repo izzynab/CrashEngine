@@ -15,11 +15,12 @@ namespace CrashEngine {
 		// pre-allocate enough memory for the LUT texture.
 		glBindTexture(GL_TEXTURE_2D, m_RendererID);
 		glTexImage2D(GL_TEXTURE_2D, 0, specification.internalFormat, specification.Width, specification.Height, 0, specification.DataFormat, specification.type, 0);
+
 		// be sure to set wrapping mode to GL_CLAMP_TO_EDGE
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, specification.WrapParam);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, specification.WrapParam);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, specification.FilterParam);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, specification.FilterParam);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, specification.MinFilterParam);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, specification.MagFilterParam);
 
 	}
 
@@ -41,6 +42,7 @@ namespace CrashEngine {
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
+
 	}
 
 	OpenGLTexture2D::OpenGLTexture2D(const std::string& path)
@@ -50,10 +52,8 @@ namespace CrashEngine {
 
 		int width, height, channels;
 		stbi_set_flip_vertically_on_load(false);
-		stbi_uc* data = nullptr;
-		{
-			data = stbi_load(m_Path.c_str(), &width, &height, &channels, 0);
-		}
+		stbi_uc* data = stbi_load(m_Path.c_str(), &width, &height, &channels, 0);
+
 		CE_CORE_ASSERT(data, "Failed to load image!");
 		specification.Width = width;
 		specification.Height = height;
@@ -68,13 +68,26 @@ namespace CrashEngine {
 			specification.internalFormat = InternalFormat::RGB8;
 			specification.DataFormat = DataFormat::RGB;
 		}
+		else if (channels == 2)
+		{
+			//specification.internalFormat = InternalFormat::RGB8;
+			//specification.DataFormat = DataFormat::RGB;
+		}
+		else if (channels == 1)
+		{
+			//specification.internalFormat = InternalFormat::RGB8;
+			//specification.DataFormat = DataFormat::RGB;
+		}
 
 
 		CE_CORE_ASSERT(internalFormat & dataFormat, "Format not supported!");
 
 		glGenTextures(1, &m_RendererID);
 		glBindTexture(GL_TEXTURE_2D, m_RendererID);
-		glTexImage2D(GL_TEXTURE_2D, 0, specification.DataFormat, specification.Width, specification.Height, 0, specification.DataFormat, specification.type, data);
+
+		if(channels == 1) glTexImage2D(GL_TEXTURE_2D, 0, specification.internalFormat, specification.Width, specification.Height, 0, GL_RED, specification.type, data);
+		else glTexImage2D(GL_TEXTURE_2D, 0, specification.internalFormat, specification.Width, specification.Height, 0, specification.DataFormat, specification.type, data);
+
 		glGenerateMipmap(GL_TEXTURE_2D);
 
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);

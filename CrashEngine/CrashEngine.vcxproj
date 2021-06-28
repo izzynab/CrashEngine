@@ -87,9 +87,6 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
-    <Lib>
-      <AdditionalDependencies>opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-    </Lib>
     <PostBuildEvent>
       <Command>IF EXIST ..\bin\Debug-windows-x86_64\CrashEngine\CrashEngine.lib\ (xcopy /Q /E /Y /I ..\bin\Debug-windows-x86_64\CrashEngine\CrashEngine.lib ..\bin\Debug-windows-x86_64\Sandbox &gt; nul) ELSE (xcopy /Q /Y /I ..\bin\Debug-windows-x86_64\CrashEngine\CrashEngine.lib ..\bin\Debug-windows-x86_64\Sandbox &gt; nul)</Command>
     </PostBuildEvent>
@@ -114,9 +111,6 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
-    <Lib>
-      <AdditionalDependencies>opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-    </Lib>
     <PostBuildEvent>
       <Command>IF EXIST ..\bin\Release-windows-x86_64\CrashEngine\CrashEngine.lib\ (xcopy /Q /E /Y /I ..\bin\Release-windows-x86_64\CrashEngine\CrashEngine.lib ..\bin\Release-windows-x86_64\Sandbox &gt; nul) ELSE (xcopy /Q /Y /I ..\bin\Release-windows-x86_64\CrashEngine\CrashEngine.lib ..\bin\Release-windows-x86_64\Sandbox &gt; nul)</Command>
     </PostBuildEvent>
@@ -141,9 +135,6 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
-    <Lib>
-      <AdditionalDependencies>opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-    </Lib>
     <PostBuildEvent>
       <Command>IF EXIST ..\bin\Dist-windows-x86_64\CrashEngine\CrashEngine.lib\ (xcopy /Q /E /Y /I ..\bin\Dist-windows-x86_64\CrashEngine\CrashEngine.lib ..\bin\Dist-windows-x86_64\Sandbox &gt; nul) ELSE (xcopy /Q /Y /I ..\bin\Dist-windows-x86_64\CrashEngine\CrashEngine.lib ..\bin\Dist-windows-x86_64\Sandbox &gt; nul)</Command>
     </PostBuildEvent>
@@ -763,6 +754,40 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <None Include="src\CrashEngine\Renderer\Shaders\background.frag" />
+    <None Include="src\CrashEngine\Renderer\Shaders\background.vert" />
+    <None Include="src\CrashEngine\Renderer\Shaders\Basic.frag" />
+    <None Include="src\CrashEngine\Renderer\Shaders\Basic.vert" />
+    <None Include="src\CrashEngine\Renderer\Shaders\Basic3D.frag" />
+    <None Include="src\CrashEngine\Renderer\Shaders\Basic3D.vert" />
+    <None Include="src\CrashEngine\Renderer\Shaders\blur.frag" />
+    <None Include="src\CrashEngine\Renderer\Shaders\blurTest.frag" />
+    <None Include="src\CrashEngine\Renderer\Shaders\brdf.frag" />
+    <None Include="src\CrashEngine\Renderer\Shaders\brightness.frag" />
+    <None Include="src\CrashEngine\Renderer\Shaders\computeTest.comp" />
+    <None Include="src\CrashEngine\Renderer\Shaders\cubemap.vert" />
+    <None Include="src\CrashEngine\Renderer\Shaders\deferred.frag" />
+    <None Include="src\CrashEngine\Renderer\Shaders\depthMap.frag" />
+    <None Include="src\CrashEngine\Renderer\Shaders\depthMap.vert" />
+    <None Include="src\CrashEngine\Renderer\Shaders\equirectangularToCubemap.frag" />
+    <None Include="src\CrashEngine\Renderer\Shaders\fxaa.frag" />
+    <None Include="src\CrashEngine\Renderer\Shaders\GammaHDR.frag" />
+    <None Include="src\CrashEngine\Renderer\Shaders\gbuffer.frag" />
+    <None Include="src\CrashEngine\Renderer\Shaders\Instanced3D.frag" />
+    <None Include="src\CrashEngine\Renderer\Shaders\Instanced3D.vert" />
+    <None Include="src\CrashEngine\Renderer\Shaders\irradiance.frag" />
+    <None Include="src\CrashEngine\Renderer\Shaders\lines.frag" />
+    <None Include="src\CrashEngine\Renderer\Shaders\lines.geom" />
+    <None Include="src\CrashEngine\Renderer\Shaders\lines.vert" />
+    <None Include="src\CrashEngine\Renderer\Shaders\mixbloom.frag" />
+    <None Include="src\CrashEngine\Renderer\Shaders\pbr.frag" />
+    <None Include="src\CrashEngine\Renderer\Shaders\pbr.vert" />
+    <None Include="src\CrashEngine\Renderer\Shaders\prefilter.frag" />
+    <None Include="src\CrashEngine\Renderer\Shaders\ssao.frag" />
+    <None Include="src\CrashEngine\Renderer\Shaders\ssaoBlur.frag" />
+    <None Include="src\CrashEngine\Renderer\Shaders\TexBasic.frag" />
+    <None Include="src\CrashEngine\Renderer\Shaders\Text.frag" />
+    <None Include="src\CrashEngine\Renderer\Shaders\Text.vert" />
     <None Include="vendor\assimp\include\assimp\config.h.in" />
   </ItemGroup>
   <ItemGroup>

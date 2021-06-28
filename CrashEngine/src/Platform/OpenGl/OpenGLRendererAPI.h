@@ -11,9 +11,13 @@ namespace CrashEngine {
 		virtual void SetClearColor(const glm::vec4& color) override;
 		virtual void Clear() override;
 
+		virtual void CullFront() override;
+		virtual void CullBack() override;
+
 		virtual double GetTime() override;
 
-		virtual void Enable(int nr) override;
+		virtual void Enable(int nr) override; 
+		virtual void Disable(int nr) override;
 
 		virtual void DepthFunc(int nr) override;
 

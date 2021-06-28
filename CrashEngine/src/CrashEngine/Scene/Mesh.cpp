@@ -14,6 +14,15 @@ namespace CrashEngine {
         
 	}
 
+    Mesh::Mesh(std::string const& path, std::shared_ptr<Material>& mat)
+        :path(path)
+    {
+        LoadMesh(path);
+        //material = new Material("default_material");
+        material = mat;
+
+    }
+
 	void Mesh::LoadMesh(std::string const& path)
 	{
 		Assimp::Importer importer;

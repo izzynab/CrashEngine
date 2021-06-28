@@ -15,22 +15,24 @@ namespace CrashEngine
 		depthMapShader = Shader::Create("depthMap.vert", "depthMap.frag");
 
 		FramebufferSpecification depthspec;
-		depthspec.Height = 1024;
-		depthspec.Width = 1024;
-
-		for (int i = 0; i < 3; i++)
-		{
-			depthMap.push_back(Texture2D::Create(1024, 1024));//todo: another size?
-		}
+		depthspec.Height = 2048;
+		depthspec.Width = 2048;
 
 		depthFramebuffer = Framebuffer::Create(depthspec, true);
-		
+
+		depthMap.push_back(Texture2D::Create(2048,2048));
+		depthMap.push_back(Texture2D::Create(2048,2048));
+		depthMap.push_back(Texture2D::Create(2048,2048));
+		depthMap.push_back(Texture2D::Create(2048,2048));
+
 
 		m_cascadeEnd.push_back(1.0f);
-		m_cascadeEnd.push_back(60.0f);
-		m_cascadeEnd.push_back(150.0f);
-		m_cascadeEnd.push_back(300.0f);
+		m_cascadeEnd.push_back(20.0f);
+		m_cascadeEnd.push_back(50.0f);
+		m_cascadeEnd.push_back(90.0f);
+		m_cascadeEnd.push_back(130.0f);
 
+		mCascadeWorldViewProj.push_back(glm::mat4(1));
 		mCascadeWorldViewProj.push_back(glm::mat4(1));
 		mCascadeWorldViewProj.push_back(glm::mat4(1));
 		mCascadeWorldViewProj.push_back(glm::mat4(1));
@@ -46,21 +48,17 @@ namespace CrashEngine
 			glm::cos(rotation.y));
 
 		glm::vec3 up = glm::vec3(0.0f, 1.f, 0.0f);
-		glm::vec3 right = glm::vec3(1.0f, 0.f, 0.0f);
 
 		float fov = camera->fov;
 		float AspectRatio = camera->ScreenWidth / camera->ScreenHeight;
-
-		for (int i = 0; i < 3; i++)
+	
+		for (int i = 0; i < 4; i++)
 		{
 			//splitted frustum
-			glm::mat4 cameraProjectionMatrix = glm::perspective(glm::radians(fov), camera->ScreenWidth / camera->ScreenHeight, m_cascadeEnd[0], m_cascadeEnd[i+1]);	
+			glm::mat4 cameraProjectionMatrix = glm::perspective(glm::radians(fov), AspectRatio, m_cascadeEnd[i], m_cascadeEnd[i+1]);
 			glm::mat4 cameraProjView = cameraProjectionMatrix * camera->GetViewMatrix();
 
-			Application::Get().GetDebugger().DrawFrustum(cameraProjView);
-
 			std::array<glm::vec3, 8> frustumCorners = CalculateFrustumCoreners(cameraProjView);
-
 
 			//calculate frustum center and distance from near to far plane of the frustum
 			float maxZ = -std::numeric_limits<float>::max();
@@ -74,54 +72,41 @@ namespace CrashEngine
 			}
 			frustumCenter /= 8.f;
 
-			//calculate light relative to frustum position
-			glm::vec3 relativeLightPosition = rot;
-			float distance = maxZ - minZ;
-			relativeLightPosition *= distance;
-			glm::vec3 lightPosition = frustumCenter;
-			lightPosition += relativeLightPosition;
+			glm::vec3 lightDir = rot;
+			glm::vec3 lightPos = frustumCenter + lightDir * (m_cascadeEnd[i+1] - m_cascadeEnd[i]);
 
-			//calculate light view matrix
-			float lightAngleX = glm::degrees(glm::acos(rot.z));
-			float lightAngleY = glm::degrees(glm::asin(rot.x));
-			float lightAngleZ = 0;
-			glm::vec3 lightCenter = glm::vec3(lightAngleX, lightAngleY, lightAngleZ);
-			glm::mat4 lightViewMatrix = glm::lookAt(lightPosition, lightCenter, up);
+			glm::mat4 mLightView = glm::lookAt(lightPos, frustumCenter, glm::vec3(0.0f, 1.0f, 0.0f));
 
-			//calculate light projection matrix
-			float minX = std::numeric_limits<float>::max();
-			float maxX = -std::numeric_limits<float>::max();
-			float minY = std::numeric_limits<float>::max();
-			float maxY = -std::numeric_limits<float>::max();
-			minZ = std::numeric_limits<float>::max();
-			maxZ = -std::numeric_limits<float>::max();
-
-			for (int i = 0; i < 8; i++) {
-				glm::vec3 corner = frustumCorners[i];
-				glm::vec4 coords = glm::vec4(corner, 1);
-
-				//coords = coords * lightViewMatrix;
-				coords = lightViewMatrix * coords;
-
-				minX = glm::min(coords.x, minX);
-				maxX = glm::max(coords.x, maxX);
-				minY = glm::min(coords.y, minY);
-				maxY = glm::max(coords.y, maxY);
-				minZ = glm::min(coords.z, minZ);
-				maxZ = glm::max(coords.z, maxZ);
+			for (int i = 0; i < 8; ++i)
+			{
+				frustumCorners[i] = glm::vec3(mLightView * glm::vec4(frustumCorners[i], 1.0f));
 			}
-			float distz = maxZ - minZ;
 
-			glm::mat4 lightProjectionMatrix = glm::ortho<float>(minX, maxX, minY, maxY, 0, distz);
+			float minX = std::numeric_limits<float>::max();
+			float maxX = std::numeric_limits<float>::min();
+			float minY = std::numeric_limits<float>::max();
+			float maxY = std::numeric_limits<float>::min();
+			minZ = std::numeric_limits<float>::max();
+			maxZ = std::numeric_limits<float>::min();
 
-			//set mCascadeWorldViewProj
-			mCascadeWorldViewProj[i] = lightProjectionMatrix * lightViewMatrix;
-			//Application::Get().GetDebugger().DrawFrustum(mCascadeWorldViewProj[i]);
+			for (int i = 0; i < 8; ++i)
+			{
+				minX = std::min(minX, frustumCorners[i].x);
+				maxX = std::max(maxX, frustumCorners[i].x);
+				minY = std::min(minY, frustumCorners[i].y);
+				maxY = std::max(maxY, frustumCorners[i].y);
+				minZ = std::min(minZ, frustumCorners[i].z);
+				maxZ = std::max(maxZ, frustumCorners[i].z);
+			}
+
+			glm::mat4 mLightProj = glm::ortho(minX, maxX, minY, maxY, m_cascadeEnd[0], maxZ- minZ);
+
+			mCascadeWorldViewProj[i] = mLightProj * mLightView;
+
 		}
-		Application::Get().GetDebugger().DrawFrustum(mCascadeWorldViewProj[0]);
 
 
-		for (int i = 0; i < 3; i++)
+		for (int i = 0; i < 4; i++)
 		{
 			glm::mat4 lightSpaceMatrix =  mCascadeWorldViewProj[i];
 
@@ -132,7 +117,7 @@ namespace CrashEngine
 			depthMapShader->Bind();
 			depthMapShader->SetUniformMat4("lightSpaceMatrix", lightSpaceMatrix);
 
-			RenderCommand::SetViewport(1024, 1024);
+			RenderCommand::SetViewport(2048, 2048);
 			depthFramebuffer->Bind();
 			depthFramebuffer->SetTexture(CE_TEXTURE_2D, depthMap[i]->GetRendererID(),0);
 			RenderCommand::SetClearColor(glm::vec4(0, 0.5, 0, 1));
@@ -140,16 +125,13 @@ namespace CrashEngine
 
 			m_ActiveScene->DepthRender(depthMapShader);
 		}
+
 		depthFramebuffer->Unbind();
-
-
-		//Application::Get().GetDebugger().DrawFrustum(mCascadeWorldViewProj[0]);
-		//Application::Get().GetDebugger().DrawFrustum(mCascadeWorldViewProj[1]);
-		//Application::Get().GetDebugger().DrawFrustum(mCascadeWorldViewProj[2]);
 	}
 
 	std::array<glm::vec3, 8> DirectionalLight::CalculateFrustumCoreners(glm::mat4 projViewMatrix)
 	{
+
 		glm::mat4 inv = glm::inverse(projViewMatrix);
 
 		glm::vec4 f[8u] =

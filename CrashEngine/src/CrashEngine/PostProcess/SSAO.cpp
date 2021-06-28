@@ -47,7 +47,8 @@ namespace CrashEngine
 		texspec.Width = 4;
 		texspec.Height = 4;
 		texspec.DataFormat = DataFormat::RGB;
-		texspec.FilterParam = FilterParam::NEAREST;
+		texspec.MagFilterParam = FilterParam::NEAREST;
+		texspec.MinFilterParam = FilterParam::NEAREST;
 		texspec.internalFormat = InternalFormat::RGBA16F;
 		texspec.type = Type::FLOAT;
 		texspec.WrapParam = WrapParam::REPEAT;
@@ -73,6 +74,7 @@ namespace CrashEngine
 		RenderCommand::BindTexture(noiseTexture->GetRendererID(), 2);//noise
 		for (unsigned int i = 0; i < kernelSize; ++i)
 			ssaoShader->SetUniformVec3("samples[" + std::to_string(i) + "]", ssaoKernel[i]);
+		ssaoShader->SetUniformInt("ssaoON", ssao);
 		ssaoShader->SetUniformInt("kernelSize", kernelSize);
 		ssaoShader->SetUniformFloat("radius", radius);
 		ssaoShader->SetUniformFloat("bias", bias);

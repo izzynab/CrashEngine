@@ -16,6 +16,9 @@ namespace CrashEngine {
 
 	Scene::Scene()
 	{
+		//RenderCommand::Enable(CE_CULL_FACE);
+		//RenderCommand::CullFront();
+
 		postProcess.reset(new PostProcess());
 		ssao.reset(new SSAO());
 
@@ -54,7 +57,7 @@ namespace CrashEngine {
 		return entity;
 	}
 
-	Entity Scene::CreateMesh(const std::string path, std::shared_ptr<Material> material, const std::string& name = std::string())
+	Entity Scene::CreateMesh(const std::string path, std::shared_ptr<Material>& material, const std::string& name = std::string())
 	{
 		Entity entity = { m_Registry.create(), this };
 		entity.AddComponent<TransformComponent>();
@@ -62,9 +65,8 @@ namespace CrashEngine {
 		tag.Tag = name.empty() ? "Mesh" : name;
 
 
-		Mesh& mesh = Mesh(path);
+		Mesh& mesh = Mesh(path, material);
 		mesh.directory = path;
-		mesh.material = material;
 		entity.AddComponent<Mesh>(mesh);
 		
 		return entity;
@@ -91,7 +93,7 @@ namespace CrashEngine {
 	void Scene::OnUpdate(Timestep ts, Shader* shader)
 	{
 		auto view = m_Registry.view<TransformComponent, Mesh>();
-
+		
 		for (auto entity : view) 
 		{
 			auto& mod = view.get<Mesh>(entity);
@@ -125,12 +127,16 @@ namespace CrashEngine {
 			auto& mod = view.get<Mesh>(entity);
 			auto& transform = view.get<TransformComponent>(entity);
 
+		
 			glm::mat4 model = transform.GetTransform();
 			shader->Bind();
 			shader->SetUniformMat4("model", model);
+			
 
 			mod.Draw(shader,false);
 		}
+
+
 		//todo: add isntanced meshes render pass
 
 	}

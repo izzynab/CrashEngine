@@ -57,6 +57,7 @@ namespace CrashEngine {
 		Mesh() = default;
 		Mesh(const Mesh&) = default;
 		Mesh(std::string const& path);
+		Mesh(std::string const& path, std::shared_ptr<Material>& mat);
 
 		void Draw(Shader* shader,bool bindTextures = true);
 

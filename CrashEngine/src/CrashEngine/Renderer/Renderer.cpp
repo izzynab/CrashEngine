@@ -88,7 +88,7 @@ namespace CrashEngine {
 			defferedShader->SetUniformVec3("lightRotation", rotation);
 			defferedShader->SetUniformVec3("lightColor", ActiveScene->directionalLight->color * ActiveScene->directionalLight->intensity);
 			defferedShader->SetUniformVec3("camPos", camera->GetPosition());
-			for (int i = 0; i < 3; i++)
+			for (int i = 0; i < 4; i++)
 				ActiveScene->directionalLight->depthMap[i]->Bind(8 + i);
 
 

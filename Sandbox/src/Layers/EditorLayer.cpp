@@ -41,7 +41,6 @@ namespace CrashEngine {
 		SceneSerializer serializer(m_RenderProperties->GetScene());
 		serializer.Deserialize("C:/EngineDev/CrashEngine/Sandbox/Content/Scenes/jd.crash");
 
-
 		//---------------------Test space--------------------------------------------------------
 		RenderCommand::InitDebugOutput();
 
@@ -51,7 +50,8 @@ namespace CrashEngine {
 		tspec.Height = 1080;
 		tspec.type = Type::FLOAT;
 		tspec.DataFormat = DataFormat::RGBA;
-		tspec.FilterParam = FilterParam::LINEAR;
+		tspec.MagFilterParam = FilterParam::LINEAR;
+		tspec.MinFilterParam = FilterParam::LINEAR;
 		tspec.internalFormat = InternalFormat::RGBA32F;
 		testTexture = Texture2D::Create(tspec);
 

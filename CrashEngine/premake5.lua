@@ -52,8 +52,6 @@ project "CrashEngine"
 		"ImGui",
 		"assimp",
 		"yaml-cpp",
-		"opengl32.lib",
-		
 	}
 	
 	filter "files:vendor/ImGuizmo/**.cpp"

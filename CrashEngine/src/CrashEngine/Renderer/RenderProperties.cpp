@@ -28,6 +28,7 @@ namespace CrashEngine {
 		deferredShader->SetUniformInt("shadowMap[0]", 8);
 		deferredShader->SetUniformInt("shadowMap[1]", 9);
 		deferredShader->SetUniformInt("shadowMap[2]", 10);
+		deferredShader->SetUniformInt("shadowMap[3]", 11);
 
 		GBufferShader.reset(Shader::Create("pbr.vert", "gbuffer.frag"));
 		GBufferShader->Bind();

@@ -5,11 +5,131 @@ Entities:
     TagComponent:
       Tag: Mesh
     TransformComponent:
-      Translation: [0, 5.57007408, 0]
+      Translation: [36.7274475, 2.92039442, 0]
       Rotation: [0, 0, 0]
       Scale: [1, 1, 1]
     Mesh:
-      Directory: C:\EngineDev\CrashEngine\Sandbox\Content\Assets\sphere.obj
+      Directory: C:\EngineDev\CrashEngine\Sandbox\Content\Assets\cube.obj
+      Material:
+        Name: default_material
+        Albedo:
+          path: ""
+          albedo use: false
+          albedo color: [0.200000003, 0.200000003, 0.200000003, 0]
+          albedo load: false
+        Metallic:
+          path: ""
+          metallic use: false
+          metallic color: 0.5
+          metallic load: false
+        Roughness:
+          path: ""
+          roughness use: false
+          roughness color: 0.5
+          roughness load: false
+        Normal:
+          path: ""
+        Ao:
+          path: ""
+  - Entity: 12837192831273
+    TagComponent:
+      Tag: Mesh
+    TransformComponent:
+      Translation: [27.7639389, 5.21508312, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    Mesh:
+      Directory: C:\EngineDev\CrashEngine\Sandbox\Content\Assets\cube.obj
+      Material:
+        Name: default_material
+        Albedo:
+          path: ""
+          albedo use: false
+          albedo color: [0.200000003, 0.200000003, 0.200000003, 0]
+          albedo load: false
+        Metallic:
+          path: ""
+          metallic use: false
+          metallic color: 0.5
+          metallic load: false
+        Roughness:
+          path: ""
+          roughness use: false
+          roughness color: 0.5
+          roughness load: false
+        Normal:
+          path: ""
+        Ao:
+          path: ""
+  - Entity: 12837192831273
+    TagComponent:
+      Tag: Empty Entity
+    TransformComponent:
+      Translation: [15.4404249, 4.50895596, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    Mesh:
+      Directory: C:\EngineDev\CrashEngine\Sandbox\Content\Assets\cube.obj
+      Material:
+        Name: default_material
+        Albedo:
+          path: ""
+          albedo use: false
+          albedo color: [0.200000003, 0.200000003, 0.200000003, 0]
+          albedo load: false
+        Metallic:
+          path: ""
+          metallic use: false
+          metallic color: 0.5
+          metallic load: false
+        Roughness:
+          path: ""
+          roughness use: false
+          roughness color: 0.5
+          roughness load: false
+        Normal:
+          path: ""
+        Ao:
+          path: ""
+  - Entity: 12837192831273
+    TagComponent:
+      Tag: Mesh
+    TransformComponent:
+      Translation: [-27.0568333, 4.4662075, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    Mesh:
+      Directory: C:\EngineDev\CrashEngine\Sandbox\Content\Assets\cube.obj
+      Material:
+        Name: default_material
+        Albedo:
+          path: ""
+          albedo use: false
+          albedo color: [0.200000003, 0.200000003, 0.200000003, 0]
+          albedo load: false
+        Metallic:
+          path: ""
+          metallic use: false
+          metallic color: 0.5
+          metallic load: false
+        Roughness:
+          path: ""
+          roughness use: false
+          roughness color: 0.5
+          roughness load: false
+        Normal:
+          path: ""
+        Ao:
+          path: ""
+  - Entity: 12837192831273
+    TagComponent:
+      Tag: Mesh
+    TransformComponent:
+      Translation: [-12.2071075, 7.70107555, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    Mesh:
+      Directory: C:\EngineDev\CrashEngine\Sandbox\Content\Assets\cube.obj
       Material:
         Name: default_material
         Albedo:
@@ -37,7 +157,7 @@ Entities:
     TransformComponent:
       Translation: [0, 1.11147451, 0]
       Rotation: [0, 0, 0]
-      Scale: [12.2440023, 1, 9.39317608]
+      Scale: [86.6460571, 1, 10.5356293]
     Mesh:
       Directory: C:\EngineDev\CrashEngine\Sandbox\Content\Assets\cube.obj
       Material:
@@ -61,17 +181,77 @@ Entities:
           path: ""
         Ao:
           path: ""
+  - Entity: 12837192831273
+    TagComponent:
+      Tag: Mesh
+    TransformComponent:
+      Translation: [0, 5.57007408, 0]
+      Rotation: [0, 0, 0]
+      Scale: [2.20902562, 1, 1]
+    Mesh:
+      Directory: C:\EngineDev\CrashEngine\Sandbox\Content\Assets\sphere.obj
+      Material:
+        Name: default_material
+        Albedo:
+          path: ""
+          albedo use: false
+          albedo color: [0.200000003, 0.200000003, 0.200000003, 0]
+          albedo load: false
+        Metallic:
+          path: ""
+          metallic use: false
+          metallic color: 0.5
+          metallic load: false
+        Roughness:
+          path: ""
+          roughness use: false
+          roughness color: 0.5
+          roughness load: false
+        Normal:
+          path: ""
+        Ao:
+          path: ""
+  - Entity: 12837192831273
+    TagComponent:
+      Tag: Mesh
+    TransformComponent:
+      Translation: [-0.993330538, 5.27446318, -5.4345808]
+      Rotation: [0, 0, 0]
+      Scale: [0.0700000003, 0.0700000003, 0.0699602291]
+    Mesh:
+      Directory: C:\EngineDev\CrashEngine\Sandbox\Content\Assets\Camera.OBJ
+      Material:
+        Name: default_material
+        Albedo:
+          path: ""
+          albedo use: false
+          albedo color: [0.200000003, 0.200000003, 0.200000003, 0]
+          albedo load: false
+        Metallic:
+          path: ""
+          metallic use: false
+          metallic color: 0.5
+          metallic load: false
+        Roughness:
+          path: ""
+          roughness use: false
+          roughness color: 0.5
+          roughness load: false
+        Normal:
+          path: ""
+        Ao:
+          path: ""
 Directional light:
-  rotation: [1.90240884, 1.71042275, 0]
+  rotation: [2.04203534, 2.02458191, 0]
   color: [1, 1, 1]
   intensity: 50
 Sky light:
-  directory: ""
+  directory: C:\EngineDev\CrashEngine\Sandbox\Content\Assets\Textures\hdr\14-Hamarikyu_Bridge_B_3k.hdr
 Bloom:
   blur: true
   threshold: 0.400000006
   softthreshold: 0.100000001
 SSAO:
-  radius: 0.5
-  bias: 0.0250000004
-  power: 3
+  radius: 0.639999986
+  bias: 0.156000003
+  power: 3.81100011
