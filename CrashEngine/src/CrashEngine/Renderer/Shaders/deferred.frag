@@ -39,6 +39,9 @@ layout (std140) uniform Matrices
 
 const float PI = 3.14159265359;
 
+float R_shadowVarianceMin = 0.00002f;
+float R_shadowLightBleedingReduction = 0.2f;
+
 // ----------------------------------------------------------------------------
 float DistributionGGX(vec3 N, vec3 H, float roughness)
 {
@@ -85,16 +88,34 @@ vec3 fresnelSchlickRoughness(float cosTheta, vec3 F0, float roughness)
     return F0 + (max(vec3(1.0 - roughness), F0) - F0) * pow(1.0 - cosTheta, 5.0);
 }   
 // ----------------------------------------------------------------------------
-float ShadowCalculation(vec4 fragPosLightSpace,int cascade)
+float linstep(float low, float high, float v)
 {
-    // perform perspective divide
-    vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
+	return clamp((v-low)/(high-low), 0.0, 1.0);
+}
+
+float SampleVarianceShadowMap(vec2 coords, float compare,int cascade)
+{
+	vec2 moments = texture2D(shadowMap[cascade], coords.xy).xy;
+
+	float p = step(compare, moments.x);
+	float variance = max(moments.y - moments.x * moments.x, R_shadowVarianceMin);
+
+	float d = compare - moments.x;
+	float pMax = linstep(R_shadowLightBleedingReduction, 1.0, variance / (variance + d*d));
+
+	return min(max(p, pMax), 1.0);
+	//return step(compare, texture2D(shadowMap, coords.xy).r);
+}
+
+float ShadowCalculation(vec2 coords, float compare,int cascade)
+{
     // transform to [0,1] range
-    projCoords = projCoords * 0.5 + 0.5;
+    vec2 projCoords = coords * 0.5 + 0.5;
+    compare = compare* 0.5 + 0.5;
     // get closest depth value from light's perspective (using [0,1] range fragPosLight as coords)
     float closestDepth = texture(shadowMap[cascade], projCoords.xy).r; 
     // get depth of current fragment from light's perspective
-    float currentDepth = projCoords.z;
+    float currentDepth = compare;
     // calculate bias (based on depth map resolution and slope)
     vec3 normal = texture(normal,TexCoords).rgb;
     vec3 lightDir = normalize(lightRotation);
@@ -115,7 +136,7 @@ float ShadowCalculation(vec4 fragPosLightSpace,int cascade)
     shadow /= 9.0;
     
     // keep the shadow at 0.0 when outside the far_plane region of the light's frustum.
-    if(projCoords.z > 1.0)
+    if(compare > 1.0)
         shadow = 0.0;
         
     return shadow;
@@ -201,7 +222,9 @@ void main()
     if (dst <= cascadeEndClipSpace[0]) 
         {
             vec4 FragPosLightSpace = lightSpaceMatrix[0] * inverse(view) * vec4(texture(position,TexCoords).rgb, 1.0);
-            float shadow = ShadowCalculation(FragPosLightSpace, 0);   
+            // perform perspective divide
+            vec3 projCoords = FragPosLightSpace.xyz / FragPosLightSpace.w;
+            float shadow = ShadowCalculation(projCoords.xy,projCoords.z, 0);   
             if(shadow == 1) Lo = vec3(0);
         }
     for (int i = 1 ; i < Cascades ; i++) 
@@ -209,7 +232,9 @@ void main()
         if (dst <= cascadeEndClipSpace[i] && dst >= cascadeEndClipSpace[i-1]) 
         {
             vec4 FragPosLightSpace = lightSpaceMatrix[i] * inverse(view) * vec4(texture(position,TexCoords).rgb, 1.0);
-            float shadow = ShadowCalculation(FragPosLightSpace, i);   
+             // perform perspective divide
+            vec3 projCoords = FragPosLightSpace.xyz / FragPosLightSpace.w;
+            float shadow = ShadowCalculation(projCoords.xy, projCoords.z, i);   
             if(shadow == 1) Lo = vec3(0);
         }
     }

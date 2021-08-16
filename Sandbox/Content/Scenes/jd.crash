@@ -7,7 +7,7 @@ Entities:
     TransformComponent:
       Translation: [36.7274475, 2.92039442, 0]
       Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
+      Scale: [1, 21.2488079, 1]
     Mesh:
       Directory: C:\EngineDev\CrashEngine\Sandbox\Content\Assets\cube.obj
       Material:
@@ -157,7 +157,7 @@ Entities:
     TransformComponent:
       Translation: [0, 1.11147451, 0]
       Rotation: [0, 0, 0]
-      Scale: [86.6460571, 1, 10.5356293]
+      Scale: [86.6460571, 1, 80.1901474]
     Mesh:
       Directory: C:\EngineDev\CrashEngine\Sandbox\Content\Assets\cube.obj
       Material:

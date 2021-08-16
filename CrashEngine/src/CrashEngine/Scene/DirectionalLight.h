@@ -34,5 +34,6 @@ namespace CrashEngine {
 		std::vector<glm::mat4> mCascadeWorldViewProj;
 
 		Shader* depthMapShader;
+		Shader* blurShader;
 	};
 }

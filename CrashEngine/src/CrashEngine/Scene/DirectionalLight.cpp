@@ -13,29 +13,31 @@ namespace CrashEngine
 	DirectionalLight::DirectionalLight()
 	{
 		depthMapShader = Shader::Create("depthMap.vert", "depthMap.frag");
+		blurShader = Shader::Create("Basic.vert", "blur.frag");
 
 		FramebufferSpecification depthspec;
-		depthspec.Height = 2048;
-		depthspec.Width = 2048;
+		depthspec.Height = 1024*4;
+		depthspec.Width = 1024*4;
 
 		depthFramebuffer = Framebuffer::Create(depthspec, true);
 
-		depthMap.push_back(Texture2D::Create(2048,2048));
-		depthMap.push_back(Texture2D::Create(2048,2048));
-		depthMap.push_back(Texture2D::Create(2048,2048));
-		depthMap.push_back(Texture2D::Create(2048,2048));
+		depthMap.push_back(Texture2D::Create(1024 * 4, 1024 * 4));
+		depthMap.push_back(Texture2D::Create(1024 * 3, 1024 * 3));
+		depthMap.push_back(Texture2D::Create(1024 * 2, 1024 * 2));
+		depthMap.push_back(Texture2D::Create(1024, 1024));
 
 
 		m_cascadeEnd.push_back(1.0f);
-		m_cascadeEnd.push_back(20.0f);
-		m_cascadeEnd.push_back(50.0f);
-		m_cascadeEnd.push_back(90.0f);
-		m_cascadeEnd.push_back(130.0f);
+		m_cascadeEnd.push_back(30.0f);
+		m_cascadeEnd.push_back(70.f);
+		m_cascadeEnd.push_back(120.f);
+		m_cascadeEnd.push_back(180.f);
 
 		mCascadeWorldViewProj.push_back(glm::mat4(1));
 		mCascadeWorldViewProj.push_back(glm::mat4(1));
 		mCascadeWorldViewProj.push_back(glm::mat4(1));
 		mCascadeWorldViewProj.push_back(glm::mat4(1));
+
 	}
 
 
@@ -117,13 +119,14 @@ namespace CrashEngine
 			depthMapShader->Bind();
 			depthMapShader->SetUniformMat4("lightSpaceMatrix", lightSpaceMatrix);
 
-			RenderCommand::SetViewport(2048, 2048);
+			RenderCommand::SetViewport(1024 *(4-i), 1024 * (4 - i));
 			depthFramebuffer->Bind();
 			depthFramebuffer->SetTexture(CE_TEXTURE_2D, depthMap[i]->GetRendererID(),0);
 			RenderCommand::SetClearColor(glm::vec4(0, 0.5, 0, 1));
 			RenderCommand::Clear();
 
 			m_ActiveScene->DepthRender(depthMapShader);
+
 		}
 
 		depthFramebuffer->Unbind();
